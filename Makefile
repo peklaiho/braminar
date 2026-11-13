@@ -8,6 +8,9 @@ braminar: braminar.o
 braminar.o: braminar.c
 	$(CXX) $(CXXFLAGS) -c braminar.c -o braminar.o
 
+extract_data: extract_data.c
+	$(CXX) $(CXXFLAGS) extract_data.c -o extract_data
+
 .PHONY: clean
 clean:
-	rm -f braminar braminar.o
+	rm -f braminar braminar.o extract_data
