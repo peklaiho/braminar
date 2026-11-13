@@ -1,0 +1,7 @@
+Description of files contained on disk (excluding this one)
+---------------------------------------------------------------
+BRAMINAR.COM    Main program of Braminar
+BRAMINAR.DOC    Documentation file
+BRAM.DAT        Data file used to limit data segment
+FINASSLT.CHN    Final Assault Module
+
