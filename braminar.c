@@ -224,22 +224,98 @@ static void start_final_battle(void)
     exit(EXIT_SUCCESS);
 }
 
+static void event_city(void)
+{
+    puts("\nYou arrive at a city.");
+}
+
+static void event_village(void)
+{
+    puts("\nYou arrive at a village.");
+}
+
+static void event_combat(void)
+{
+    puts("\nYou encounter a monster.");
+}
+
+static void event_dark_castle(void)
+{
+    puts("\nYou find the Dark Castle of the Mad King.");
+}
+
+static void event_enchanted_forest(void)
+{
+    puts("\nYou enter an enchanted forest.");
+}
+
+static void event_overlords_keep(void)
+{
+    puts("\nYou find the Evil Overlord's Keep.");
+}
+
+static void event_flowing_river(void)
+{
+    puts("\nYou come upon a flowing river.");
+}
+
+static void event_hollow_tree(void)
+{
+    puts("\nYou find a hollow tree with a door.");
+}
+
+static void event_grass_hut(void)
+{
+    puts("\nYou find a grass hut.");
+}
+
+static void event_sick_servants(void)
+{
+    puts("\nSome of your servants are sick.");
+}
+
+static void event_statue_of_pan(void)
+{
+    puts("\nYou find a statue of Pan.");
+}
+
+static void event_storm(void)
+{
+    puts("\nA storm approaches.");
+}
+
+static void event_thicket(void)
+{
+    puts("\nYou find a thicket in the woods.");
+}
+
+static void event_gypsy_camp(void)
+{
+    puts("\nYou come upon a wandering Gypsy camp.");
+}
+
 static void run_event(void)
 {
-    switch (rand() % 4) {
-    case 0:
-        puts("\nYou encounter a monster. Combat is not implemented yet.");
-        break;
-    case 1:
-        puts("\nYou arrive at a town. Town visits are not implemented yet.");
-        break;
-    case 2:
-        puts("\nYou travel through a quiet forest.");
-        break;
-    case 3:
-        puts("\nYou encounter the OVERLORD.");
-        break;
-    }
+    static void (*const events[])(void) = {
+        event_city,
+        event_village,
+        event_combat,
+        event_dark_castle,
+        event_enchanted_forest,
+        event_overlords_keep,
+        event_flowing_river,
+        event_hollow_tree,
+        event_grass_hut,
+        event_sick_servants,
+        event_statue_of_pan,
+        event_storm,
+        event_thicket,
+        event_gypsy_camp,
+    };
+
+    /* Equal chances are placeholders until the original probabilities are recovered. */
+    size_t count = sizeof(events) / sizeof(events[0]);
+    events[rand() % count]();
 }
 
 int main(void)
