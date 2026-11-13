@@ -2,6 +2,8 @@
 
 The original files in `dos/` are the reference for the remake. The extraction tool reads them without modifying them. Extracted text retains the original spelling and terminology; corrections belong in the remake.
 
+Recovered rules and their binary evidence are documented in [mechanics.md](mechanics.md). The encounter catalogue is in [events.md](events.md).
+
 ## Extraction tool
 
 Build the standalone C99 tool from the project root:

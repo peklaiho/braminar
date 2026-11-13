@@ -2,6 +2,8 @@
 
 This is a working reference combining observed gameplay with text extracted from `dos/BRAMINAR.COM`. Keep it updated as mechanics are recovered. Details described as string findings are provisional: strings establish possible messages, but event grouping, prerequisites, probabilities, and arithmetic need gameplay or code verification. File offsets below are hexadecimal offsets into the original executable.
 
+Recovered rules and their binary evidence belong in [mechanics.md](mechanics.md). File formats and extraction-tool usage are described in [data-format.md](data-format.md).
+
 Each turn has chance for one of the listed random events.
 
 Additionally each turn restores little Hit Points.
@@ -10,6 +12,8 @@ Each turn also consumes food (more servants = more food consumed). If no food, s
 ## City and Village
 
 City and Village are similar.
+
+Binary inspection confirms that male and female servant prices are generated separately during player setup as `Random(10) + 5`, giving prices from 5 to 14 gold pieces. They stay fixed during the game and are used for both buying and selling. The two prices are displayed after gender selection, followed by a keypress pause. See [the binary findings](mechanics.md#servant-prices) for offsets and arithmetic.
 
 - Servant market
 - Chance to enter tavern

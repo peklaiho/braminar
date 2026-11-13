@@ -3,6 +3,7 @@
 #include <ctype.h>
 #include <signal.h>
 #include <stdbool.h>
+#include <stdint.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -32,6 +33,17 @@ typedef struct {
     bool horse;
     bool cart;
 } Player;
+
+static uint32_t random_state;
+static int male_servant_price;
+static int female_servant_price;
+
+static int random_number(int limit)
+{
+    /* Original runtime at file offsets 0x0FDA-0x101A: 32-bit state, 15-bit output. */
+    random_state = random_state * UINT32_C(129) + UINT32_C(0x361962E9);
+    return (int)((random_state >> 17) % (uint32_t)limit);
+}
 
 /* Keep the caller's terminal settings for line input and cleanup. */
 static struct termios original_terminal;
@@ -160,6 +172,37 @@ static bool display_title(void)
     return read_key() != EOF;
 }
 
+static void generate_player_stats(Player* player)
+{
+    static const char* const hair_colors[] = {"Blonde", "Brown", "Black", "Red"};
+
+    player->level = random_number(3) + 7;
+    player->hit_points = 0;
+    /* The original rolls one ten-sided die per level, in this order. */
+    for (int i = 0; i < player->level; ++i) {
+        player->hit_points += random_number(10) + 1;
+    }
+    player->hair_color = hair_colors[random_number(4)];
+    player->good_looks = true;
+    player->staff_of_aviatar = false;
+    player->talisman_of_braminar = false;
+    player->male_servants = random_number(15);
+    player->female_servants = random_number(15);
+    player->gold = random_number(25);
+    player->food = 100;
+    player->medicine = 3;
+    player->poison = 0;
+    player->swords = 0;
+    player->bows = 0;
+    player->arrows = 0;
+    player->daggers = 0;
+    player->horse = false;
+    player->cart = false;
+
+    male_servant_price = random_number(10) + 5;
+    female_servant_price = random_number(10) + 5;
+}
+
 static bool create_player(Player* player)
 {
     do {
@@ -179,16 +222,10 @@ static bool create_player(Player* player)
         putchar('\n');
     } while (player->gender != 'M' && player->gender != 'F');
 
-    player->level = 8;
-    player->hit_points = 30.20;
-    player->hair_color = "Brown";
-    player->good_looks = true;
-    player->male_servants = 12;
-    player->female_servants = 9;
-    player->gold = 10;
-    player->food = 91;
-    player->medicine = 3;
-    return true;
+    generate_player_stats(player);
+    printf("\nMale servants cost %d gold pieces\n", male_servant_price);
+    printf("Female servants cost %d gold pieces\n", female_servant_price);
+    return wait_for_key();
 }
 
 static bool display_stats(const Player* player)
@@ -315,7 +352,7 @@ static void run_event(void)
 
     /* Equal chances are placeholders until the original probabilities are recovered. */
     size_t count = sizeof(events) / sizeof(events[0]);
-    events[rand() % count]();
+    events[random_number((int)count)]();
 }
 
 int main(void)
@@ -325,7 +362,7 @@ int main(void)
     /* The entire game uses yellow text; cleanup resets the terminal color. */
     printf("\033[93m");
 
-    srand((unsigned int)time(NULL));
+    random_state = (uint32_t)time(NULL);
 
     if (!display_title()) {
         return EXIT_SUCCESS;
