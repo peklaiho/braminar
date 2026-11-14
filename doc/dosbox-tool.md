@@ -21,7 +21,7 @@ Run from the project root:
 ```
 
 The tool waits for Braminar's welcome screen and prints it. Enter tool commands
-at the `dosbox>` prompt; each command prints the resulting screen:
+at the `dosbox>` prompt; each command prints its command label and the resulting screen:
 
 ```text
 key space
@@ -85,3 +85,49 @@ This was verified against the original welcome screen, name and gender prompts,
 prices, and character status. Captures retain original wording and typos; the
 remake's text changes do not apply to this inspection tool. Pausing affects real
 elapsed time, so this tool does not establish timing-sensitive mechanics.
+
+## Controlled mechanics probes
+
+`combat_probe.py` imports the same `Game` runner to capture a band encounter with
+chosen player state and RNG seed. It labels its output `CONTROLLED PROBE`, records
+the configuration, captures inputs and screens, and prints `STATE` JSON records
+with inventory, HP, experience, ring state, and RNG state at each checkpoint.
+
+```sh
+./combat_probe.py --seed 6427 > /tmp/goblin-fight.txt
+./combat_probe.py --seed 6427 --bows 1 --arrows 2 > /tmp/arrow-exhaustion.txt
+./combat_probe.py --seed 6450 --choice g > /tmp/band-payment.txt
+./combat_probe.py --seed 6443 --swords 2 --daggers 3 --poison 1 --use-poison
+```
+
+Use `./combat_probe.py --help` for player-state options. Seeds must select slot 4;
+the script rejects other seeds. Starting seeds for the nine band types are:
+Goblin 6427, Gremlin 6435, Rust Golem 6443, Orc 6450, Ogre 6458, Pirate 6466,
+Troglodyte 6409, Drow Elf 6411, Demon 6419. Changing equipment can change all later
+rolls because armed rounds consume an additional random number.
+
+The probe changes temporary emulated memory, including the seed at `DS:01FC`;
+it does not modify the original DOS files. Keep these experiments distinct from
+ordinary playthrough observations. The initially displayed status predates the
+memory edits; the `STATE initial` record describes the actual probe state. After
+death the probe captures the exit screen but omits a memory checkpoint because
+DOS has regained control of the data-segment register.
+
+For further Python probes, `game.read_memory(segment, offset, size)` reads bytes;
+`game.write_memory('DS', offset, data)` writes up to 256 bytes and verifies them by
+readback. Writes also support `SS`. `game.debugger()` pauses/resumes through a
+context manager; `game.dump()` and `game.debug_command()` operate while paused.
+Do not nest debugger contexts. Capturing a screen reads the current display;
+editing player memory does not itself redraw the status screen. The Real48
+conversion functions in `combat_probe.py` serve binary inspection only; the C
+remake uses ordinary arithmetic as described in `CHANGES.md`.
+
+Run `./check_combat.py` to compare the remake with the saved controlled captures,
+or `./check_combat.py --sanitize` to enable address and undefined-behavior
+sanitizers. This requires a C compiler (`CC`, default `cc`); it builds
+`check_combat.c` in a temporary directory and runs the checks without DOSBox.
+The compact fixtures in `doc/combat-checkpoints.json` are sufficient to run the
+checks without the raw transcripts, which the repository ignores. Individual
+case names may be passed as arguments, for example `./check_combat.py arrows poison`.
+See the
+[combat ledger](combat-research.md) for cases and evidence limits.

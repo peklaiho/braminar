@@ -12,6 +12,13 @@ This document records intentional differences between the classic DOS game and t
 | --- | --- | --- |
 | Character status | `Mecidine:` | `Medicine:` |
 | Enchanted forest | `The nymph it luring you deep into the forest.` | `The nymph is luring you deep into the forest.` |
+| Band encounter | `Things seem strangely quite when out of no where jumps` | `Things seem strangely quiet when out of nowhere jumps` |
+| Band encounter | `or you may fight their champ, and win their horde.` | `or you may fight their champ, and win their hoard.` |
+| Forced combat | `Your ring compells you to fight.` | `Your ring compels you to fight.` |
+| Unarmed combat | `You bump him abit.` | `You bump him a bit.` |
+| Blade combat | `You severe a finger.` | `You sever a finger.` |
+| Blade combat | `You nearly severe a limb.` | `You nearly sever a limb.` |
+| Combat reward | `You find a shiny ring on your opponents finger & take it.` | `You find a shiny ring on your opponent's finger & take it.` |
 
 ## Numeric precision
 

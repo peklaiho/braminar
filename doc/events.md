@@ -6,19 +6,22 @@ Recovered rules and their binary evidence belong in [mechanics.md](mechanics.md)
 
 Preserve the player-visible experience when implementing these findings. Minor numeric precision details with no observable effect may be simplified under the guideline in `mechanics.md`; record intentional differences in [CHANGES.md](../CHANGES.md). Keep original observations distinct from those implementation choices.
 
-The main loop selects one of 16 slots, with state-dependent substitutions and two separate hollow-tree routines. The recovered dispatch, healing, food consumption, starvation, and level advancement are described in [mechanics.md](mechanics.md#main-turn-loop). The enchanted forest and occupied gnome branch of the hollow tree are implemented; other location bodies remain incomplete.
+The main loop selects one of 16 slots, with state-dependent substitutions and two separate hollow-tree routines. The recovered dispatch, healing, food consumption, starvation, and level advancement are described in [mechanics.md](mechanics.md#main-turn-loop). Band encounters and shared combat, the enchanted forest, and the occupied gnome branch of the hollow tree are implemented; other location bodies remain incomplete.
 
 ## Recorded playthroughs
 
 Capture every encountered event, including encounters outside the current research focus. Keep raw screen snapshots and an input ledger, then summarize observed branches and state changes here. Binary-verified rules belong in `mechanics.md`; an observed message alone does not establish its inventory effect or probability.
 
 - [2026-11-14, session 01](captures/2026-11-14-session-01.md): Pan's riddle, a goblin band, enchanted forest, occupied hollow tree, village market/tavern/store/inn, and a river vision. Includes the initial stats and intermediate status screens. The ledger distinguishes observed outcomes from rules subsequently recovered in the binary.
+- [2026-11-14, combat research](combat-research.md): an ordinary playthrough with two gnome visits, village trading and lodging, and a fatal Demon fight; twelve separately labelled controlled combat experiments with memory checkpoints.
 
 ## City and Village
 
 City and Village are similar.
 
 Observed village sequence in session 01: enter → market → sell (male and female numeric quantities) → buy → tavern → drink → socialize → darts → store. Selling zero of each sex was accepted. A two-gold drink produced `It wasn't so hot.`; socializing produced `No one to socialize with.`; darts offered a five-gold ante and was declined. This is one path through the location, not a complete branch map. See the capture ledger for store offers and the eventual exit state.
+
+The combat research playthrough sold two males and five females for 81 gold at its fixed prices, bought a bow, twelve arrows, and ten food, and paid twenty gold for room 3. Female servants bandaged wounds during lodging; the next status showed three HP restored plus normal turn healing. Store offer prices differed from session 01, and `You have:` followed the gold balance after each purchase rather than item stocks. Store price generation and inn healing formulas still need binary verification.
 
 Binary inspection confirms that male and female servant prices are generated separately during player setup as `Random(10) + 5`, giving prices from 5 to 14 gold pieces. They stay fixed during the game and are used for both buying and selling. The two prices are displayed after gender selection, followed by a keypress pause. See [the binary findings](mechanics.md#servant-prices) for offsets and arithmetic.
 
@@ -62,7 +65,9 @@ Strings near `0xD908` describe encountering a band of creatures that demands mal
 
 Separate combat text exists for ordinary monsters, Anthrax the wizard, a dragon, the Mad King, and powerful creatures such as Cerberus, Lolth, and the Lich King. These may be called from other events rather than selected directly by the main loop.
 
-Session 01 observed Goblins demanding 7 males, 9 females, and 7 gold. Choosing `R` produced `You got away!` with no servant loss. Binary inspection at `0xDDB5`–`0xDE34` shows the servant-loss branch requires a horse, no cart, and more than two servants; the warning's reference to having no cart alone is incomplete. Full combat and escape probabilities still need reconstruction.
+Session 01 observed Goblins demanding 7 males, 9 females, and 7 gold. Choosing `R` produced `You got away!` with no servant loss. The [band and shared combat rules](mechanics.md#band-encounters) are now recovered and implemented: template selection, all three payment demands, horse/cart losses, escape conditions, equipment destruction, poison, attack and damage tables, pauses, experience, ring awards, and loot. The servant-loss branch requires a horse, no cart, and more than two servants, and reduces each sex's count to at most one.
+
+The ordinary combat research run fought Demons, used all twelve arrows, continued unarmed, and died at -1.73 HP with the enemy at 31.37 HP. Separately labelled controlled probes verify victories, death, payment, fleeing, ring effects, and equipment behavior against the remake. The shared routine is called by bands and the river champion; the separate wizard, dragon, Mad King, and other specialized combat routines remain unimplemented and must be investigated independently.
 
 ## Dark Castle of the Mad King
 
@@ -120,6 +125,8 @@ Additional strings describe the gnome announcing food or giving healing ointment
 The main dispatch confirms two separate tree slots. Session 01 entered the occupied variant: the gnome announced three food and five HP of ointment. The HP award occurred; the food award did not. The [binary confirms this discrepancy](mechanics.md#gnomes-announced-food-gift). The second tree routine is selected independently by slot 13, while slot 6 can itself branch to an empty home.
 
 The remake implements the occupied gnome branch and intentionally fixes its missing food award: the announced 3–8 food is added to inventory before normal turn consumption. Healing remains 1–5 HP when below `level * 10`, without a subsequent cap. See [CHANGES.md](../CHANGES.md#bug-fixes). Empty-home choices remain placeholders.
+
+The ordinary combat research playthrough observed two more gnome visits: announced food/healing of five/one and three/two respectively. Both visits again showed healing applied but no food gift in the classic. See the [combat ledger](combat-research.md) for before/after stats.
 
 ## Grass hut
 
@@ -186,6 +193,6 @@ The fortune teller offers advice for 10 gold. Rumors mention the Ring of Doom ai
 
 ## Additional player state to investigate
 
-State beyond the visible status screen includes the Ring of Doom, plague, protection from servant illnesses, the ability to charm a dragon on the next meeting, and knowledge of the prime command. Ring growth, plague progression, the illness-protection gate, and prime-command generation are now documented in `mechanics.md`. Acquisition paths and other effects still need reconstruction; these state variables are not additional main-loop events.
+State beyond the visible status screen includes the Ring of Doom, plague, protection from servant illnesses, the ability to charm a dragon on the next meeting, and knowledge of the prime command. Ring acquisition through shared combat, attack bonuses, forced fighting, growth, plague progression, the illness-protection gate, and prime-command generation are documented in `mechanics.md`. Other acquisition paths and effects still need reconstruction; these state variables are not additional main-loop events.
 
 The main-loop slots are now mapped in `mechanics.md`. The completeness of nested encounters and their conditions still needs investigation.

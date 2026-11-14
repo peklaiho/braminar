@@ -2,6 +2,7 @@
 """Run the original Braminar and read its DOS text screen through the debugger."""
 
 import argparse
+from contextlib import contextmanager
 import errno
 import fcntl
 import os
@@ -134,15 +135,22 @@ class Game:
         subprocess.run(['xdotool', *arguments], env=self.env, check=True,
                        stdout=subprocess.DEVNULL, timeout=self.timeout)
 
-    def dump(self, segment, offset, size):
-        path = self.path / 'MEMDUMP.BIN'
-        path.unlink(missing_ok=True)
+    def debug_command(self, command):
         self.output.clear()
-        command = f'MEMDUMPBIN {segment:04X}:{offset:04X} {size:X}'
         os.write(self.master, command.encode('ascii'))
         # Give curses time to consume the command before submitting Enter.
         self.settle(0.05)
         os.write(self.master, b'\n')
+        self.settle(0.05)
+
+    def dump(self, segment, offset, size):
+        if isinstance(segment, int):
+            segment = f'{segment:04X}'
+        elif segment not in ('CS', 'DS', 'ES', 'SS'):
+            raise ValueError('Use a numeric segment or CS, DS, ES, SS')
+        path = self.path / 'MEMDUMP.BIN'
+        path.unlink(missing_ok=True)
+        self.debug_command(f'MEMDUMPBIN {segment}:{offset:04X} {size:X}')
         deadline = time.monotonic() + self.timeout
         while not path.exists() or path.stat().st_size != size:
             if time.monotonic() >= deadline:
@@ -153,10 +161,34 @@ class Game:
             raise RuntimeError(f'Expected {size} dump bytes, got {len(data)}')
         return data
 
-    def screen(self):
+    @contextmanager
+    def debugger(self):
         self.keyboard('key', 'alt+Pause')
         self.settle(0.15)
         try:
+            yield
+        finally:
+            self.output.clear()
+            os.write(self.master, b'\x1b[15~')  # xterm F5: resume emulation.
+            self.await_output(b'(Running)')
+
+    def read_memory(self, segment, offset, size):
+        with self.debugger():
+            return self.dump(segment, offset, size)
+
+    def write_memory(self, segment, offset, data):
+        if segment not in ('DS', 'SS'):
+            raise ValueError('Memory probes may write only DS or SS')
+        if not 1 <= len(data) <= 256:
+            raise ValueError('Write between 1 and 256 bytes per probe')
+        with self.debugger():
+            values = ' '.join(f'{value:02X}' for value in data)
+            self.debug_command(f'SM {segment}:{offset:04X} {values}')
+            if self.dump(segment, offset, len(data)) != data:
+                raise RuntimeError('Debugger memory write did not match its readback')
+
+    def screen(self):
+        with self.debugger():
             bios = self.dump(0x40, 0, 0x100)
             mode = bios[0x49]
             columns = int.from_bytes(bios[0x4A:0x4C], 'little')
@@ -176,10 +208,6 @@ class Game:
                 characters = data[start:start + columns * 2:2]
                 lines.append(characters.replace(b'\0', b' ').decode('cp437').rstrip())
             return '\n'.join(lines).strip('\n')
-        finally:
-            self.output.clear()
-            os.write(self.master, b'\x1b[15~')  # xterm F5: resume emulation.
-            self.await_output(b'(Running)')
 
     def command(self, command):
         verb, _, argument = command.partition(' ')
@@ -237,7 +265,7 @@ def main():
                         continue
                     try:
                         game.command(command)
-                        print(game.screen(), flush=True)
+                        print(f'\n--- {command} ---\n{game.screen()}', flush=True)
                     except ValueError as error:
                         print(error, file=sys.stderr)
     except KeyboardInterrupt:

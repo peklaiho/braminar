@@ -21,7 +21,7 @@ result = (state >> 17) % bound;
 
 Thus each price is `5 + ((next_state >> 17) % 10)`. The remainder operation gives a slight distribution bias: among the 32,768 possible 15-bit outputs, residues 0 through 7 occur 3,277 times each, while residues 8 and 9 occur 3,276 times each. The remake preserves this mapping rather than replacing it with an unbiased bounded sampler.
 
-The remake uses this generator for character stats, prices, the recovered main event selector, and the enchanted forest. It seeds the state from the current time. The order of random calls within character generation is reproduced, but the original initial seed and full order of random calls elsewhere are not yet reproduced, so identical complete runs across the original and remake are not claimed.
+The remake uses this generator for character stats, prices, the recovered main event selector, band encounters and shared combat, the enchanted forest, and the gnome branch. It seeds the state from the current time. The order of random calls within character generation and the implemented encounter branches is reproduced, but the original initial seed and full order of random calls elsewhere are not yet reproduced, so identical complete runs across the original and remake are not claimed.
 
 ## Character generation
 
@@ -98,8 +98,8 @@ The two guarded slots do not reroll when their conditions fail. At character cre
 ### End-of-turn bookkeeping
 
 1. If `0 < HP < level * 10`, add approximately 0.10 HP (`0xF112`–`0xF15A`). The classic's six-byte real literal at `0xF151` is `7D CC CC CC CC 4C`, slightly below 0.10; the remake intentionally uses 0.10 without reproducing that representation detail. The comparison happens before addition; there is no clamp afterward. If HP is nonpositive, reset the real accumulator at `DS:0x02BA` to zero (`0xF15D`–`0xF17D`). Combat adds to this accumulator after a victory (`0x3C24`–`0x3C58`), supporting its interpretation as experience.
-2. If experience is strictly greater than 5, announce a level increase, add one level, subtract 5 experience, and add 10 HP (`0xF180`–`0xF205`). This is a single `if`, not a loop; exactly 5 does not qualify. Combat's full experience award formula remains to be recovered.
-3. If the ring byte is greater than zero and less than 100, add 5 (`0xF208`–`0xF237`). A value such as 99 becomes 104; there is no clamp to 100. It starts at zero. Other ring effects remain to be recovered.
+2. If experience is strictly greater than 5, announce a level increase, add one level, subtract 5 experience, and add 10 HP (`0xF180`–`0xF205`). This is a single `if`, not a loop; exactly 5 does not qualify. Shared combat awards `enemy level / 4.0`; specialized combat routines still need separate investigation.
+3. If the ring byte is greater than zero and less than 100, add 5 (`0xF208`–`0xF237`). A value such as 99 becomes 104; there is no clamp to 100. It starts at zero. Combat bonuses and forced fights are described below; effects in other encounters remain to be recovered.
 4. If the plague byte is positive, add 5, storing the low byte. If the resulting byte is at least 100, print `You have died from the plague` and set HP to zero (`0xF23A`–`0xF294`). Other routines establish the identification: plague acquisition increments this byte at `0x48B2`–`0x48BA`; the forest cure clears it at `0x8F0B`–`0x8F0E`.
 5. Subtract integer `(male servants + female servants + 1) / 2` from food (`0xF297`–`0xF2B9`). The signed integer division precedes conversion to real: this is not half a unit per person. With zero servants, consumption is zero; with nine servants, it is five. Counts are assumed nonnegative and within the signed 16-bit arithmetic range here; overflow behavior for extreme counts has not been reconstructed in C.
 6. If food is strictly negative, set it to zero. If the combined servant count exceeds one, announce starvation and decrement each positive servant count by one (`0xF2BC`–`0xF34D`). Reaching exactly zero does not cause starvation that turn. A sole remaining servant is not removed by this code. Starvation here does not damage the player.
@@ -107,7 +107,7 @@ The two guarded slots do not reroll when their conditions fail. At character cre
 
 The [first recorded session](captures/2026-11-14-session-01.md) independently shows HP increasing by 0.10 per completed turn and food decreasing by five for a party with nine servants. An elves' gift adds ten food before the five-unit consumption. These observations corroborate the binary calculations; they do not independently test every boundary above.
 
-The remake implements the dispatch, bookkeeping, forest, and occupied gnome branch of the hollow tree, with explicit placeholders for other encounters. Some event bodies and their random calls are still missing, so subsequent event sequences will differ even with equal initial seeds. The remake intentionally uses `double` for HP and experience without Real48 emulation, as recorded in `CHANGES.md`. Food is currently integer; whether inventory calculations require visible fractional quantities remains unresolved and must be checked as those mechanics are recovered. The final-assault transition is still deferred with the Keep implementation; `start_final_battle()` remains its intended stub entry point.
+The remake implements the dispatch, bookkeeping, band encounters and shared combat, forest, and occupied gnome branch of the hollow tree, with explicit placeholders for other encounters. Some event bodies and their random calls are still missing, so subsequent event sequences will differ even with equal initial seeds. The remake intentionally uses `double` for HP and experience without Real48 emulation, as recorded in `CHANGES.md`. Food is currently integer; whether inventory calculations require visible fractional quantities remains unresolved and must be checked as those mechanics are recovered. The final-assault transition is still deferred with the Keep implementation; `start_final_battle()` remains its intended stub entry point.
 
 ## Enchanted forest
 
@@ -146,3 +146,72 @@ The gate tests `level < 20 OR NOT staff` at `0xA106`–`0xA121`. Level 20 is suf
 `make` succeeds, retaining the existing warning about the unused final-battle stub. A temporary C harness built with AddressSanitizer and UndefinedBehaviorSanitizer checked bookkeeping against the documented boundaries: HP at and just below the limit, zero versus negative food, starvation with one or two servants, experience exactly five versus above five, one promotion per turn, dead-player experience reset, ring growth past 100, plague death, and byte wraparound. It also reproduced the captured forest resistance/elves state change with a selected seed. These are remake checks against the recovered rules, not additional observations of original-game boundary behavior.
 
 A terminal-based check of the full remake passed character creation, an encounter, and the next status with the expected HP and food changes. All 18 dispatch call sites, including guarded alternatives, were checked directly against the executable bytes. `git diff --check` passed. Most event bodies remain outside this validation; exact Real48 emulation is intentionally outside the remake's requirements.
+
+## Band encounters
+
+The routine at `0xD8FA`–`0xDEE6` is now implemented. It selects one of nine templates with `Random(9) + 1` (`0xD947`–`0xDA3A`). Startup assigns the following names and levels at `0xEC37`–`0xED23`:
+
+| Roll | Name | Level | Template at DS |
+| --- | --- | --- | --- |
+| 1 | Goblin | 5 | `0x0410` |
+| 2 | Gremlin | 6 | `0x03F3` |
+| 3 | Rust Golem | 6 | `0x042D` |
+| 4 | Orc | 7 | `0x044A` |
+| 5 | Ogre | 9 | `0x0467` |
+| 6 | Pirate | 10 | `0x0484` |
+| 7 | Troglodyte | 11 | `0x04A1` |
+| 8 | Drow Elf | 12 | `0x04BE` |
+| 9 | Demon | 14 | `0x04DB` |
+
+Each template is 29 bytes: a Pascal string of capacity 20 (21 bytes including length), a signed 16-bit level, and six bytes for HP. The band copies the full template to its stack; the shared combat routine generates fresh HP.
+
+After choosing the template, roll three independent `Random(10) + 1` demands in order: male servants, female servants, gold (`0xDA7A`–`0xDAAD`). The offer requires all three resources. Read F/G/R case-insensitively, repeating invalid input. If the ring byte is strictly greater than 45, print that it compels fighting and choose F without reading a key (`0xDBDC`–`0xDC5B`).
+
+- Fight calls the shared routine below (`0xDC6B`–`0xDC7B`).
+- Give succeeds only with enough of each demanded resource, and subtracts all three demands. If any is insufficient, print the assassination message and set HP to zero; this branch does not actually clear the remaining inventory (`0xDC89`–`0xDDA7`). It returns after a delay, without a keypress pause.
+- Run with a horse, no cart, and more than two servants sets each sex's count to one if it was greater than one. This is not a loss of just one servant (`0xDDB5`–`0xDE34`).
+- On every run attempt, roll `Random(100) + 1`, even with a horse or a low-level enemy. The player is caught only if there is no horse, enemy level is greater than nine, and the roll is strictly less than `enemy level * 3` (`0xDE37`–`0xDE78`). Caught players enter shared combat. Otherwise print `You got away!`. The routine delays after the outcome, without adding a separate keypress pause.
+
+These rules were checked in [controlled original-game probes](combat-research.md), including successful and failed payment, a horse escape, and a caught escape. Controlled probes alter only temporary emulator state and are distinct from the ordinary playthrough.
+
+## Shared combat
+
+`0x2DB4`–`0x3E6B` implements the shared routine called by band encounters and the river's champion path (`0x9D99`). Wizard, dragon, Mad King, and other specialized fights use separate routines and remain unfinished; these rules must not be applied to them without checking their code.
+
+### Setup and round selection
+
+1. A Rust Golem clears all swords and daggers before any poison choice (`0x2DC4`–`0x2E28`). A Drow Elf clears bows and arrows (`0x2E2B`–`0x2E91`). The effects are based on the monster name, not on a chance roll.
+2. If poison is available, offer to use it. Yes consumes one dose. Regardless of the answer, next roll `Random(7) + 1` and multiply by enemy level to generate HP. If poison was used, set that generated HP to zero (`0x2E94`–`0x2F1D`). Thus a poisoned enemy still consumes the HP random call and equipment destruction still occurs.
+3. While both participants have positive HP, run a round. Roll `Random(9) + 1` for the player's attack; add two if any ring is held (`0x2F4B`–`0x2F70`).
+4. If the player has a sword or dagger, or has both a bow and at least one arrow, roll `Random(100) + 1`; add one to the attack result if this roll is less than 26. Skip this random call entirely when unarmed. Clamp the final attack result to nine (`0x2F73`–`0x2FD8`). Weapon counts do not add further bonuses.
+5. Choose blade text if any sword or dagger is held, otherwise bow text if a bow and arrows are available, otherwise unarmed text. A bow shot consumes one arrow, including a miss. Blades take precedence over a bow, so holding both does not consume arrows. Damage depends on the attack result, not on which of these three text categories is used (`0x2FDB`–`0x382E`).
+6. The enemy retaliates even if that attack reduced its HP to zero or below. An enemy of level ten or less rolls `Random(9) + 1`; higher-level enemies roll `Random(8) + 2`. The player's level does not affect these rolls (`0x3831`–`0x3863`).
+7. Show both HP totals and pause for a key after every round, including the fatal round (`0x3AFC`–`0x3B5F`). The player does not choose an attack or weapon each round. Recheck both HP totals only after that pause.
+
+### Damage table
+
+The table gives the ordinary decimal values represented by the classic's constants. The remake uses these decimals with `double`, following the numeric-simplification guideline. Preserve significant values such as 0.01 and 1.02, which can affect displayed HP and survival.
+
+| Result | Damage to monster | Damage to player |
+| --- | --- | --- |
+| 1 | 0 | 0 |
+| 2 | 0.01 | 0 |
+| 3 | 0.20 | 0.01 |
+| 4 | 2.10 | 0.10 |
+| 5 | 3.20 | 1.02 |
+| 6 | 3.90 | 2.10 |
+| 7 | 4.60 | 3.20 |
+| 8 | 5.10 | 4.10 |
+| 9 | 6.20 | 5.00 |
+
+Player constants occur at `0x3178`, `0x3259`, `0x333A`, `0x3449`, `0x3538`, `0x3627`, `0x3728`, `0x3825`; enemy constants occur at `0x38FA`, `0x394C`, `0x399E`, `0x39EC`, `0x3A3B`, `0x3A98`, `0x3AF0`. The enemy's result-two message, `He nudged you slightly.`, does not subtract HP (`0x389E`–`0x38C2`).
+
+### Outcome, experience, and loot
+
+The routine reports the player's survival and the monster's survival separately (`0x3B62`–`0x3C21`), so both may die in the same round. Surviving players gain `enemy level / 4.0` experience (`0x3C24`–`0x3C58`), including victories obtained with poison. The real division preserves fractional experience: a level-five Goblin gives 1.25, a level-eleven Troglodyte gives 2.75. Main-loop level advancement follows later.
+
+Always roll `Random(100) + 1` after the fight, even if the player died or already owns a ring. If that roll is less than player level, the player is alive, and the ring byte is zero, award a ring by setting the byte to five (`0x3C5B`–`0x3CEA`). The ordinary end-of-turn increment then raises a newly acquired ring to ten.
+
+Survivors next roll male servants 1–20, female servants 1–20, and gold 1–50, in that order. Add all three to inventory and add food equal to the sum of those two servant awards (`0x3CED`–`0x3E57`). No loot calls are made for a dead player. Both success and death end with a keypress pause (`0x3E5A`–`0x3E60`). End-of-turn bookkeeping then runs, consuming food for the enlarged party and checking for level advancement or death.
+
+The [probe ledger](combat-research.md) records scenarios and validation. Round HP, arrow use, equipment loss, experience, ring acquisition, rewards, end-of-turn state, and RNG progression were compared against original memory checkpoints. These checks establish the recorded cases, not complete parity for every possible state or for the specialized combat routines.

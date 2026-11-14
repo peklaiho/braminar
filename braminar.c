@@ -38,6 +38,12 @@ typedef struct {
     bool illness_protection;
 } Player;
 
+typedef struct {
+    const char* name;
+    int level;
+    double hit_points;
+} Monster;
+
 static uint32_t random_state;
 static int male_servant_price;
 static int female_servant_price;
@@ -279,9 +285,228 @@ static void event_village(void)
     puts("\nYou arrive at a village.");
 }
 
-static void event_combat(void)
+static int read_choice(const char* choices)
 {
-    puts("\nYou encounter a monster.");
+    for (;;) {
+        int ch = read_key();
+        if (ch == EOF) {
+            return EOF;
+        }
+        ch = toupper((unsigned char)ch);
+        if (ch != '\0' && strchr(choices, ch) != NULL) {
+            putchar('\n');
+            return ch;
+        }
+    }
+}
+
+static void combat_round(Player* player, Monster* monster)
+{
+    static const double player_damage[] = {0, 0, 0.01, 0.20, 2.10, 3.20, 3.90, 4.60, 5.10, 6.20};
+    static const double monster_damage[] = {0, 0, 0, 0.01, 0.10, 1.02, 2.10, 3.20, 4.10, 5.00};
+    static const char* const attacks[3][9] = {
+        {
+            "You swing but miss him.",
+            "You bump him a bit.",
+            "You hit him lightly.",
+            "You hit him good.",
+            "A strong uppercut knocks him back.",
+            "You throw a stone & hit him.",
+            "You bust a branch over his head.",
+            "You push his face into a tree.",
+            "You slam the brute on the floor.",
+        },
+        {
+            "You Swing, but miss.",
+            "You nick him slightly.",
+            "You cut him slightly.",
+            "Your blade draws blood.",
+            "You gouge him deep, but he still stands.",
+            "Your blade reaches bone.",
+            "You sever a finger.",
+            "You parry, and open his side.",
+            "You nearly sever a limb.",
+        },
+        {
+            "You Shoot, but miss.",
+            "Your arrow scratches him.",
+            "Your arrow slices him.",
+            "Your arrow draws blood.",
+            "Your arrow sinks deep, but he's ok.",
+            "An arrow pierces his leg.",
+            "An arrow pierces his arm.",
+            "You dodge, and plant one in his leg.",
+            "An arrow lodges deep in his chest.",
+        },
+    };
+    static const char* const retaliation[] = {
+        "The beast misses you.",
+        "He nudged you slightly.",
+        "He scratched you.",
+        "He knocked the wind out of you.",
+        "He slugged you in the gut well.",
+        "He punched you in the face.",
+        "He threw a rock and hit you.",
+        "He hit you on the back with a tree branch.",
+        "He flipped you over, and slammed you.",
+    };
+
+    /* Shared combat at 0x2F4B-0x3B53; see doc/mechanics.md#shared-combat. */
+    int attack = random_number(9) + 1;
+    if (player->ring_power > 0) {
+        attack += 2;
+    }
+    int weapon = 0;
+    if (player->swords > 0 || player->daggers > 0) {
+        weapon = 1;
+    } else if (player->bows > 0 && player->arrows > 0) {
+        weapon = 2;
+    }
+    if (weapon != 0 && random_number(100) + 1 < 26) {
+        ++attack;
+    }
+    if (attack > 9) {
+        attack = 9;
+    }
+    puts(attacks[weapon][attack - 1]);
+    monster->hit_points -= player_damage[attack];
+    if (weapon == 2) {
+        --player->arrows;
+    }
+
+    /* The original retaliates even if the player's blow killed the monster. */
+    int counterattack = monster->level > 10 ? random_number(8) + 2 : random_number(9) + 1;
+    puts(retaliation[counterattack - 1]);
+    player->hit_points -= monster_damage[counterattack];
+    printf("\n---Player: %5.2f          Monster: %5.2f\n",
+           player->hit_points, monster->hit_points);
+}
+
+static bool fight_monster(Player* player, Monster monster)
+{
+    if (strcmp(monster.name, "Rust Golem") == 0) {
+        puts("The rust golem causes any swords/daggers to rust.");
+        player->swords = 0;
+        player->daggers = 0;
+    }
+    if (strcmp(monster.name, "Drow Elf") == 0) {
+        puts("Drow elves Cause Bowstrings to snap & arrows to warp.");
+        player->bows = 0;
+        player->arrows = 0;
+    }
+    bool poisoned = false;
+    if (player->poison > 0) {
+        puts("Do you wish to use your poison?");
+        printf("(Y/N) ");
+        int choice = read_choice("YN");
+        if (choice == EOF) {
+            return false;
+        }
+        if (choice == 'Y') {
+            --player->poison;
+            poisoned = true;
+        }
+    }
+    monster.hit_points = (random_number(7) + 1) * monster.level;
+    if (poisoned) {
+        monster.hit_points = 0;
+    }
+    while (player->hit_points > 0 && monster.hit_points > 0) {
+        combat_round(player, &monster);
+        if (!wait_for_key()) {
+            return false;
+        }
+    }
+    puts(player->hit_points > 0 ? "You Won the fight!" : "You did not survive the fight.");
+    puts(monster.hit_points > 0 ? "The monster won the fight." : "The monster is dead.");
+    if (player->hit_points > 0) {
+        player->experience += monster.level / 4.0;
+    }
+    int ring_roll = random_number(100) + 1;
+    if (ring_roll < player->level && player->hit_points > 0 && player->ring_power == 0) {
+        puts("You find a shiny ring on your opponent's finger & take it.");
+        player->ring_power = 5;
+    }
+    if (player->hit_points > 0) {
+        int males = random_number(20) + 1;
+        int females = random_number(20) + 1;
+        int gold = random_number(50) + 1;
+        puts("The monsters fled leaving behind,");
+        printf("     %d Male servants\n     %d Female Servants\n", males, females);
+        printf("     %d Gold Pieces\n     %d Food.\n", gold, males + females);
+        player->male_servants += males;
+        player->female_servants += females;
+        player->gold += gold;
+        player->food += males + females;
+    }
+    return wait_for_key();
+}
+
+static bool event_combat(Player* player)
+{
+    static const Monster monsters[] = {
+        {"Goblin", 5, 0}, {"Gremlin", 6, 0}, {"Rust Golem", 6, 0},
+        {"Orc", 7, 0}, {"Ogre", 9, 0}, {"Pirate", 10, 0},
+        {"Troglodyte", 11, 0}, {"Drow Elf", 12, 0}, {"Demon", 14, 0},
+    };
+    puts("\nThings seem strangely quiet when out of nowhere jumps");
+    Monster monster = monsters[random_number(9)];
+    printf("A band of %ss.  They look grumpy.\n", monster.name);
+    int males = random_number(10) + 1;
+    int females = random_number(10) + 1;
+    int gold = random_number(10) + 1;
+    puts("They say they will let you pass if you give them:");
+    printf("%d  Male servants.\n%d  Female servants.\n%d  gold pieces.\n", males, females, gold);
+    puts("or you may fight their champ, and win their hoard.\n");
+    puts("Do you wish to (F)ight (G)ive, or (R)un?");
+    int choice;
+    if (player->ring_power > 45) {
+        puts("Your ring compels you to fight.");
+        choice = 'F';
+    } else {
+        choice = read_choice("FGR");
+    }
+    if (choice == EOF) {
+        return false;
+    }
+    if (choice == 'F') {
+        return fight_monster(player, monster);
+    }
+    if (choice == 'G') {
+        if (player->male_servants >= males && player->female_servants >= females && player->gold >= gold) {
+            puts("They take their goodies and leave.");
+            player->male_servants -= males;
+            player->female_servants -= females;
+            player->gold -= gold;
+        } else {
+            printf("You have insufficient funds.  The %ss\n", monster.name);
+            puts("Take what you have and assassinate you.");
+            player->hit_points = 0;
+        }
+    } else {
+        if (player->horse && !player->cart && player->male_servants + player->female_servants > 2) {
+            puts("You lose some servants (you have no cart).");
+            if (player->male_servants > 1) {
+                player->male_servants = 1;
+            }
+            if (player->female_servants > 1) {
+                player->female_servants = 1;
+            }
+        }
+        int escape_roll = random_number(100) + 1;
+        if (!player->horse && monster.level > 9 && escape_roll < monster.level * 3) {
+            puts("They caught you.  You must battle.");
+            if (!fight_monster(player, monster)) {
+                return false;
+            }
+        } else {
+            puts("You got away!");
+        }
+    }
+    fflush(stdout);
+    struct timespec delay = {1, choice == 'R' ? 500000000 : 0};
+    nanosleep(&delay, NULL);
+    return true;
 }
 
 static void event_dark_castle(void)
@@ -443,7 +668,7 @@ static bool run_event(Player* player)
     case 1: event_village(); break;
     case 2: event_city(); break;
     case 3: event_gypsy_camp(); break;
-    case 4: event_combat(); break;
+    case 4: return event_combat(player);
     case 5: event_thicket(); break;
     case 6: return event_hollow_tree(player);
     case 7: event_grass_hut(); break;
@@ -451,12 +676,12 @@ static bool run_event(Player* player)
         if (player->ring_power > 0) {
             event_mountain_trail();
         } else {
-            event_combat();
+            return event_combat(player);
         }
         break;
     case 9:
         if (player->illness_protection) {
-            event_combat();
+            return event_combat(player);
         } else if (player->male_servants + player->female_servants == 0) {
             puts("There seems to be a bug going around.");
             return true;

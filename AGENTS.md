@@ -21,6 +21,8 @@ Focus initially on the main game. Implement the final battle later, with a separ
 
 Run `./dosbox_game.py` from the project root to play the original game and capture its text screen directly from video memory. Use `key`, `text`, `screen`, `wait`, and `quit` interactively, or repeat `-c 'COMMAND'` for scripted sequences. See [DOSBox tool usage](doc/dosbox-tool.md) for setup, examples, and capture limitations. The tool runs a temporary copy of the DOS files and cleans up its processes on exit.
 
+Use `./combat_probe.py --seed 6427` for a controlled original-game band encounter and `./check_combat.py --sanitize` to compare the remake with saved combat checkpoints. See the same usage document for options and the [combat ledger](doc/combat-research.md) for evidence. Keep controlled memory/seed experiments explicitly labelled and separate from unmodified playthroughs.
+
 ## Reconstructing the game
 
 Capture information from every encounter as it occurs during play, including random events outside the current research focus. Save raw transcripts in `doc/captures/`, recording texts, choices, inputs, resulting screens, and visible state changes; summarize findings in `doc/events.md` and recovered rules in `doc/mechanics.md`, linking to the evidence. Do not restrict a playthrough to recording one targeted event and discard other encounters. Build the remake incrementally from confirmed texts and observed flow, then increase its precision as further gameplay and binary analysis establish conditions, arithmetic, and probabilities. Leave explicit placeholders and focused TODO comments linking to the research notes for unresolved mechanics, rather than silently inventing rules; keep observations distinct from verified rules.
