@@ -13,8 +13,11 @@ Focus initially on the main game. Implement the final battle later, with a separ
 ## Code
 
 - Write clean, readable C99 targeting POSIX systems, primarily Linux and BSD. Use the C standard library and POSIX APIs without external libraries or dependencies. Windows support is deferred.
-- Use line input for the player name and immediate single-character input for all other current prompts. Gender accepts uppercase or lowercase M/F and repeats for other characters. Restore terminal settings after character input and on exit or interruption.
 - Prefer simple functions, clear names, and straightforward control flow.
+
+## Running the game
+
+Run `./dosbox_game.py` from the project root to play the original game and capture its text screen directly from video memory. Use `key`, `text`, `screen`, `wait`, and `quit` interactively, or repeat `-c 'COMMAND'` for scripted sequences. See [DOSBox tool usage](doc/dosbox-tool.md) for setup, examples, and capture limitations. The tool runs a temporary copy of the DOS files and cleans up its processes on exit.
 
 ## Reconstructing the game
 
