@@ -72,9 +72,9 @@ The first record decodes to:
 | Answer 2 | `0x00000066` | 15 | Orange Sherbert |
 | Answer 3 | `0x0000007B` | 13 | Guacamole Dip |
 
-### Rules still to recover
+### Question selection and answers
 
-There is no separate answer-key field in this record layout. The binary must be examined to establish how the correct choice is determined, which records can be selected, and how the question event awards the prime command. Empty records do not establish whether the original code can select them.
+There is no separate answer-key field in this record layout. Binary inspection now confirms that Pan selects only the first 20 records and rolls the answer number after the player chooses; success generates a five-letter prime command. See [the recovered Pan rules](mechanics.md#statue-of-pan) for offsets and the observed example. The event has not yet been implemented in the remake.
 
 ## Binary text extraction
 

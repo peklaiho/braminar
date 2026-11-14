@@ -32,6 +32,10 @@ typedef struct {
     int daggers;
     bool horse;
     bool cart;
+    double experience;
+    uint8_t ring_power;
+    uint8_t plague;
+    bool illness_protection;
 } Player;
 
 static uint32_t random_state;
@@ -198,6 +202,10 @@ static void generate_player_stats(Player* player)
     player->daggers = 0;
     player->horse = false;
     player->cart = false;
+    player->experience = 0;
+    player->ring_power = 0;
+    player->plague = 0;
+    player->illness_protection = false;
 
     male_servant_price = random_number(10) + 5;
     female_servant_price = random_number(10) + 5;
@@ -281,9 +289,60 @@ static void event_dark_castle(void)
     puts("\nYou find the Dark Castle of the Mad King.");
 }
 
-static void event_enchanted_forest(void)
+static bool event_enchanted_forest(Player* player)
 {
-    puts("\nYou enter an enchanted forest.");
+    /* Recovered at 0x8BA7-0x8F9A; see doc/mechanics.md#enchanted-forest. */
+    puts("\nYou come upon an enchanted forest.  Enter?");
+    int ch;
+    do {
+        printf("(Y/N) ");
+        ch = read_key();
+        if (ch == EOF) {
+            return false;
+        }
+        ch = toupper((unsigned char)ch);
+        putchar('\n');
+    } while (ch != 'Y' && ch != 'N');
+    if (ch == 'N') {
+        puts("You move on.");
+        return true;
+    }
+
+    if (random_number(100) + 1 < player->level + 5) {
+        puts(player->gender == 'M'
+             ? "You are confronted by a beautiful Female Nymph."
+             : "You are confronted by an attractive Male Nymph.");
+        puts("The nymph is luring you deep into the forest.");
+        if (random_number(100) + 1 < 50 + 2 * player->level) {
+            puts("but you resist & the nymph disappears.");
+        } else {
+            puts("& you follow.  You are lost in La La Land.");
+            player->hit_points = 0;
+        }
+    }
+
+    if (player->hit_points > 0 && player->ring_power == 0) {
+        puts("The elven folk come out and greet you.");
+        puts("They give you food for everyone in your party.");
+        player->food += player->male_servants + player->female_servants + 1;
+        if (!player->good_looks) {
+            puts("The elves also cure your ugliness.");
+            player->good_looks = true;
+        }
+        if (random_number(100) + 1 < 21) {
+            puts("A good faerie appears to wish you well on your quest.");
+            if (player->plague > 0) {
+                puts("She cures you of the Plague.");
+                player->plague = 0;
+            } else {
+                puts("She restores all your hit points.");
+                if (player->hit_points < player->level * 10) {
+                    player->hit_points = player->level * 10;
+                }
+            }
+        }
+    }
+    return wait_for_key();
 }
 
 static void event_overlords_keep(void)
@@ -331,28 +390,102 @@ static void event_gypsy_camp(void)
     puts("\nYou come upon a wandering Gypsy camp.");
 }
 
-static void run_event(void)
+static void event_mountain_trail(void)
 {
-    static void (*const events[])(void) = {
-        event_city,
-        event_village,
-        event_combat,
-        event_dark_castle,
-        event_enchanted_forest,
-        event_overlords_keep,
-        event_flowing_river,
-        event_hollow_tree,
-        event_grass_hut,
-        event_sick_servants,
-        event_statue_of_pan,
-        event_storm,
-        event_thicket,
-        event_gypsy_camp,
-    };
+    puts("\nYou come upon a mountain trail.");
+}
 
-    /* Equal chances are placeholders until the original probabilities are recovered. */
-    size_t count = sizeof(events) / sizeof(events[0]);
-    events[random_number((int)count)]();
+static void event_empty_tree(void)
+{
+    puts("\nYou find a hollow tree with a door.  No one seems to be home.");
+}
+
+static bool run_event(Player* player)
+{
+    /* Original dispatch at 0xEF97-0xF10F; see doc/mechanics.md#main-turn-loop. */
+    switch (random_number(16) + 1) {
+    case 1: event_village(); break;
+    case 2: event_city(); break;
+    case 3: event_gypsy_camp(); break;
+    case 4: event_combat(); break;
+    case 5: event_thicket(); break;
+    case 6: event_hollow_tree(); break;
+    case 7: event_grass_hut(); break;
+    case 8:
+        if (player->ring_power > 0) {
+            event_mountain_trail();
+        } else {
+            event_combat();
+        }
+        break;
+    case 9:
+        if (player->illness_protection) {
+            event_combat();
+        } else if (player->male_servants + player->female_servants == 0) {
+            puts("There seems to be a bug going around.");
+            return true;
+        } else {
+            event_sick_servants();
+        }
+        break;
+    case 10: event_storm(); break;
+    case 11: event_dark_castle(); break;
+    case 12: return event_enchanted_forest(player);
+    case 13: event_empty_tree(); break;
+    case 14: event_flowing_river(); break;
+    case 15: event_statue_of_pan(); break;
+    case 16: event_overlords_keep(); break;
+    }
+    /* TODO: Recover these branches and their pauses; see doc/events.md. */
+    puts("This encounter is not implemented yet.");
+    return wait_for_key();
+}
+
+static bool finish_turn(Player* player)
+{
+    /* Preserve this order: 0xF112-0xF36D; see doc/mechanics.md#main-turn-loop. */
+    if (player->hit_points > 0 && player->hit_points < player->level * 10) {
+        /* Real48 literal at 0xF151, approximately 0.1. */
+        /* TODO: Match Real48 rounding after addition; see doc/mechanics.md. */
+        player->hit_points += 0x1.9999999998p-4;
+    }
+    if (player->hit_points <= 0) {
+        player->experience = 0;
+    }
+    if (player->experience > 5) {
+        puts("You have raised a level.");
+        ++player->level;
+        player->experience -= 5;
+        player->hit_points += 10;
+    }
+    if (player->ring_power > 0 && player->ring_power < 100) {
+        player->ring_power += 5;
+    }
+    if (player->plague > 0) {
+        player->plague += 5;
+    }
+    if (player->plague >= 100) {
+        puts("You have died from the plague");
+        player->hit_points = 0;
+    }
+    player->food -= (player->male_servants + player->female_servants + 1) / 2;
+    if (player->food < 0) {
+        player->food = 0;
+        if (player->male_servants + player->female_servants > 1) {
+            puts("You lose some servants due to starvation.");
+            if (player->male_servants > 0) {
+                --player->male_servants;
+            }
+            if (player->female_servants > 0) {
+                --player->female_servants;
+            }
+        }
+    }
+    if (player->hit_points <= 0) {
+        puts("Game Over.");
+        return false;
+    }
+    return true;
 }
 
 int main(void)
@@ -380,8 +513,7 @@ int main(void)
             break;
         }
 
-        run_event();
-        if (!wait_for_key()) {
+        if (!run_event(&player) || !finish_turn(&player)) {
             break;
         }
     }

@@ -21,6 +21,8 @@ Run `./dosbox_game.py` from the project root to play the original game and captu
 
 ## Reconstructing the game
 
+Capture information from every encounter as it occurs during play, including random events outside the current research focus. Save raw transcripts in `doc/captures/`, recording texts, choices, inputs, resulting screens, and visible state changes; summarize findings in `doc/events.md` and recovered rules in `doc/mechanics.md`, linking to the evidence. Do not restrict a playthrough to recording one targeted event and discard other encounters. Build the remake incrementally from confirmed texts and observed flow, then increase its precision as further gameplay and binary analysis establish conditions, arithmetic, and probabilities. Leave explicit placeholders and focused TODO comments linking to the research notes for unresolved mechanics, rather than silently inventing rules; keep observations distinct from verified rules.
+
 - Build the first version by extracting the original texts and playing the DOS game to understand its flow and behavior.
 - Reverse engineer the binaries where needed to recover the mechanics accurately. Combat is especially important: probabilities, arithmetic, rounding, and other relevant numeric behavior must match the original.
 - Distinguish verified behavior from observations and assumptions. Do not treat a plausible implementation as a confirmed original rule.
