@@ -6,7 +6,7 @@ Recovered rules and their binary evidence belong in [mechanics.md](mechanics.md)
 
 Preserve the player-visible experience when implementing these findings. Minor numeric precision details with no observable effect may be simplified under the guideline in `mechanics.md`; record intentional differences in [CHANGES.md](../CHANGES.md). Keep original observations distinct from those implementation choices.
 
-The main loop selects one of 16 slots, with state-dependent substitutions and two separate hollow-tree routines. The recovered dispatch, healing, food consumption, starvation, and level advancement are described in [mechanics.md](mechanics.md#main-turn-loop). Band encounters and shared combat, the river, the enchanted forest, the occupied gnome branch of the hollow tree, and the Keep's prerequisite rejection are implemented; other location bodies remain incomplete.
+The main loop selects one of 16 slots, with state-dependent substitutions and two separate hollow-tree routines. The recovered dispatch, healing, food consumption, starvation, and level advancement are described in [mechanics.md](mechanics.md#main-turn-loop). Band encounters and shared combat, the river, the enchanted forest, both branches of the slot-6 hollow tree, and the Keep's prerequisite rejection are implemented; other location bodies remain incomplete.
 
 ## Recorded playthroughs
 
@@ -15,6 +15,7 @@ Capture every encountered event, including encounters outside the current resear
 - [2026-11-14, session 01](captures/2026-11-14-session-01.md): Pan's riddle, a goblin band, enchanted forest, occupied hollow tree, village market/tavern/store/inn, and a river vision. Includes the initial stats and intermediate status screens. The ledger distinguishes observed outcomes from rules subsequently recovered in the binary.
 - [2026-11-14, combat research](combat-research.md): an ordinary playthrough with two gnome visits, village trading and lodging, and a fatal Demon fight; twelve separately labelled controlled combat experiments with memory checkpoints.
 - [2026-11-14, session 03](session-03.md): five ordinary turns covering a city visit, a victorious Drow fight after failed flight, a river vision, Keep rejection, and servant illness; five separate controlled river checks.
+- [2026-11-14, session 04](session-04.md): ordinary play reaching an empty gnome home, Anthrax's laboratory, and a Gypsy camp; eight separate controlled empty-home checks.
 
 ## City and Village
 
@@ -129,7 +130,7 @@ Additional strings describe the gnome announcing food or giving healing ointment
 
 The main dispatch confirms two separate tree slots. Session 01 entered the occupied variant: the gnome announced three food and five HP of ointment. The HP award occurred; the food award did not. The [binary confirms this discrepancy](mechanics.md#gnomes-announced-food-gift). The second tree routine is selected independently by slot 13, while slot 6 can itself branch to an empty home.
 
-The remake implements the occupied gnome branch and intentionally fixes its missing food award: the announced 3–8 food is added to inventory before normal turn consumption. Healing remains 1–5 HP when below `level * 10`, without a subsequent cap. See [CHANGES.md](../CHANGES.md#bug-fixes). Empty-home choices remain placeholders.
+The remake implements the occupied gnome branch and intentionally fixes its missing food award: the announced 3–8 food is added to inventory before normal turn consumption. Healing remains 1–5 HP when below `level * 10`, without a subsequent cap. See [CHANGES.md](../CHANGES.md#bug-fixes). Slot 6's empty-home choices are now implemented: steal 1–100 food, take a random trunk outcome (arrows, medicine, Staff or substitute medicine, Rune Guardian damage), or leave. See [recovered rules](mechanics.md#empty-gnome-home) and [session 04](session-04.md). Slot 13 remains a separate unfinished event.
 
 The ordinary combat research playthrough observed two more gnome visits: announced food/healing of five/one and three/two respectively. Both visits again showed healing applied but no food gift in the classic. See the [combat ledger](combat-research.md) for before/after stats.
 
@@ -147,6 +148,8 @@ Additional strings in the hut's surrounding block (`0x6CD3` to `0x7558`) suggest
 - Discover an astral gate through which a creature can appear.
 
 These branches need control-flow verification before their grouping under the hut is considered confirmed. A later block repeats the old-man and puppy scenes and describes a watching deity rewarding a good deed or reducing the player's level. Possible rewards include servants, food, poison, and the Talisman.
+
+Session 04 entered a grass hut and found nothing. After its pause, status showed only the ordinary 0.10 HP healing and 42 food consumed for 84 servants plus the player. This verifies one empty visit, not the other hut branches.
 
 ## Mountain trail and guru
 
@@ -177,6 +180,8 @@ Session 01 asked `How much weight can an unladen swallow bear?` with choices `2 
 - If take shelter, wait for storm to pass
 - Potentially lose servants if no shelter
 
+Session 04 declined shelter from a tornado, lost servants, and then suffered starvation. Binary inspection separates the storm losses (five males, two females) from starvation (one of each). All eight storm types and shelter/loss arithmetic are now [documented](mechanics.md#storms); the event remains unimplemented.
+
 ## Thicket in the woods
 
 - Chance for combat
@@ -189,7 +194,9 @@ Strings from around `0xDEF5` describe a dark dwelling or laboratory, with a roas
 - On leaving, discover a pentacle and choose whether to step into it.
 - Pentacle messages describe receiving a golden ring, being thrown out by a freezing wind, being hit by a pie, a figure appearing, or being raised to level 20 and given the Staff.
 
-These are string findings; potion selection, effects without explicit numeric messages, pentacle outcomes, and their conditions need code verification.
+Session 04 entered the laboratory and defeated Anthrax after level drain, three servant deaths, plague, a staff strike, and lightning. Rewards announced 30 males, 47 females, and 100 gold; food also increased. The full fight and evidence limits are recorded in [session 04](session-04.md#anthrax-observations). Wizard combat remains a separate unfinished routine.
+
+Potion and pentacle details above remain string findings; selection, effects without explicit numeric messages, outcomes, and their conditions need code verification.
 
 ## Wandering Gypsy Camp
 
@@ -197,6 +204,8 @@ These are string findings; potion selection, effects without explicit numeric me
 - Fortune teller
 
 The fortune teller offers advice for 10 gold. Rumors mention the Ring of Doom aiding combat and compelling or corrupting its owner, the guru removing it, and other encounter hints.
+
+Session 04 played Dagger's Hand: the player succeeded, the opponent hit a finger, and the player won. After the result pause, the fortune teller offered advice; buying it produced `Pan will tell you the Prime Command.` Gold changed from 108 to 99 across the game and advice together. This supports a net one-gold game prize on this path, but betting arithmetic and probabilities still need binary verification. See [the ledger](session-04.md).
 
 ## Additional player state to investigate
 

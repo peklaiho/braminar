@@ -678,8 +678,41 @@ static bool event_hollow_tree(Player* player)
         puts("No one seems to be home.");
         puts("There is a kettle of stew over a fire, and a large");
         puts("wooden trunk next to the wall.");
-        /* TODO: Recover the empty home's choices and effects; see doc/events.md. */
-        puts("This encounter is not implemented yet.");
+        /* Slot 6 empty home at 0x6A48-0x6C99; see doc/mechanics.md#empty-gnome-home. */
+        puts("\nyou may (S)teal food, (T)ake from trunk or (L)eave.");
+        int choice = read_choice("STL");
+        if (choice == EOF) {
+            return false;
+        }
+        if (choice == 'S') {
+            int food = random_number(100) + 1;
+            printf("You steal %d food.\n", food);
+            player->food += food;
+        } else if (choice == 'T') {
+            switch (random_number(4) + 1) {
+            case 1:
+                puts("you find some arrows!!!");
+                player->arrows += random_number(20) + 1;
+                break;
+            case 2:
+                puts("You Find some medicine!!");
+                player->medicine += random_number(10) + 1;
+                break;
+            case 3:
+                if (!player->staff_of_aviatar) {
+                    puts("You find the STAFF of AVIATAR!!!!!");
+                    player->staff_of_aviatar = true;
+                } else {
+                    puts("You find some medicine!!!");
+                    player->medicine += random_number(10) + 1;
+                }
+                break;
+            case 4:
+                puts("You release a Rune Guardian which comes out and burns you.");
+                player->hit_points -= random_number(5) + 1;
+                break;
+            }
+        }
     }
     return wait_for_key();
 }

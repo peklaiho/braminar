@@ -107,7 +107,7 @@ The two guarded slots do not reroll when their conditions fail. At character cre
 
 The [first recorded session](captures/2026-11-14-session-01.md) independently shows HP increasing by 0.10 per completed turn and food decreasing by five for a party with nine servants. An elves' gift adds ten food before the five-unit consumption. These observations corroborate the binary calculations; they do not independently test every boundary above.
 
-The remake implements the dispatch, bookkeeping, band encounters and shared combat, river, forest, occupied gnome branch of the hollow tree, and the Keep's prerequisite rejection, with explicit placeholders for other encounters. Some event bodies and their random calls are still missing, so subsequent event sequences will differ even with equal initial seeds. The remake intentionally uses `double` for HP and experience without Real48 emulation, as recorded in `CHANGES.md`. Food is currently integer; whether inventory calculations require visible fractional quantities remains unresolved and must be checked as those mechanics are recovered. The final-assault transition is still deferred with the eligible Keep branch; `start_final_battle()` remains its intended stub entry point.
+The remake implements the dispatch, bookkeeping, band encounters and shared combat, river, forest, both branches of the slot-6 hollow tree, and the Keep's prerequisite rejection, with explicit placeholders for other encounters. Some event bodies and their random calls are still missing, so subsequent event sequences will differ even with equal initial seeds. The remake intentionally uses `double` for HP and experience without Real48 emulation, as recorded in `CHANGES.md`. Food is currently integer; whether inventory calculations require visible fractional quantities remains unresolved and must be checked as those mechanics are recovered. The final-assault transition is still deferred with the eligible Keep branch; `start_final_battle()` remains its intended stub entry point.
 
 ## Enchanted forest
 
@@ -135,7 +135,20 @@ In the occupied branch of the hollow-tree routine, the original announces a gift
 
 The remake intentionally fixes this classic bug: add the announced 3–8 food to inventory before normal turn consumption. With the captured example's starting food of 95, a gift of three and consumption of five now leave 93 food, rather than the classic's 90. This difference is recorded in [CHANGES.md](../CHANGES.md#bug-fixes); the original capture remains evidence of classic behavior.
 
-After entering slot 6's tree, `Roll(100) < 56` selects the occupied gnome branch (`0x67C0`–`0x67D4`). If HP is below `level * 10`, the gnome rolls 1–5, announces that many HP restored, and adds it without a subsequent cap (`0x68D8`–`0x696A`). The captured five-HP ointment changed 49.30 HP to 54.40 after turn healing. The remake implements this occupied branch, including its pause, and pauses after declining entry as the original does (`0x6C9C`–`0x6CBB`). The empty-home branch and separate slot 13 tree remain unfinished.
+After entering slot 6's tree, `Roll(100) < 56` selects the occupied gnome branch (`0x67C0`–`0x67D4`). If HP is below `level * 10`, the gnome rolls 1–5, announces that many HP restored, and adds it without a subsequent cap (`0x68D8`–`0x696A`). The captured five-HP ointment changed 49.30 HP to 54.40 after turn healing. The remake implements this occupied branch, including its pause, and pauses after declining entry as the original does (`0x6C9C`–`0x6CBB`). The empty-home branch is now implemented as described below. The separate slot 13 tree remains unfinished.
+
+## Empty gnome home
+
+Session 04 entered main-loop slot 6's empty home and took the Staff from its trunk during ordinary play. The remainder of this branch was checked against the executable and eight separately labelled [controlled DOS captures](captures/2026-11-14-tree-probes.txt); [saved checkpoints](tree-checkpoints.json) retain their final states. See [the pass ledger](session-04.md) for the distinction between ordinary and controlled observations.
+
+- The initial entry choice and occupied/empty split are shared with the occupied branch above. An occupied roll is `Roll(100) < 56`; rolls 56–100 select the empty home, irrespective of inventory. Do not reuse this implementation for slot 13 without inspecting that separate routine.
+- The empty home offers `(S)teal food, (T)ake from trunk or (L)eave.` Read one character, case-insensitively, retrying invalid choices (`0x6A48`–`0x6A87`). There is one action per visit.
+- S rolls 1–100, announces that quantity, and adds it to food (`0x6A94`–`0x6AE6`). Unlike the occupied gnome's gift, this food addition exists in the classic.
+- T rolls 1–4 with equal probability (`0x6AF4`–`0x6B03`). Result 1 adds 1–20 arrows (`0x6B0B`–`0x6B45`); result 2 adds 1–10 medicine (`0x6B53`–`0x6B8E`). Result 3 awards the Staff if absent, without another random draw (`0x6B9C`–`0x6BDA`); if already held, it instead adds 1–10 medicine (`0x6BE0`–`0x6C1C`). Result 4 releases a Rune Guardian and subtracts 1–5 HP (`0x6C2A`–`0x6C96`). This is direct damage, with no combat choice or retaliation.
+- L consumes no further random numbers and prints no outcome line. All three actions end at the same keypress pause (`0x6CB5`–`0x6CBB`). Declining initial entry prints `You move on.` and also pauses, without rolling occupied/empty.
+- Normal end-of-turn healing and food consumption follow. There is no extra reward, experience gain, or recorded theft penalty on these paths.
+
+The controlled cases start at level 8, 50 HP, five servants of each sex, 8 gold, 100 food, 3 medicine, 2 arrows, no ring/plague, and the Staff absent except in `staff-held`. Arrows yielded five; medicine one; the held-Staff substitute nine medicine; the Guardian dealt five HP; theft added 57 food. Final food was 95 except for theft (152), with 0.10 turn healing applied to every case. `./check_tree.py --sanitize` compares inventory, HP, experience, level, RNG state, and expected input counts. These checks cover the captured seeds; full random ranges follow from binary arithmetic. Extreme signed-integer overflow remains outside this reconstruction.
 
 ## Overlord's Keep prerequisite
 
@@ -153,6 +166,18 @@ The routine at `0x96E7`–`0x9DC7` is now implemented. [Session 03](session-03.m
 - Every gazed path has a final keypress pause (`0x9D9C`–`0x9DA2`). After combat this is an additional pause after the shared routine's result pause, including on death. Normal turn bookkeeping follows.
 
 Preserve the random-call order: vision, Staff, Talisman, champion, then any combat draws. Already owning either quest item does not skip its roll. Typo corrections in visions are enumerated in [CHANGES.md](../CHANGES.md#typo-corrections).
+
+## Storms
+
+Following session 04's tornado, the routine at `0x7A5B`–`0x7E14` was inspected. It remains unimplemented; only the tornado/no-shelter path was observed during this ordinary pass.
+
+- Roll 1–8 at `0x7AB4`–`0x7ABB`: rain storm, Hail storm, Snow storm, Wind storm, Tornado, Hurricane, Monsoon, Tidal Wave, in that order. All offer shelter.
+- Sheltering preserves servants and food apart from ordinary turn consumption. The waiting loop runs `storm type * Roll(5)` iterations, each delaying one second and printing a dot, then prints `The storm is gone.` (`0x7C5B`–`0x7D17`). This is one random call, with duration scaled by the storm's type, not an arbitrary fixed wait.
+- Without shelter, type 1 (rain) makes no inventory changes and consumes no further random numbers. Types 2–7 independently subtract `Roll(5)` males and then `Roll(5)` females, clamping each count to zero (`0x7D1D`–`0x7DB9`). These rolls occur even if that sex's count is zero.
+- Without shelter, type 8 clears both servant counts and food (`0x7DBC`–`0x7E02`). It does not directly damage HP.
+- Every path takes the common keypress pause (`0x7E05`–`0x7E0B`), then returns for normal turn bookkeeping. Starvation after storm losses is a separate effect.
+
+Session 04's combined loss of six males and three females, with food exhausted, matches five/two storm losses followed by one/one starvation. The full distribution and shelter duration above come from binary arithmetic; controlled checks of the other branches have not yet been run.
 
 ## Servant illness
 

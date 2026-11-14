@@ -131,3 +131,18 @@ checks without the raw transcripts, which the repository ignores. Individual
 case names may be passed as arguments, for example `./check_combat.py arrows poison`.
 See the
 [combat ledger](combat-research.md) for cases and evidence limits.
+
+## Empty-home probes
+
+`./tree_probe.py > doc/captures/2026-11-14-tree-probes.txt` captures eight
+controlled slot-6 empty-home branches and writes `doc/tree-checkpoints.json`.
+It uses deterministic seeds and resets temporary player memory between cases;
+the header and each case explicitly label these modifications. Status screens
+before the next turn can contain values from the previous case. The final
+`STATE` records are memory reads after the next status screen.
+
+Run `./check_tree.py --sanitize` to compare the remake with those saved original
+checkpoints without DOSBox. The checks include the four trunk results, the
+held-Staff medicine substitute, food theft, leaving, and declining entry, along
+with RNG progression and input counts. See [session 04](session-04.md) and the
+[recovered rules](mechanics.md#empty-gnome-home).
