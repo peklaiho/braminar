@@ -6,7 +6,7 @@ Recovered rules and their binary evidence belong in [mechanics.md](mechanics.md)
 
 Preserve the player-visible experience when implementing these findings. Minor numeric precision details with no observable effect may be simplified under the guideline in `mechanics.md`; record intentional differences in [CHANGES.md](../CHANGES.md). Keep original observations distinct from those implementation choices.
 
-The main loop selects one of 16 slots, with state-dependent substitutions and two separate hollow-tree routines. The recovered dispatch, healing, food consumption, starvation, and level advancement are described in [mechanics.md](mechanics.md#main-turn-loop). Band encounters and shared combat, the river, the enchanted forest, both branches of the slot-6 hollow tree, and the Keep's prerequisite rejection are implemented; other location bodies remain incomplete.
+The main loop selects one of 16 slots, with state-dependent substitutions and two separate hollow-tree routines. The recovered dispatch, healing, food consumption, starvation, and level advancement are described in [mechanics.md](mechanics.md#main-turn-loop). Band encounters and shared combat, the river, the enchanted forest, both branches of the slot-6 hollow tree, storms, servant illness, and the Keep's prerequisite rejection are implemented; other location bodies remain incomplete.
 
 ## Recorded playthroughs
 
@@ -16,6 +16,8 @@ Capture every encountered event, including encounters outside the current resear
 - [2026-11-14, combat research](combat-research.md): an ordinary playthrough with two gnome visits, village trading and lodging, and a fatal Demon fight; twelve separately labelled controlled combat experiments with memory checkpoints.
 - [2026-11-14, session 03](session-03.md): five ordinary turns covering a city visit, a victorious Drow fight after failed flight, a river vision, Keep rejection, and servant illness; five separate controlled river checks.
 - [2026-11-14, session 04](session-04.md): ordinary play reaching an empty gnome home, Anthrax's laboratory, and a Gypsy camp; eight separate controlled empty-home checks.
+
+Additional targeted research: [storms and servant illness](storm-illness-research.md), with controlled comparisons and explicit blank-input behavior differences.
 
 ## City and Village
 
@@ -165,7 +167,7 @@ Binary inspection places the guru in main-loop slot 8 only when the ring byte is
 - Ask how many servants to cure
 - Any uncured servants die
 
-Session 03 observed 9 males and 1 female with Old-Timer's disease. Treating 2 males and 1 female consumed three medicine, removed seven males, and left all females alive. Independent sick-count rolls, disease selection, medicine allocation, losses, and an excessive-treatment bug are now [recovered from the binary](mechanics.md#servant-illness). Treatment remains unimplemented; the disease label alone does not infect the player with plague.
+Session 03 observed 9 males and 1 female with Old-Timer's disease. Treating 2 males and 1 female consumed three medicine, removed seven males, and left all females alive. Independent sick-count rolls, disease selection, medicine allocation, losses, and an excessive-treatment bug are now [recovered from the binary](mechanics.md#servant-illness). Treatment is now implemented, including medicine priority, uncured losses, the original excessive-cure behavior, and input handling. Controlled checks cover these branches, zero/one-sex parties, and protection substitution; see the [storm/illness ledger](storm-illness-research.md). The disease label alone does not infect the player with plague.
 
 ## Statue of Pan
 
@@ -180,7 +182,7 @@ Session 01 asked `How much weight can an unladen swallow bear?` with choices `2 
 - If take shelter, wait for storm to pass
 - Potentially lose servants if no shelter
 
-Session 04 declined shelter from a tornado, lost servants, and then suffered starvation. Binary inspection separates the storm losses (five males, two females) from starvation (one of each). All eight storm types and shelter/loss arithmetic are now [documented](mechanics.md#storms); the event remains unimplemented.
+Session 04 declined shelter from a tornado, lost servants, and then suffered starvation. Binary inspection separates the storm losses (five males, two females) from starvation (one of each). All eight storm types and shelter/loss arithmetic are now [documented](mechanics.md#storms); the event is now implemented and checked against controlled original-game captures. See the [storm/illness ledger](storm-illness-research.md).
 
 ## Thicket in the woods
 

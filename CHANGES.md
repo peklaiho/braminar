@@ -23,6 +23,8 @@ This document records intentional differences between the classic DOS game and t
 | River vision | `A diety giving you a box of Duncin' Doughnuts` | `A deity giving you a box of Duncin' Doughnuts` |
 | River vision | `A monsterous beast waiting in a pentacle` | `A monstrous beast waiting in a pentacle` |
 | River vision | `A needed treasure in the Gnomes trunk` | `A needed treasure in the Gnome's trunk` |
+| Storm losses | `You may of lost some slaves in the storm.` | `You may have lost some servants in the storm.` |
+| Tidal wave | `All slaves & food is lost.` | `All servants & food are lost.` |
 
 ## Numeric precision
 
@@ -32,3 +34,9 @@ This document records intentional differences between the classic DOS game and t
 ## Bug fixes
 
 - The gnome's food gift adds the announced 3–8 units to inventory. The classic game displays the gift without adding food. Normal end-of-turn food consumption still follows.
+
+- Blank treatment lines retry instead of using the classic routine's uninitialized local value, which can consume medicine or change servant counts unpredictably.
+
+## Runtime diagnostics
+
+- Invalid treatment numbers still abort play with `I/O error 10` and `Program aborted`, but omit the DOS program-counter address, which has no counterpart in the C remake.

@@ -22,8 +22,8 @@ The boxes above are a reusable workflow, not claims that every target needs ever
 
 ## Next targets
 
-- [ ] Storms: implement the recovered routine; compare shelter, rain without shelter, servant losses with zero/small parties, tidal-wave losses, and subsequent starvation.
-- [ ] Servant illness: probe medicine allocation, zero/one-sex parties, and excessive treatment; implement numeric input and losses. Preserve the original excessive-treatment behavior unless an intentional change is explicitly adopted and recorded.
+- [x] Storms: implemented and compared across all eight types, shelter, zero/small parties, tidal losses, and starvation. [Evidence and limits](storm-illness-research.md).
+- [x] Servant illness: implemented and compared for medicine allocation, zero/one-sex parties, excessive cures, protection, and numeric input. Original excessive cures are preserved; blank-input retry is an explicit fix. Bare tokens/input-length limits remain open. [Evidence and limits](storm-illness-research.md).
 - [ ] Pan: implement the decoded questions and recovered random-answer/command generation; capture success, failure, and decline.
 - [ ] Keep command branch: recover exact input/comparison behavior and connect successful entry to the final-battle stub after turn bookkeeping. Check level/Staff gates, wrong command, and correct command.
 - [ ] After these bounded targets, run an ordinary integration pass, choosing unfinished branches and checking interactions such as Pan's command followed by the Keep.
@@ -62,8 +62,8 @@ Slot numbers follow the [recovered dispatch](mechanics.md#event-selection). “P
 | 6 | Empty gnome home and decline | Recovered / implemented | Eight retained comparisons via `./check_tree.py --sanitize`: all trunk results, held-Staff substitute, theft, leave, decline. [Scope](mechanics.md#empty-gnome-home) |
 | 7 | Grass hut | Partial / placeholder | Empty visit observed; other strings' grouping and good-deed/reward rules need control-flow verification. [Evidence](events.md#grass-hut) |
 | 8 | Mountain trail/guru when ring held | Partial / placeholder | Ring gate and Staff/ring removal inspected; capture climb/refusal/acceptance and verify remaining text/flow. [Evidence](events.md#mountain-trail-and-guru) |
-| 9 | Servant illness | Recovered treatment arithmetic / placeholder | One ordinary treatment observed. Probe boundaries and numeric input; no-servant message exists in remake but its delay is missing. [Rules](mechanics.md#servant-illness) |
-| 10 | Storms | Recovered / placeholder | Ordinary tornado/no-shelter and starvation observed; other branches lack controlled comparisons. [Rules](mechanics.md#storms) |
+| 9 | Servant illness | Recovered / implemented | Controlled medicine, excess-cure, zero/one-sex, protection, and input comparisons; no-servant delay restored. Blank-input retry is intentional; bare tokens/input-length limits remain open. [Validation](storm-illness-research.md) |
+| 10 | Storms | Recovered / implemented | Controlled checks for all eight types, two shelter durations, zero/small/one-sex parties, and starvation; requested delays checked against dots and binary loop. [Validation](storm-illness-research.md) |
 | 11 | Dark Castle: dungeon, throne room, galley | String findings / placeholder | Recover room flow, traps/escape, theft timing, crystal ball, rewards, and Mad King triggers. [Evidence](events.md#dark-castle-of-the-mad-king) |
 | 12 | Enchanted forest | Recovered / implemented | Ordinary nymph resistance/elves gift and temporary remake harness. Capture fatal lure, ring exclusion, faerie plague cure versus healing, and decline. [Rules](mechanics.md#enchanted-forest) |
 | 13 | Separate empty-tree routine | String findings / placeholder | Inspect independently; do not reuse slot 6's rules without verifying them. [Evidence](events.md#hollow-tree-with-a-door) |

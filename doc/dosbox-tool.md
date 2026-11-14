@@ -146,3 +146,18 @@ checkpoints without DOSBox. The checks include the four trunk results, the
 held-Staff medicine substitute, food theft, leaving, and declining entry, along
 with RNG progression and input counts. See [session 04](session-04.md) and the
 [recovered rules](mechanics.md#empty-gnome-home).
+
+## Storm and illness probes
+
+`./event_probe.py > doc/captures/2026-11-14-storm-illness-probes.txt` captures
+controlled storms and illness, resetting temporary player memory and selecting
+seeds before dispatch. Completed cases are saved immediately in
+`doc/storm-illness-checkpoints.json`. To rerun selected cases and update their
+entries, pass names, for example `./event_probe.py storm-tidal illness-excess`.
+The invalid/overflow cases deliberately abort the original; the tool restarts
+it if further cases remain. Every encountered screen and input is captured.
+
+`./check_events.py --sanitize` runs comparisons without DOSBox. It checks state,
+RNG, normalized text order, input counts, and requested delays. The blank-input
+case explicitly checks a documented intentional difference. See the
+[research ledger](storm-illness-research.md) for evidence and validation limits.

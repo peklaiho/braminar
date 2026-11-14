@@ -722,10 +722,111 @@ static void event_grass_hut(void)
     puts("\nYou find a grass hut.");
 }
 
-static void event_sick_servants(void)
+static bool read_treatment(int* quantity)
 {
-    /* TODO: Implement treatment quantities and losses; see doc/mechanics.md#servant-illness. */
-    puts("\nSome of your servants are sick.");
+    /* Pascal numeric input at 0x2618/0x10A7; see doc/mechanics.md#servant-illness. */
+    /* TODO: Verify bare signs/prefixes and input-length limits; see those notes. */
+    char line[160];
+    for (;;) {
+        if (!read_line(line, sizeof(line))) {
+            return false;
+        }
+        const char* cursor = line;
+        while (isspace((unsigned char)*cursor)) {
+            ++cursor;
+        }
+        if (*cursor == '\0') {
+            continue;
+        }
+        bool negative = *cursor == '-';
+        if (negative) {
+            ++cursor;
+        }
+        int base = 10;
+        if (*cursor == '$') {
+            base = 16;
+            ++cursor;
+        }
+        int value = 0;
+        int digits = 0;
+        int limit = base == 16 ? 65535 : (negative ? 32768 : 32767);
+        while (*cursor != '\0' && !isspace((unsigned char)*cursor)) {
+            int ch = toupper((unsigned char)*cursor++);
+            int digit = ch >= '0' && ch <= '9' ? ch - '0' : ch - 'A' + 10;
+            if (!((ch >= '0' && ch <= '9') || (ch >= 'A' && ch <= 'F')) ||
+                digit >= base || value > (limit - digit) / base) {
+                puts("\nI/O error 10\nProgram aborted");
+                return false;
+            }
+            value = value * base + digit;
+            ++digits;
+        }
+        if (digits == 0) {
+            puts("\nI/O error 10\nProgram aborted");
+            return false;
+        }
+        if (negative) {
+            value = -value;
+        }
+        if (value > 32767) {
+            value -= 65536;
+        } else if (value < -32768) {
+            value += 65536;
+        }
+        if (value >= 0) {
+            *quantity = value;
+            return true;
+        }
+    }
+}
+
+static bool event_sick_servants(Player* player)
+{
+    /* Original routine at 0x76FE-0x7A5A; see doc/mechanics.md#servant-illness. */
+    if (player->male_servants + player->female_servants > 0) {
+        static const char* const diseases[] = {
+            "The Plague", "Small Pox", "Chicken Pox", "Turkey Pox", "Leprocy",
+            "Old-Timer's disease", "A fatal cold", "Bubonic plague", "Scarlet fever", "The Flu"
+        };
+        int sick_males = random_number(10) + 1;
+        if (sick_males > player->male_servants) {
+            sick_males = player->male_servants;
+        }
+        int sick_females = random_number(10) + 1;
+        if (sick_females > player->female_servants) {
+            sick_females = player->female_servants;
+        }
+        printf("\n%d male and %d female servants have come down with: %s\n",
+               sick_males, sick_females, diseases[random_number(10)]);
+        printf("How many males to cure? ");
+        int cured;
+        if (!read_treatment(&cured)) {
+            return false;
+        }
+        if (cured > player->medicine) {
+            cured = player->medicine;
+        }
+        player->medicine -= cured;
+        player->male_servants -= sick_males - cured;
+        printf("How many females to cure? ");
+        if (!read_treatment(&cured)) {
+            return false;
+        }
+        if (cured > player->medicine) {
+            cured = player->medicine;
+        }
+        player->medicine -= cured;
+        player->female_servants -= sick_females - cured;
+        puts("Any not cured pass away.");
+        if (!wait_for_key()) {
+            return false;
+        }
+    } else {
+        puts("There seems to be a bug going around.");
+    }
+    struct timespec delay = {1, 0};
+    nanosleep(&delay, NULL);
+    return true;
 }
 
 static void event_statue_of_pan(void)
@@ -733,9 +834,51 @@ static void event_statue_of_pan(void)
     puts("\nYou find a statue of Pan.");
 }
 
-static void event_storm(void)
+static bool event_storm(Player* player)
 {
-    puts("\nA storm approaches.");
+    /* Original routine at 0x7A5B-0x7E14; see doc/mechanics.md#storms. */
+    static const char* const storms[] = {
+        "A rain storm comes.", "A Hail storm comes.", "A Snow storm comes.",
+        "A Wind storm comes.", "A Tornado comes.", "A Hurricane comes.",
+        "A Monsoon comes.", "A Tidal Wave comes."
+    };
+    puts("\nWhile you are walking along, the weather suddenly changes.");
+    int storm = random_number(8) + 1;
+    puts(storms[storm - 1]);
+    puts("Will you Take shelter? (alternative is move on.)");
+    printf("(Y/N) ");
+    int choice = read_choice("YN");
+    if (choice == EOF) {
+        return false;
+    }
+    if (choice == 'Y') {
+        puts("You and your servants take shelter.");
+        printf("Waiting for storm to pass.");
+        int seconds = storm * (random_number(5) + 1);
+        for (int i = 0; i < seconds; ++i) {
+            fflush(stdout);
+            struct timespec delay = {1, 0};
+            nanosleep(&delay, NULL);
+            putchar('.');
+        }
+        puts("The storm is gone.");
+    } else if (storm >= 2 && storm <= 7) {
+        puts("You may have lost some servants in the storm.");
+        player->male_servants -= random_number(5) + 1;
+        player->female_servants -= random_number(5) + 1;
+        if (player->male_servants < 0) {
+            player->male_servants = 0;
+        }
+        if (player->female_servants < 0) {
+            player->female_servants = 0;
+        }
+    } else if (storm == 8) {
+        puts("All servants & food are lost.");
+        player->male_servants = 0;
+        player->female_servants = 0;
+        player->food = 0;
+    }
+    return wait_for_key();
 }
 
 static void event_thicket(void)
@@ -779,14 +922,9 @@ static bool run_event(Player* player)
     case 9:
         if (player->illness_protection) {
             return event_combat(player);
-        } else if (player->male_servants + player->female_servants == 0) {
-            puts("There seems to be a bug going around.");
-            return true;
-        } else {
-            event_sick_servants();
         }
-        break;
-    case 10: event_storm(); break;
+        return event_sick_servants(player);
+    case 10: return event_storm(player);
     case 11: event_dark_castle(); break;
     case 12: return event_enchanted_forest(player);
     case 13: event_empty_tree(); break;
