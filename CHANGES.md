@@ -37,6 +37,7 @@ This document records intentional differences between the classic DOS game and t
 
 - Blank treatment lines retry instead of using the classic routine's uninitialized local value, which can consume medicine or change servant counts unpredictably.
 
-## Runtime diagnostics
+## Integer input
 
-- Invalid treatment numbers still abort play with `I/O error 10` and `Program aborted`, but omit the DOS program-counter address, which has no counterpart in the C remake.
+- Use the shared `read_integer` for nonnegative decimal quantities. Negative numbers, letters, signs, hexadecimal, fractions, mixed text, overflow beyond C `INT_MAX`, and lines of 159 or more characters silently become zero. Surrounding whitespace and leading zeroes are accepted; empty or whitespace-only lines retry. EOF still ends input.
+- This replaces the classic treatment reader's negative-number retries, hexadecimal/token parsing, signed 16-bit limit, and invalid-number aborts. The shared reader is intended for future buying/selling and other integer prompts as they are implemented.

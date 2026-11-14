@@ -57,6 +57,15 @@ static int event_nanosleep(const struct timespec* request, struct timespec* rema
 
 int main(int argc, char** argv)
 {
+    if (argc == 3 && strcmp(argv[1], "--integer") == 0) {
+        keys = "";
+        lines = argv[2];
+        initialize_input();
+        int value = -1;
+        bool read = read_integer(&value);
+        printf("CHECK {\"read\":%d,\"value\":%d}\n", read, value);
+        return 0;
+    }
     if (argc != 9) {
         return 2;
     }

@@ -158,6 +158,6 @@ The invalid/overflow cases deliberately abort the original; the tool restarts
 it if further cases remain. Every encountered screen and input is captured.
 
 `./check_events.py --sanitize` runs comparisons without DOSBox. It checks state,
-RNG, normalized text order, input counts, and requested delays. The blank-input
-case explicitly checks a documented intentional difference. See the
+RNG, normalized text order, input counts, and requested delays. Input cases explicitly check the documented shared-reader differences, and the
+suite also checks integer parsing directly. See the
 [research ledger](storm-illness-research.md) for evidence and validation limits.

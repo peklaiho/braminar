@@ -45,22 +45,28 @@ The table's initial column is male/female counts; medicine; food. Final numbers 
 | illness-invalid | 11489 | 12/12; 3; 100 | 'abc' | I/O error 10; program aborted |
 | illness-overflow | 11489 | 12/12; 3; 100 | '32768' | I/O error 10; program aborted |
 
-## Findings and implementation
+## Initial findings and implementation
 
 All eight storms are implemented, including harmless rain without shelter, independent losses and zero clamps for types 2–7, and the tidal wave clearing servants and food. Shelter consumes one duration roll and prints one dot per requested second, scaled by storm type. Captured rain and tidal shelter runs waited one/eight iterations respectively. The initial period in `Waiting for storm to pass.` is not a timed dot. The final pause is present even after an otherwise harmless storm. Starvation applies afterward to the remaining party.
 
 Illness now rolls both sick counts and the disease in the original order, caps sick counts to inventory, asks for male then female cures, spends remaining medicine in that order, and subtracts untreated servants. It retains the original excessive-cure behavior: one male/two females and twenty medicine become ten of each sex when requesting ten/ten. With no servants, it prints the bug message and requests a one-second delay without an input pause or further random calls. Illness protection substitutes a band encounter before any illness draws.
 
-Negative numbers retry without repeating the treatment prompt. Decimal and `$`-prefixed hexadecimal input are supported; the whitespace probe confirms a leading space and discarded text after the number. Invalid `abc` and decimal 32768 abort before turn bookkeeping. The remake retains that abort and its diagnostic, omitting the DOS program-counter address.
+Negative numbers retry without repeating the treatment prompt. Decimal and `$`-prefixed hexadecimal input are supported; the whitespace probe confirms a leading space and discarded text after the number. Invalid `abc` and decimal 32768 abort before turn bookkeeping. The initial remake retained that abort and its diagnostic, omitting the DOS program-counter address. The shared integer reader now deliberately replaces these input rules; see below.
 
 Blank input exposed an original uninitialized-local bug: in the captured run, a blank male answer advanced to females and consumed all medicine through a stale value. The following `2` answered the female prompt; the later `1` was typed at the exit pause. The remake deliberately retries blank lines, so its blank/2/1 case instead has the same result as the ordinary 2/1 partial treatment. This intentional difference is recorded in [CHANGES.md](../CHANGES.md). The fixture retains the observed original state and marks `compare_as: illness-partial`; the check explicitly validates the chosen retry behavior against that reference, rather than claiming parity with the original blank case.
 
-Remaining input gaps are bare signs/prefixes and original input-length limits. Extreme inventory overflow remains unresolved across the remake. Other disease labels were extracted from their Pascal strings and binary dispatch, rather than separately captured here. No assumptions about other events' numeric readers follow from this work.
+Remaining original-game input research gaps are bare signs/prefixes and input-length limits; the shared reader now intentionally treats these as invalid input. Extreme inventory overflow remains unresolved across the remake. Other disease labels were extracted from their Pascal strings and binary dispatch, rather than separately captured here. No assumptions about other events' numeric readers follow from this work.
 
-## Validation
+## Initial validation
 
 `./check_events.py --sanitize` exercises the actual event dispatch and turn processing: 27 original-game comparisons plus the documented blank-input difference. It compares HP, inventory, experience, ring/plague/protection, and final RNG where original memory is valid; normalized text order; input request counts; and requested delays. Aborted cases compare their input/diagnostic flow and lack of normal completion, without comparing memory after DOS regained control. Text normalization permits terminology replacements, recorded typo corrections, whitespace, and omission of the DOS program-counter address.
 
 The C harness scripts line/key reads and records sleep requests, so the checks run without DOSBox or real waits. Delay assertions compare requested sleep totals with binary rules and original dot counts, not wall-clock measurements from debugger captures. A separate temporary PTY check used real terminal input and actual `fgets`/key reads for treatment 2/1, returning 11 males, 9 females, zero medicine, 90 food, and 50.10 HP.
 
 The twelve existing combat cases and eight tree cases also pass with address/undefined-behavior sanitizers. `make` succeeds with only the existing unused-final-battle-stub warning; `git diff --check` passes.
+
+## Shared integer reader update
+
+`read_treatment` has been replaced by `read_integer`, beside the other input functions. It accepts nonnegative decimal quantities through C `INT_MAX`, with surrounding whitespace; invalid or negative input silently becomes zero, while empty lines retry. Hexadecimal and mixed text no longer follow Pascal token parsing. EOF still ends input. The policy and overlong-line handling are recorded in [CHANGES.md](../CHANGES.md#integer-input).
+
+Original captures and fixtures remain evidence of the classic game. The current event checks compare 22 scenarios with original behavior and explicitly check six intentional input differences: blank, negative, hexadecimal, mixed text, alphabetical input, and the old 16-bit overflow case. `32768` is now a valid integer; `abc` is zero and does not abort. The check supplies a female answer after inputs that originally aborted. Eighteen direct reader checks cover valid values, whitespace, blank retries, invalid syntax, integer overflow, overlong lines, and EOF. All pass with address/undefined-behavior sanitizers.

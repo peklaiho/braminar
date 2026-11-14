@@ -1,6 +1,7 @@
 #define _POSIX_C_SOURCE 200809L
 
 #include <ctype.h>
+#include <limits.h>
 #include <signal.h>
 #include <stdbool.h>
 #include <stdint.h>
@@ -150,6 +151,57 @@ static bool read_line(char* buffer, size_t size)
     return true;
 }
 
+static int read_choice(const char* choices)
+{
+    for (;;) {
+        int ch = read_key();
+        if (ch == EOF) {
+            return EOF;
+        }
+        ch = toupper((unsigned char)ch);
+        if (ch != '\0' && strchr(choices, ch) != NULL) {
+            putchar('\n');
+            return ch;
+        }
+    }
+}
+
+static bool read_integer(int* value)
+{
+    char line[160];
+    for (;;) {
+        if (!read_line(line, sizeof(line))) {
+            return false;
+        }
+        *value = 0;
+        const char* cursor = line;
+        while (isspace((unsigned char)*cursor)) {
+            ++cursor;
+        }
+        if (*cursor == '\0') {
+            continue;
+        }
+        if (strlen(line) == sizeof(line) - 1 || !isdigit((unsigned char)*cursor)) {
+            return true;
+        }
+        int number = 0;
+        while (isdigit((unsigned char)*cursor)) {
+            int digit = *cursor++ - '0';
+            if (number > (INT_MAX - digit) / 10) {
+                return true;
+            }
+            number = number * 10 + digit;
+        }
+        while (isspace((unsigned char)*cursor)) {
+            ++cursor;
+        }
+        if (*cursor == '\0') {
+            *value = number;
+        }
+        return true;
+    }
+}
+
 static bool wait_for_key(void)
 {
     printf("Press any key...");
@@ -283,21 +335,6 @@ static void event_city(void)
 static void event_village(void)
 {
     puts("\nYou arrive at a village.");
-}
-
-static int read_choice(const char* choices)
-{
-    for (;;) {
-        int ch = read_key();
-        if (ch == EOF) {
-            return EOF;
-        }
-        ch = toupper((unsigned char)ch);
-        if (ch != '\0' && strchr(choices, ch) != NULL) {
-            putchar('\n');
-            return ch;
-        }
-    }
 }
 
 static void combat_round(Player* player, Monster* monster)
@@ -722,64 +759,6 @@ static void event_grass_hut(void)
     puts("\nYou find a grass hut.");
 }
 
-static bool read_treatment(int* quantity)
-{
-    /* Pascal numeric input at 0x2618/0x10A7; see doc/mechanics.md#servant-illness. */
-    /* TODO: Verify bare signs/prefixes and input-length limits; see those notes. */
-    char line[160];
-    for (;;) {
-        if (!read_line(line, sizeof(line))) {
-            return false;
-        }
-        const char* cursor = line;
-        while (isspace((unsigned char)*cursor)) {
-            ++cursor;
-        }
-        if (*cursor == '\0') {
-            continue;
-        }
-        bool negative = *cursor == '-';
-        if (negative) {
-            ++cursor;
-        }
-        int base = 10;
-        if (*cursor == '$') {
-            base = 16;
-            ++cursor;
-        }
-        int value = 0;
-        int digits = 0;
-        int limit = base == 16 ? 65535 : (negative ? 32768 : 32767);
-        while (*cursor != '\0' && !isspace((unsigned char)*cursor)) {
-            int ch = toupper((unsigned char)*cursor++);
-            int digit = ch >= '0' && ch <= '9' ? ch - '0' : ch - 'A' + 10;
-            if (!((ch >= '0' && ch <= '9') || (ch >= 'A' && ch <= 'F')) ||
-                digit >= base || value > (limit - digit) / base) {
-                puts("\nI/O error 10\nProgram aborted");
-                return false;
-            }
-            value = value * base + digit;
-            ++digits;
-        }
-        if (digits == 0) {
-            puts("\nI/O error 10\nProgram aborted");
-            return false;
-        }
-        if (negative) {
-            value = -value;
-        }
-        if (value > 32767) {
-            value -= 65536;
-        } else if (value < -32768) {
-            value += 65536;
-        }
-        if (value >= 0) {
-            *quantity = value;
-            return true;
-        }
-    }
-}
-
 static bool event_sick_servants(Player* player)
 {
     /* Original routine at 0x76FE-0x7A5A; see doc/mechanics.md#servant-illness. */
@@ -800,7 +779,7 @@ static bool event_sick_servants(Player* player)
                sick_males, sick_females, diseases[random_number(10)]);
         printf("How many males to cure? ");
         int cured;
-        if (!read_treatment(&cured)) {
+        if (!read_integer(&cured)) {
             return false;
         }
         if (cured > player->medicine) {
@@ -809,7 +788,7 @@ static bool event_sick_servants(Player* player)
         player->medicine -= cured;
         player->male_servants -= sick_males - cured;
         printf("How many females to cure? ");
-        if (!read_treatment(&cured)) {
+        if (!read_integer(&cured)) {
             return false;
         }
         if (cured > player->medicine) {
