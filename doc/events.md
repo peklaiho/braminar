@@ -4,7 +4,9 @@ This is a working reference combining observed gameplay with text extracted from
 
 Recovered rules and their binary evidence belong in [mechanics.md](mechanics.md). File formats and extraction-tool usage are described in [data-format.md](data-format.md).
 
-The main loop selects one of 16 slots, with state-dependent substitutions and two separate hollow-tree routines. The recovered dispatch, healing, food consumption, starvation, and level advancement are described in [mechanics.md](mechanics.md#main-turn-loop). Location bodies remain incomplete in the remake except for the enchanted forest.
+Preserve the player-visible experience when implementing these findings. Minor numeric precision details with no observable effect may be simplified under the guideline in `mechanics.md`; record intentional differences in [CHANGES.md](../CHANGES.md). Keep original observations distinct from those implementation choices.
+
+The main loop selects one of 16 slots, with state-dependent substitutions and two separate hollow-tree routines. The recovered dispatch, healing, food consumption, starvation, and level advancement are described in [mechanics.md](mechanics.md#main-turn-loop). The enchanted forest and occupied gnome branch of the hollow tree are implemented; other location bodies remain incomplete.
 
 ## Recorded playthroughs
 
@@ -116,6 +118,8 @@ Trunk has a chance to have the Staff of Aviatar.
 Additional strings describe the gnome announcing food or giving healing ointment, the trunk containing arrows or medicine, and releasing a Rune Guardian that burns the player. A later block repeats the empty-home encounter.
 
 The main dispatch confirms two separate tree slots. Session 01 entered the occupied variant: the gnome announced three food and five HP of ointment. The HP award occurred; the food award did not. The [binary confirms this discrepancy](mechanics.md#gnomes-announced-food-gift). The second tree routine is selected independently by slot 13, while slot 6 can itself branch to an empty home.
+
+The remake implements the occupied gnome branch and intentionally fixes its missing food award: the announced 3–8 food is added to inventory before normal turn consumption. Healing remains 1–5 HP when below `level * 10`, without a subsequent cap. See [CHANGES.md](../CHANGES.md#bug-fixes). Empty-home choices remain placeholders.
 
 ## Grass hut
 

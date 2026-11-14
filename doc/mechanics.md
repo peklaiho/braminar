@@ -2,6 +2,8 @@
 
 This reference records rules recovered from the original binaries, the evidence supporting them, and remaining uncertainties. Keep binary offsets alongside the rules they support. Observed encounters and provisional string findings are catalogued in [events.md](events.md); file layouts and extraction-tool usage are documented in [data-format.md](data-format.md).
 
+The remake preserves the player-visible experience, while allowing simpler arithmetic for minor precision details that make no observable difference to a human player. For example, turn healing adds 0.10 HP using ordinary C arithmetic; emulating Pascal Real48 representation and intermediate rounding is not required. Preserve calculations that affect displayed values, costs, probabilities, thresholds, or gameplay outcomes. Original binary details below remain evidence about the classic game, not requirements to reproduce every low-order bit. Record adopted simplifications in [CHANGES.md](../CHANGES.md), separately from unresolved rules.
+
 Unless a different file is named, offsets are hexadecimal byte offsets into `dos/BRAMINAR.COM`, not DOS runtime addresses. `DS:` addresses identify variables in the original program's data segment.
 
 ## Random-number generation
@@ -95,7 +97,7 @@ The two guarded slots do not reroll when their conditions fail. At character cre
 
 ### End-of-turn bookkeeping
 
-1. If `0 < HP < level * 10`, add the six-byte real literal at `0xF151` (`0xF112`–`0xF15A`). Its bytes are `7D CC CC CC CC 4C`, representing exactly `219902325555 / 2199023255552`, approximately `0.09999999999990905`, in Pascal Real48. The comparison happens before addition; there is no clamp afterward. If HP is nonpositive, reset the real accumulator at `DS:0x02BA` to zero (`0xF15D`–`0xF17D`). Combat adds to this accumulator after a victory (`0x3C24`–`0x3C58`), supporting its interpretation as experience.
+1. If `0 < HP < level * 10`, add approximately 0.10 HP (`0xF112`–`0xF15A`). The classic's six-byte real literal at `0xF151` is `7D CC CC CC CC 4C`, slightly below 0.10; the remake intentionally uses 0.10 without reproducing that representation detail. The comparison happens before addition; there is no clamp afterward. If HP is nonpositive, reset the real accumulator at `DS:0x02BA` to zero (`0xF15D`–`0xF17D`). Combat adds to this accumulator after a victory (`0x3C24`–`0x3C58`), supporting its interpretation as experience.
 2. If experience is strictly greater than 5, announce a level increase, add one level, subtract 5 experience, and add 10 HP (`0xF180`–`0xF205`). This is a single `if`, not a loop; exactly 5 does not qualify. Combat's full experience award formula remains to be recovered.
 3. If the ring byte is greater than zero and less than 100, add 5 (`0xF208`–`0xF237`). A value such as 99 becomes 104; there is no clamp to 100. It starts at zero. Other ring effects remain to be recovered.
 4. If the plague byte is positive, add 5, storing the low byte. If the resulting byte is at least 100, print `You have died from the plague` and set HP to zero (`0xF23A`–`0xF294`). Other routines establish the identification: plague acquisition increments this byte at `0x48B2`–`0x48BA`; the forest cure clears it at `0x8F0B`–`0x8F0E`.
@@ -105,7 +107,7 @@ The two guarded slots do not reroll when their conditions fail. At character cre
 
 The [first recorded session](captures/2026-11-14-session-01.md) independently shows HP increasing by 0.10 per completed turn and food decreasing by five for a party with nine servants. An elves' gift adds ten food before the five-unit consumption. These observations corroborate the binary calculations; they do not independently test every boundary above.
 
-The remake implements the dispatch, bookkeeping, and forest, with explicit placeholders for other encounters. Event bodies and their random calls are still missing, so subsequent event sequences will differ even with equal initial seeds. The remake uses `double` for HP and experience and currently integer food; exact Real48 arithmetic and fractional inventory behavior remain unresolved. The final-assault transition is still deferred with the Keep implementation; `start_final_battle()` remains its intended stub entry point.
+The remake implements the dispatch, bookkeeping, forest, and occupied gnome branch of the hollow tree, with explicit placeholders for other encounters. Some event bodies and their random calls are still missing, so subsequent event sequences will differ even with equal initial seeds. The remake intentionally uses `double` for HP and experience without Real48 emulation, as recorded in `CHANGES.md`. Food is currently integer; whether inventory calculations require visible fractional quantities remains unresolved and must be checked as those mechanics are recovered. The final-assault transition is still deferred with the Keep implementation; `start_final_battle()` remains its intended stub entry point.
 
 ## Enchanted forest
 
@@ -131,7 +133,9 @@ The [first session](captures/2026-11-14-session-01.md) records one incorrect ans
 
 In the occupied branch of the hollow-tree routine, the original announces a gift of 3–8 food (`Roll(6) + 2`, `0x6876`–`0x68C9`) but never adds it to inventory on this path. It proceeds directly to a possible healing ointment and then exits the encounter. This matches the live capture: the gnome announced three food, yet food changed from 95 to 90 after ordinary five-unit turn consumption.
 
-If HP is below `level * 10`, the gnome rolls 1–5, announces that many HP restored, and adds it without a subsequent cap (`0x68D8`–`0x696A`). The captured five-HP ointment changed 49.30 HP to 54.40 after turn healing. Other hollow-tree branches remain unfinished. Preserve the observed inventory behavior rather than inferring an award from its message.
+The remake intentionally fixes this classic bug: add the announced 3–8 food to inventory before normal turn consumption. With the captured example's starting food of 95, a gift of three and consumption of five now leave 93 food, rather than the classic's 90. This difference is recorded in [CHANGES.md](../CHANGES.md#bug-fixes); the original capture remains evidence of classic behavior.
+
+After entering slot 6's tree, `Roll(100) < 56` selects the occupied gnome branch (`0x67C0`–`0x67D4`). If HP is below `level * 10`, the gnome rolls 1–5, announces that many HP restored, and adds it without a subsequent cap (`0x68D8`–`0x696A`). The captured five-HP ointment changed 49.30 HP to 54.40 after turn healing. The remake implements this occupied branch, including its pause, and pauses after declining entry as the original does (`0x6C9C`–`0x6CBB`). The empty-home branch and separate slot 13 tree remain unfinished.
 
 ## Overlord's Keep prerequisite
 
@@ -141,4 +145,4 @@ The gate tests `level < 20 OR NOT staff` at `0xA106`–`0xA121`. Level 20 is suf
 
 `make` succeeds, retaining the existing warning about the unused final-battle stub. A temporary C harness built with AddressSanitizer and UndefinedBehaviorSanitizer checked bookkeeping against the documented boundaries: HP at and just below the limit, zero versus negative food, starvation with one or two servants, experience exactly five versus above five, one promotion per turn, dead-player experience reset, ring growth past 100, plague death, and byte wraparound. It also reproduced the captured forest resistance/elves state change with a selected seed. These are remake checks against the recovered rules, not additional observations of original-game boundary behavior.
 
-A terminal-based check of the full remake passed character creation, an encounter, and the next status with the expected HP and food changes. All 18 dispatch call sites, including guarded alternatives, were checked directly against the executable bytes. `git diff --check` passed. Exact Real48 arithmetic and most event bodies remain outside this validation.
+A terminal-based check of the full remake passed character creation, an encounter, and the next status with the expected HP and food changes. All 18 dispatch call sites, including guarded alternatives, were checked directly against the executable bytes. `git diff --check` passed. Most event bodies remain outside this validation; exact Real48 emulation is intentionally outside the remake's requirements.

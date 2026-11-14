@@ -2,6 +2,8 @@
 
 The original files in `dos/` are the reference for the remake. The extraction tool reads them without modifying them. Extracted text retains the original spelling and terminology; corrections belong in the remake.
 
+File layouts and original numeric representations are reference evidence. The remake may simplify precision details that make no observable difference to a human player, following [the mechanics guideline](mechanics.md); intentional differences are recorded in [CHANGES.md](../CHANGES.md).
+
 Recovered rules and their binary evidence are documented in [mechanics.md](mechanics.md). The encounter catalogue is in [events.md](events.md).
 
 ## Extraction tool

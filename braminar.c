@@ -355,9 +355,45 @@ static void event_flowing_river(void)
     puts("\nYou come upon a flowing river.");
 }
 
-static void event_hollow_tree(void)
+static bool event_hollow_tree(Player* player)
 {
-    puts("\nYou find a hollow tree with a door.");
+    puts("\nYou come up to a hollow tree with a door.  Enter?");
+    int ch;
+    do {
+        printf("(Y/N) ");
+        ch = read_key();
+        if (ch == EOF) {
+            return false;
+        }
+        ch = toupper((unsigned char)ch);
+        putchar('\n');
+    } while (ch != 'Y' && ch != 'N');
+    if (ch == 'N') {
+        puts("You move on.");
+        return wait_for_key();
+    }
+
+    /* Original occupied branch: 0x67C0-0x696D; food award fixed per CHANGES.md. */
+    if (random_number(100) + 1 < 56) {
+        puts("Inside is a little Gnome smoking a pipe.");
+        puts("There is a kettle of stew over a fire, and a large");
+        puts("wooden trunk next to the wall.");
+        int food = random_number(6) + 3;
+        printf("The gnome greets you and gives you %d food.\n\n", food);
+        player->food += food;
+        if (player->hit_points < player->level * 10) {
+            int healing = random_number(5) + 1;
+            printf("The gnome gives you an ointment that cures %d hit points\n", healing);
+            player->hit_points += healing;
+        }
+    } else {
+        puts("No one seems to be home.");
+        puts("There is a kettle of stew over a fire, and a large");
+        puts("wooden trunk next to the wall.");
+        /* TODO: Recover the empty home's choices and effects; see doc/events.md. */
+        puts("This encounter is not implemented yet.");
+    }
+    return wait_for_key();
 }
 
 static void event_grass_hut(void)
@@ -409,7 +445,7 @@ static bool run_event(Player* player)
     case 3: event_gypsy_camp(); break;
     case 4: event_combat(); break;
     case 5: event_thicket(); break;
-    case 6: event_hollow_tree(); break;
+    case 6: return event_hollow_tree(player);
     case 7: event_grass_hut(); break;
     case 8:
         if (player->ring_power > 0) {
@@ -445,9 +481,7 @@ static bool finish_turn(Player* player)
 {
     /* Preserve this order: 0xF112-0xF36D; see doc/mechanics.md#main-turn-loop. */
     if (player->hit_points > 0 && player->hit_points < player->level * 10) {
-        /* Real48 literal at 0xF151, approximately 0.1. */
-        /* TODO: Match Real48 rounding after addition; see doc/mechanics.md. */
-        player->hit_points += 0x1.9999999998p-4;
+        player->hit_points += 0.10;
     }
     if (player->hit_points <= 0) {
         player->experience = 0;
