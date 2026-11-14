@@ -6,7 +6,7 @@ Recovered rules and their binary evidence belong in [mechanics.md](mechanics.md)
 
 Preserve the player-visible experience when implementing these findings. Minor numeric precision details with no observable effect may be simplified under the guideline in `mechanics.md`; record intentional differences in [CHANGES.md](../CHANGES.md). Keep original observations distinct from those implementation choices.
 
-The main loop selects one of 16 slots, with state-dependent substitutions and two separate hollow-tree routines. The recovered dispatch, healing, food consumption, starvation, and level advancement are described in [mechanics.md](mechanics.md#main-turn-loop). Band encounters and shared combat, the enchanted forest, and the occupied gnome branch of the hollow tree are implemented; other location bodies remain incomplete.
+The main loop selects one of 16 slots, with state-dependent substitutions and two separate hollow-tree routines. The recovered dispatch, healing, food consumption, starvation, and level advancement are described in [mechanics.md](mechanics.md#main-turn-loop). Band encounters and shared combat, the river, the enchanted forest, the occupied gnome branch of the hollow tree, and the Keep's prerequisite rejection are implemented; other location bodies remain incomplete.
 
 ## Recorded playthroughs
 
@@ -14,6 +14,7 @@ Capture every encountered event, including encounters outside the current resear
 
 - [2026-11-14, session 01](captures/2026-11-14-session-01.md): Pan's riddle, a goblin band, enchanted forest, occupied hollow tree, village market/tavern/store/inn, and a river vision. Includes the initial stats and intermediate status screens. The ledger distinguishes observed outcomes from rules subsequently recovered in the binary.
 - [2026-11-14, combat research](combat-research.md): an ordinary playthrough with two gnome visits, village trading and lodging, and a fatal Demon fight; twelve separately labelled controlled combat experiments with memory checkpoints.
+- [2026-11-14, session 03](session-03.md): five ordinary turns covering a city visit, a victorious Drow fight after failed flight, a river vision, Keep rejection, and servant illness; five separate controlled river checks.
 
 ## City and Village
 
@@ -53,6 +54,8 @@ Additional string findings:
 - Rats may eat food while resting; female servants may bandage wounds.
 
 The placement of the cleric and mugger encounters within city or village visits still needs verification.
+
+Session 03 entered a city and declined market, tavern, store, and inn in that order. It returned directly to status with only normal healing and food use. No extra marketplace, cleric, or mugger scene appeared on this visit; this does not establish when those branches occur.
 
 ## Combat
 
@@ -101,7 +104,7 @@ The forest's flow and arithmetic have now been [recovered from the binary](mecha
 
 - Initiate the final battle, if at least level 20 and have Staff of Aviatar
 
-The Keep also asks for the prime command before allowing the attack. Binary inspection confirms that level 20 is sufficient and a failed command removes the Staff; see [mechanics.md](mechanics.md#overlords-keep-prerequisite). The location remains unimplemented.
+The Keep also asks for the prime command before allowing the attack. Binary inspection confirms that level 20 is sufficient and a failed command removes the Staff; see [mechanics.md](mechanics.md#overlords-keep-prerequisite). Session 03 observed the rejection at level 9 without the Staff. Rejection and its keypress pause are implemented; the eligible command/final-assault branch remains a placeholder.
 
 ## Flowing river
 
@@ -109,9 +112,11 @@ The Keep also asks for the prime command before allowing the attack. Binary insp
   - Chance for combat
   - Chance to see a vision
 
-Additional strings describe finding the Staff or Talisman in the river and being attacked by a Troglodyte champion. Visions include hints and humorous scenes; their relationship to actual game state is not yet established.
+Gazing produces one of twenty flavor visions, then independent chances of finding the Staff (9% if absent), finding the Talisman (5% if absent), and fighting a Troglodyte champion (25%). The vision itself is independent of game state and does not apply the depicted effect. This flow and its exact RNG order are now [verified from the binary](mechanics.md#flowing-river) and implemented.
 
 Session 01 chose to gaze and saw `An attractive tavern patron following you.` After the pause, the next status reflected only normal healing and food consumption. No item award or combat was observed on that visit.
+
+Session 03 saw `A trap door in the Holiday out hotel`, again without items or combat. Five separate controlled checks cover harmless visions, both quest-item awards together, already-held items, a poisoned champion, and declining to gaze. The champion path has a river exit pause after the combat result pause. See the [session ledger](session-03.md#controlled-river-checks).
 
 ## Hollow tree with a door
 
@@ -156,6 +161,8 @@ Binary inspection places the guru in main-loop slot 8 only when the ring byte is
 
 - Ask how many servants to cure
 - Any uncured servants die
+
+Session 03 observed 9 males and 1 female with Old-Timer's disease. Treating 2 males and 1 female consumed three medicine, removed seven males, and left all females alive. Independent sick-count rolls, disease selection, medicine allocation, losses, and an excessive-treatment bug are now [recovered from the binary](mechanics.md#servant-illness). Treatment remains unimplemented; the disease label alone does not infect the player with plague.
 
 ## Statue of Pan
 

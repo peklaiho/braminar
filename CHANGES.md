@@ -19,6 +19,10 @@ This document records intentional differences between the classic DOS game and t
 | Blade combat | `You severe a finger.` | `You sever a finger.` |
 | Blade combat | `You nearly severe a limb.` | `You nearly sever a limb.` |
 | Combat reward | `You find a shiny ring on your opponents finger & take it.` | `You find a shiny ring on your opponent's finger & take it.` |
+| River vision | `A diety watching over a hollow tree home.` | `A deity watching over a hollow tree home.` |
+| River vision | `A diety giving you a box of Duncin' Doughnuts` | `A deity giving you a box of Duncin' Doughnuts` |
+| River vision | `A monsterous beast waiting in a pentacle` | `A monstrous beast waiting in a pentacle` |
+| River vision | `A needed treasure in the Gnomes trunk` | `A needed treasure in the Gnome's trunk` |
 
 ## Numeric precision
 

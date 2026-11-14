@@ -570,14 +570,77 @@ static bool event_enchanted_forest(Player* player)
     return wait_for_key();
 }
 
-static void event_overlords_keep(void)
+static bool event_overlords_keep(Player* player)
 {
     puts("\nYou find the Evil Overlord's Keep.");
+    if (player->level < 20 || !player->staff_of_aviatar) {
+        puts("You cannot attack due to lack of Staff or 20th level.");
+    } else {
+        /* TODO: Recover command input and final-assault transition; see doc/mechanics.md. */
+        puts("This encounter is not implemented yet.");
+    }
+    return wait_for_key();
 }
 
-static void event_flowing_river(void)
+static bool event_flowing_river(Player* player)
 {
-    puts("\nYou come upon a flowing river.");
+    /* Original routine at 0x96E7-0x9DC7; see doc/mechanics.md#flowing-river. */
+    static const char* visions[] = {
+        "An attractive tavern patron following you.",
+        "A deity watching over a hollow tree home.",
+        "A monstrous beast waiting in a pentacle",
+        "A needed treasure in the Gnome's trunk",
+        "Your servants dying of starvation",
+        "Your hair turning Magenta!",
+        "You as the King of Braminar!",
+        "A deity giving you a box of Duncin' Doughnuts",
+        "Your servants coming down with chicken pox",
+        "An old hermit admiring your female servants",
+        "You defeating anything, while wearing a gold ring.",
+        "A market that sells food very cheap",
+        "The Mad King slaying you.",
+        "Your troops fighting the Overlord's troops",
+        "Your servants turning into demons",
+        "You changing sex when you pass thru a water fall.",
+        "A giant hamburger chasing you around.",
+        "A trap door in the Holiday out hotel",
+        "A magical sword that kills Goblins",
+        "The Overlord wearing your outfit!!"
+    };
+
+    puts("\nYou come upon a flowing river.  Gaze into it?");
+    printf("(Y/N) ");
+    int choice = read_choice("YN");
+    if (choice == EOF) {
+        return false;
+    }
+    putchar('\n');
+    if (choice == 'N') {
+        puts("You Move on.");
+        return true;
+    }
+
+    puts("You see the vision of:");
+    printf("     %s\n", visions[random_number(20)]);
+    int staff_roll = random_number(100) + 1;
+    if (!player->staff_of_aviatar && staff_roll < 10) {
+        puts("You spot the Staff of Aviatar in the River & get it!");
+        player->staff_of_aviatar = true;
+    }
+    int talisman_roll = random_number(100) + 1;
+    if (!player->talisman_of_braminar && talisman_roll < 6) {
+        puts("You spot the Talisman of Braminar & get it!");
+        player->talisman_of_braminar = true;
+    }
+    if (random_number(100) + 1 < 26) {
+        puts("A group of Troglodytes jump out of the river "
+             "& their champion attacks you!");
+        Monster monster = {"Troglodyte", 11, 0};
+        if (!fight_monster(player, monster)) {
+            return false;
+        }
+    }
+    return wait_for_key();
 }
 
 static bool event_hollow_tree(Player* player)
@@ -628,6 +691,7 @@ static void event_grass_hut(void)
 
 static void event_sick_servants(void)
 {
+    /* TODO: Implement treatment quantities and losses; see doc/mechanics.md#servant-illness. */
     puts("\nSome of your servants are sick.");
 }
 
@@ -693,9 +757,9 @@ static bool run_event(Player* player)
     case 11: event_dark_castle(); break;
     case 12: return event_enchanted_forest(player);
     case 13: event_empty_tree(); break;
-    case 14: event_flowing_river(); break;
+    case 14: return event_flowing_river(player);
     case 15: event_statue_of_pan(); break;
-    case 16: event_overlords_keep(); break;
+    case 16: return event_overlords_keep(player);
     }
     /* TODO: Recover these branches and their pauses; see doc/events.md. */
     puts("This encounter is not implemented yet.");

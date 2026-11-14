@@ -107,7 +107,7 @@ The two guarded slots do not reroll when their conditions fail. At character cre
 
 The [first recorded session](captures/2026-11-14-session-01.md) independently shows HP increasing by 0.10 per completed turn and food decreasing by five for a party with nine servants. An elves' gift adds ten food before the five-unit consumption. These observations corroborate the binary calculations; they do not independently test every boundary above.
 
-The remake implements the dispatch, bookkeeping, band encounters and shared combat, forest, and occupied gnome branch of the hollow tree, with explicit placeholders for other encounters. Some event bodies and their random calls are still missing, so subsequent event sequences will differ even with equal initial seeds. The remake intentionally uses `double` for HP and experience without Real48 emulation, as recorded in `CHANGES.md`. Food is currently integer; whether inventory calculations require visible fractional quantities remains unresolved and must be checked as those mechanics are recovered. The final-assault transition is still deferred with the Keep implementation; `start_final_battle()` remains its intended stub entry point.
+The remake implements the dispatch, bookkeeping, band encounters and shared combat, river, forest, occupied gnome branch of the hollow tree, and the Keep's prerequisite rejection, with explicit placeholders for other encounters. Some event bodies and their random calls are still missing, so subsequent event sequences will differ even with equal initial seeds. The remake intentionally uses `double` for HP and experience without Real48 emulation, as recorded in `CHANGES.md`. Food is currently integer; whether inventory calculations require visible fractional quantities remains unresolved and must be checked as those mechanics are recovered. The final-assault transition is still deferred with the eligible Keep branch; `start_final_battle()` remains its intended stub entry point.
 
 ## Enchanted forest
 
@@ -139,7 +139,32 @@ After entering slot 6's tree, `Roll(100) < 56` selects the occupied gnome branch
 
 ## Overlord's Keep prerequisite
 
-The gate tests `level < 20 OR NOT staff` at `0xA106`–`0xA121`. Level 20 is sufficient when the Staff is held. On a successful prime-command comparison it sets `DS:0x04F8` to true (`0xA23B`–`0xA23E`); a failed comparison removes the Staff (`0xA2A2`–`0xA2A5`). The command input and comparison have not yet been implemented in the remake.
+The gate tests `level < 20 OR NOT staff` at `0xA106`–`0xA121`. Level 20 is sufficient when the Staff is held. Rejection prints `You cannot attack due to lack of Staff or 20th level.` and takes the common exit pause (`0xA124`–`0xA166`, `0xA2A8` onward). This branch was observed in [session 03](session-03.md) and is implemented. On a successful prime-command comparison it sets `DS:0x04F8` to true (`0xA23B`–`0xA23E`); a failed comparison removes the Staff (`0xA2A2`–`0xA2A5`). The command input and comparison have not yet been implemented in the remake.
+
+## Flowing river
+
+The routine at `0x96E7`–`0x9DC7` is now implemented. [Session 03](session-03.md) records an ordinary harmless vision and five separately labelled controlled checks, with [compact final states](river-checkpoints.json).
+
+- Declining to gaze prints `You Move on.` and returns without a pause or encounter RNG draws (`0x9728`–`0x9734`, `0x9DA8`–`0x9DC7`).
+- Gazing selects one of twenty visions with `Roll(20)` (`0x976A`–`0x9C3B`). These are independent flavor texts: the selection does not inspect inventory, future events, or item placement, and none directly applies its depicted effect.
+- Always roll 1–100 for the Staff, even when already held. Award it only if absent and the roll is strictly below 10: 9% (`0x9C3E`–`0x9CAC`).
+- Always roll 1–100 for the Talisman next, even when already held. Award it only if absent and the roll is strictly below 6: 5% (`0x9CAF`–`0x9D14`). Both awards can happen on the same visit.
+- Roll 1–100 next. Strictly below 26 invokes shared combat against the Troglodyte template, level 11: 25% (`0x9D17`–`0x9D99`). There are no payment or fleeing choices. Poison and all other shared-combat rules apply; the HP roll is made by that routine.
+- Every gazed path has a final keypress pause (`0x9D9C`–`0x9DA2`). After combat this is an additional pause after the shared routine's result pause, including on death. Normal turn bookkeeping follows.
+
+Preserve the random-call order: vision, Staff, Talisman, champion, then any combat draws. Already owning either quest item does not skip its roll. Typo corrections in visions are enumerated in [CHANGES.md](../CHANGES.md#typo-corrections).
+
+## Servant illness
+
+The routine at `0x76FE`–`0x7A5A` was inspected after [session 03](session-03.md) encountered Old-Timer's disease. The remake's treatment branch remains a placeholder; these are recovered original rules for its eventual implementation.
+
+- With any servants, independently roll 1–10 for sick males and sick females, each capped at the number of that sex (`0x7717`–`0x775C`). Both rolls occur even if one sex has zero servants.
+- Roll 1–10 for the displayed disease (`0x77AF`–`0x7918`): The Plague, Small Pox, Chicken Pox, Turkey Pox, Leprocy, Old-Timer's disease, A fatal cold, Bubonic plague, Scarlet fever, The Flu. All take the same treatment path. These names do not set the player's plague byte.
+- Ask for males to cure, then females, using numeric line input; negative numbers retry the numeric read. Each requested quantity is capped to remaining medicine. Each cure consumes one medicine, and each sick servant left untreated is subtracted from that sex's count (`0x791B`–`0x79E8`). Males therefore receive medicine first.
+- The original does not cap treatment to the sick count. An excessive request can consume unnecessary medicine and even increase the servant count through subtraction of a negative untreated count. This is binary evidence, not a proposed bug fix; decide explicitly before implementing different behavior.
+- Print `Any not cured pass away.`, pause, then delay one second before returning (`0x79EB`–`0x7A51`). With no servants, print `There seems to be a bug going around.` and take only that delay. Main-loop illness protection substitutes a band encounter before reaching this routine.
+
+The observed 9 sick males / 1 sick female, treated with 2 / 1 from three medicine, removed seven males and consumed all medicine. Subsequent turn consumption was fourteen food for 27 remaining servants plus the player, matching the recovered rules. Invalid nonnumeric input behavior and extreme integer ranges have not been tested.
 
 ## Implementation checks, 2026-11-14
 
