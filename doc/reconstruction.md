@@ -28,11 +28,12 @@ The boxes above are a reusable workflow, not claims that every target needs ever
 - [x] City/Village: shared servant market, tavern, store, inn, and both complete location wrappers; City marketplace/cleric/muggers and Village pickpocket. Forty controlled comparisons. [Evidence and limits](town-research.md).
 - [x] Mountain trail/guru: climb, refusal, ring removal, optional Staff loss, and pause implemented; five controlled comparisons. [Evidence and limits](mountain-research.md).
 - [x] Gypsy camp: Dagger’s Hand and all 35 fortune-teller hints implemented; controlled comparison scope in [research notes](gypsy-research.md).
+- [x] Grass hut: all occupants/finds, hermit outcomes, dragon combat, and gate-creature combat/rewards implemented. [Evidence and limits](hut-research.md).
 - [ ] Town follow-up: compare City shared-service purchases plus the bargain marketplace in one visit, and cleric/ring/mugger interactions. Continue ordinary integration play for discovery.
 - [ ] Keep command branch (deferred in priority until endgame work): recover exact input/comparison behavior and connect successful entry to the final-battle stub after turn bookkeeping. Check level/Staff gates, wrong command, and correct command.
 - [ ] When returning to endgame work, run an ordinary integration pass checking Pan's command followed by the Keep.
 
-City/Village took priority at the user's request; the Keep is for later endgame work. The grass hut is the next small location candidate: verify its occupants, good deeds, and rewards. Split specialized combat work into bounded targets when selecting it.
+City/Village took priority at the user's request; the Keep is for later endgame work. The separate slot-13 tree is the next location candidate: verify its independent flow and the later good-deed scenes before sharing any code. Split specialized combat work into bounded targets when selecting it.
 
 ## Core systems
 
@@ -64,7 +65,7 @@ Slot numbers follow the [recovered dispatch](mechanics.md#event-selection). “P
 | 5 | Thicket/laboratory, potions, pentacle | Partial / placeholder | Laboratory entry and wizard victory observed; recover encounter selection, exploration, potion/pentacle effects and conditions. [Evidence](events.md#thicket-in-the-woods) |
 | 6 | Occupied gnome home | Recovered / implemented | Several ordinary food/healing observations. Food addition intentionally fixed; healing threshold/over-cap boundaries lack retained original probes. [Rules](mechanics.md#gnomes-announced-food-gift) |
 | 6 | Empty gnome home and decline | Recovered / implemented | Eight retained comparisons via `./check_tree.py --sanitize`: all trunk results, held-Staff substitute, theft, leave, decline. [Scope](mechanics.md#empty-gnome-home) |
-| 7 | Grass hut | Partial / placeholder | Empty visit observed; other strings' grouping and good-deed/reward rules need control-flow verification. [Evidence](events.md#grass-hut) |
+| 7 | Grass hut | Recovered / implemented | All finds and occupants, care with/without supplies, hermit outcomes, dragon/charm/poison, gate creature types/rewards, and death compared. No good-deed reward for the man or puppy in this routine. [Evidence and limits](hut-research.md). |
 | 8 | Mountain trail/guru when ring held | Recovered / implemented | Five controlled comparisons cover declining, refusing, acceptance with/without Staff, ring power 1/100, invalid keys, and Talisman preservation. [Evidence and limits](mountain-research.md). |
 | 9 | Servant illness | Recovered / implemented | Controlled medicine, excess-cure, zero/one-sex, protection, and input comparisons; no-servant delay restored. Shared nonnegative integer parsing intentionally differs from Pascal input; original bare-token/input-length behavior remains research-only. [Validation](storm-illness-research.md) |
 | 10 | Storms | Recovered / implemented | Controlled checks for all eight types, two shelter durations, zero/small/one-sex parties, and starvation; requested delays checked against dots and binary loop. [Validation](storm-illness-research.md) |
@@ -81,7 +82,8 @@ Slot numbers follow the [recovered dispatch](mechanics.md#event-selection). “P
 | Area | Current evidence and next gap |
 | --- | --- |
 | Anthrax combat | Full ordinary victory captured, including drain, plague, servant deaths, and rewards; recover its separate arithmetic and saving throws. [Observations](session-04.md#anthrax-observations) |
-| Dragon, Mad King, and other specialized fights | Separate routines remain unfinished. Establish callers, prerequisites, damage, rewards, and death behavior independently of shared combat. [Combat overview](events.md#combat) |
+| Dragon and gate-creature fights | Recovered / implemented for hut callers; other callers remain unfinished. Controlled normal fights, charm, poison, rewards and death. Not every damage-table result or simultaneous-death combination has a retained probe. [Evidence](hut-research.md). |
+| Mad King and other specialized fights | Separate routines remain unfinished. Establish callers, prerequisites, damage, rewards, and death behavior independently of shared combat. [Combat overview](events.md#combat) |
 | Hidden state and interactions | Some ring/plague/protection behavior recovered. Track remaining acquisition/removal paths, dragon charm, command changes, quest items, and effects across event boundaries. [Known gaps](events.md#additional-player-state-to-investigate) |
 | Numeric behavior | HP/experience precision choices are recorded in CHANGES.md. Check gold/food calculations for player-visible fractions as new mechanics are recovered; extreme integer overflow is unresolved. [Guideline](mechanics.md) |
 | Final battle | Deferred: reconstruct `FINASSLT.CHN` later. Keep the separate exit stub as the entry point until then; wiring the main game's successful Keep branch is still in scope. [Scope](../AGENTS.md#game-structure-and-initial-scope) |

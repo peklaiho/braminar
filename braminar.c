@@ -37,6 +37,7 @@ typedef struct {
     uint8_t ring_power;
     uint8_t plague;
     bool illness_protection;
+    int dragon_charm;
     char prime_command[6];
 } Player;
 
@@ -269,6 +270,7 @@ static void generate_player_stats(Player* player)
     player->ring_power = 0;
     player->plague = 0;
     player->illness_protection = false;
+    player->dragon_charm = 0;
     strcpy(player->prime_command, "     ");
 
     male_servant_price = random_number(10) + 5;
@@ -1167,9 +1169,312 @@ static bool event_hollow_tree(Player* player)
     return wait_for_key();
 }
 
-static void event_grass_hut(void)
+static bool fight_dragon(Player* player)
 {
-    puts("\nYou find a grass hut.");
+    static const char* const attacks[] = {
+        "You miss the dragon.",
+        "You scratched the dragon.",
+        "You removed a few scales.",
+        "You draw blood.",
+        "You smack the dragon hard.",
+        "You hit the dragon's Thor thimble!",
+        "You cut off part of the dragons tail.",
+    };
+    static const char* const retaliation[] = {
+        "The dragon missed you.",
+        "The dragon nicks you.",
+        "The dragon bakes you lightly with fire.",
+        "The dragon cuts you with it's tail.",
+        "The dragon whips you with it's tail.",
+        "The dragon breaths fire on you.",
+        "The dragon steps on you.",
+    };
+    static const double player_damage[] = {0, 0.1, 0.7, 1.2, 2, 4.3, 5.1};
+    static const double dragon_damage[] = {0, 0.1, 0.6, 1.4, 2, 3.4, 4.2};
+    if (player->dragon_charm > 0) {
+        puts("You charm the Dragon into submission!");
+        player->experience += random_number(3) + 1;
+        return true;
+    }
+    int level = random_number(14) + 1;
+    double hit_points = random_number(50) + 31;
+    if (player->poison > 0) {
+        int choice = ask_yes_no("Do you wish to use your poison?");
+        if (choice == EOF) {
+            return false;
+        }
+        if (choice == 'Y') {
+            --player->poison;
+            hit_points = 0;
+            puts("You use your poison.");
+        }
+    }
+    while (player->hit_points > 0 && hit_points > 0) {
+        int attack = random_number(7);
+        puts(attacks[attack]);
+        hit_points -= player_damage[attack];
+        int counterattack = random_number(7);
+        puts(retaliation[counterattack]);
+        player->hit_points -= dragon_damage[counterattack];
+        printf("\n---Player: %5.2f       Dragon: %5.2f\n", player->hit_points, hit_points);
+        if (!wait_for_key()) {
+            return false;
+        }
+    }
+    puts(player->hit_points > 0 ? "You win the battle!" : "You did not survive the battle.");
+    puts(hit_points > 0 ? "The dragon won." : "The dragon is slain.");
+    if (player->hit_points > 0) {
+        player->experience += level / 2;
+    }
+    return true;
+}
+
+static bool fight_gate_creature(Player* player)
+{
+    static const char* const names[] = {"Cerberus", "Collosus", "Lolth", "Vaprak", "The Lich King"};
+    static const int levels[] = {16, 16, 18, 20, 22};
+    static const int hp_dice[] = {5, 7, 10, 11, 14};
+    static const int hp_multipliers[] = {14, 12, 10, 10, 12};
+    static const char* const attacks[] = {
+        "You swing, but miss.",
+        "You lightly hit %s\n",
+        "You impact well against %s's back.\n",
+        "You break a chair over %s\n",
+        "You cut deep into %s\n",
+        "You throw a test-tube at %s\n",
+        "You happen to strike a pendant around %s's neck.\n",
+    };
+    static const char* const retaliation[] = {
+        "%s misses you.\n", "%s nicks you slightly.\n", "%s smacks you in the face.\n",
+        "%s hits you in the arm.\n", "%s breaths fire on you.\n",
+        "%s cuts you with a clawing sweep.\n", "%s throws you across the room.\n",
+    };
+    static const double player_damage[] = {0, 0.2, 1.4, 2.5, 3.4};
+    static const double monster_damage[] = {0, 1, 3, 5, 7, 9, 11.5};
+    int type = random_number(5);
+    const char* name = names[type];
+    double hit_points = (random_number(hp_dice[type]) + 1) * hp_multipliers[type];
+    printf("You are confronted by %s\n", name);
+    struct timespec delay = {0, 500000000};
+    nanosleep(&delay, NULL);
+    if (player->poison > 0) {
+        int choice = ask_yes_no("Do you wish to use your poison?");
+        if (choice == EOF) {
+            return false;
+        }
+        if (choice == 'Y') {
+            --player->poison;
+            if (random_number(100) + 1 > levels[type]) {
+                puts("Your Poison worked!");
+                hit_points = 0;
+            } else {
+                puts("The monster saves against your poison!");
+            }
+        }
+    }
+    while (player->hit_points > 0 && hit_points > 0) {
+        int attack = random_number(7);
+        if (attack == 0) {
+            puts(attacks[attack]);
+        } else {
+            printf(attacks[attack], name);
+        }
+        if (attack < 5) {
+            hit_points -= player_damage[attack];
+        } else if (attack == 5) {
+            hit_points -= random_number(10);
+        } else {
+            hit_points -= random_number(5) + 8;
+        }
+        int counterattack = random_number(7);
+        printf(retaliation[counterattack], name);
+        player->hit_points -= monster_damage[counterattack];
+        printf("\n---Player: %5.2f       %s: %5.2f\n", player->hit_points, name, hit_points);
+        if (!wait_for_key()) {
+            return false;
+        }
+    }
+    puts(player->hit_points > 0 ? "You win the battle!!!" : "You did not survive the battle.");
+    printf("%s %s\n", name, hit_points > 0 ? "has destroyed you." : "is gone.");
+    if (player->hit_points <= 0) {
+        return true;
+    }
+    player->experience += levels[type] / 2;
+    puts("\nA diety sees this great deed, and gives you: ");
+    int reward = random_number(6) + 1;
+    if (reward == 1 && !player->staff_of_aviatar) {
+        puts("The STAFF OF AVIATAR!!!");
+        player->staff_of_aviatar = true;
+    } else if (reward == 2 && !player->talisman_of_braminar) {
+        puts("The Talisman of Braminar!");
+        player->talisman_of_braminar = true;
+    } else if (reward <= 3) {
+        puts("50 Lbs of food.");
+        player->food += 250;
+    } else if (reward == 4) {
+        puts("5 units of Poison!");
+        player->poison += 5;
+    } else if (reward == 5) {
+        puts("All Hit points restored!");
+        player->hit_points = player->level * 10;
+    } else {
+        puts("a Super pack!!  (20 food, 10 Medicine 2 poison, and a horse and cart!)");
+        player->food += 20;
+        player->medicine += 10;
+        player->poison += 2;
+        player->horse = true;
+        player->cart = true;
+    }
+    return true;
+}
+
+static bool event_grass_hut(Player* player)
+{
+    int occupied = random_number(100) + 1;
+    printf("\nYou come upon a grass hut.  %s\n",
+           occupied > 50 ? "You hear sounds from within." : "all is silent within.");
+    int choice = ask_yes_no("Will you enter?");
+    if (choice == EOF) {
+        return false;
+    }
+    if (choice == 'N') {
+        puts("You move on.");
+        return wait_for_key();
+    }
+    if (occupied > 50) {
+        int occupant = random_number(3) + 1;
+        if (occupant == 1) {
+            choice = ask_yes_no("You discover an old man in the corner.  He looks ill.  Try to cure him?");
+            if (choice == EOF) {
+                return false;
+            }
+            if (choice == 'Y') {
+                if (player->medicine > 0) {
+                    puts("you give him some medicine.");
+                    --player->medicine;
+                } else {
+                    puts("You try to comfort him.");
+                }
+                puts("The old man seems better.");
+                struct timespec delay = {1, 0};
+                nanosleep(&delay, NULL);
+            }
+        } else if (occupant == 2) {
+            choice = ask_yes_no("You find a hungry little puppy in the room.  Share some of your food?");
+            if (choice == EOF) {
+                return false;
+            }
+            if (choice == 'Y') {
+                if (player->food > 0) {
+                    --player->food;
+                    puts("You feed the puppy.  It is greatful.");
+                } else {
+                    puts("You have no food, so you pet thepuppy.  ");
+                }
+                struct timespec delay = {1, 0};
+                nanosleep(&delay, NULL);
+            }
+        } else {
+            puts("You run into an old hermit with a");
+            puts("Dragon.  He says if you can beat the dragon,");
+            choice = ask_yes_no("he will double your posessions.  Do it?");
+            if (choice == EOF) {
+                return false;
+            }
+            if (choice == 'Y') {
+                if (!fight_dragon(player)) {
+                    return false;
+                }
+                if (player->hit_points > 0) {
+                    if (random_number(100) + 1 < 21) {
+                        int females = random_number(10) + 1;
+                        if (females > player->female_servants) {
+                            females = player->female_servants;
+                        }
+                        printf("The hermit disappears with %d of your female servants!!!!!\n", females);
+                    } else {
+                        puts("All your posessions are doubled!!");
+                        player->male_servants *= 2;
+                        player->female_servants *= 2;
+                        player->gold *= 2;
+                        player->food *= 2;
+                        player->medicine *= 2;
+                        player->poison *= 2;
+                        player->swords *= 2;
+                        player->bows *= 2;
+                        player->arrows *= 2;
+                        player->daggers *= 2;
+                    }
+                }
+            } else {
+                choice = ask_yes_no("Kill the hermit?");
+                if (choice == EOF) {
+                    return false;
+                }
+                if (choice == 'Y') {
+                    puts("You kill the hermit & the dragon attacks!");
+                    if (!fight_dragon(player)) {
+                        return false;
+                    }
+                }
+            }
+        }
+    } else {
+        int find = random_number(9) + 1;
+        switch (find) {
+        case 1:
+            puts("You find a rusty old sword.");
+            ++player->swords;
+            break;
+        case 2:
+            puts("You find a quiver of arrows.");
+            player->arrows += 12;
+            break;
+        case 3: {
+            int staff_roll = random_number(100) + 1;
+            if (!player->staff_of_aviatar && staff_roll < 5) {
+                puts("You find the STAFF of AVIATAR!!");
+                player->staff_of_aviatar = true;
+            } else {
+                puts("You find nothing.");
+            }
+            break;
+        }
+        case 4: {
+            int gold = random_number(25) + 1;
+            printf("You find %d gold pieces.\n", gold);
+            player->gold += gold;
+            break;
+        }
+        case 5:
+            puts("You find a female servant.");
+            ++player->female_servants;
+            break;
+        case 6:
+            puts("You find a male servant.");
+            ++player->male_servants;
+            break;
+        case 7:
+            puts("you discover a bow.");
+            ++player->bows;
+            break;
+        case 8:
+            puts("You discover an astral gate inside!");
+            if (random_number(100) + 1 <= 12) {
+                puts("A creature comes thru the gate.");
+                if (!fight_gate_creature(player)) {
+                    return false;
+                }
+            } else {
+                puts("The gate closes.");
+            }
+            break;
+        case 9:
+            puts("You find nothing.");
+            break;
+        }
+    }
+    return wait_for_key();
 }
 
 static bool event_sick_servants(Player* player)
@@ -1484,7 +1789,7 @@ static bool run_event(Player* player)
     case 4: return event_combat(player);
     case 5: event_thicket(); break;
     case 6: return event_hollow_tree(player);
-    case 7: event_grass_hut(); break;
+    case 7: return event_grass_hut(player);
     case 8:
         if (player->ring_power > 0) {
             return event_mountain_trail(player);

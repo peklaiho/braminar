@@ -211,3 +211,16 @@ waits for automatic gambling rounds to finish before advancing their pause.
 event text, key counts, and requested delays without DOSBox. Fatal injury
 compares event state before bookkeeping because DOS reclaims DS after death.
 See [research notes](gypsy-research.md) for scope and limits.
+
+## Grass hut probes
+
+`./hut_probe.py > doc/captures/2026-11-15-hut-probes.txt` captures 41 controlled
+hut cases and saves `doc/hut-checkpoints.json`. The runner resets temporary
+player memory and RNG, records every choice and combat-round pause, and restarts
+after death if more cases remain. Pass case names to update selected entries;
+`--output PATH` selects a separate checkpoint file.
+
+`./check_hut.py --sanitize` compares state, quest items, charm, RNG, normalized
+text, key counts, and requested delays without DOSBox. Fatal cases compare event
+state before turn bookkeeping, because DOS reclaims DS on exit.
+See [research notes](hut-research.md) for scope and remaining limits.

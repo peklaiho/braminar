@@ -75,7 +75,7 @@ Separate combat text exists for ordinary monsters, Anthrax the wizard, a dragon,
 
 Session 01 observed Goblins demanding 7 males, 9 females, and 7 gold. Choosing `R` produced `You got away!` with no servant loss. The [band and shared combat rules](mechanics.md#band-encounters) are now recovered and implemented: template selection, all three payment demands, horse/cart losses, escape conditions, equipment destruction, poison, attack and damage tables, pauses, experience, ring awards, and loot. The servant-loss branch requires a horse, no cart, and more than two servants, and reduces each sex's count to at most one.
 
-The ordinary combat research run fought Demons, used all twelve arrows, continued unarmed, and died at -1.73 HP with the enemy at 31.37 HP. Separately labelled controlled probes verify victories, death, payment, fleeing, ring effects, and equipment behavior against the remake. The shared routine is called by bands and the river champion; the separate wizard, dragon, Mad King, and other specialized combat routines remain unimplemented and must be investigated independently.
+The ordinary combat research run fought Demons, used all twelve arrows, continued unarmed, and died at -1.73 HP with the enemy at 31.37 HP. Separately labelled controlled probes verify victories, death, payment, fleeing, ring effects, and equipment behavior against the remake. The shared routine is called by bands and the river champion; the dragon and gate-creature routines are now implemented and compared as part of [grass-hut research](hut-research.md). Wizard and Mad King combat remain separate unfinished routines.
 
 ## Dark Castle of the Mad King
 
@@ -140,20 +140,15 @@ The ordinary combat research playthrough observed two more gnome visits: announc
 
 ## Grass hut
 
-- Chance to find nothing
-- Feed hungry puppy, receive reward for good deed
-- Chance to find sick old man and heal him, receive reward for good deed
+The hut is now implemented, including all occupied/quiet outcomes and the separate dragon and gate-creature fights. [Research notes](hut-research.md) distinguish binary rules, controlled comparisons, and remaining validation limits.
 
-Additional strings in the hut's surrounding block (`0x6CD3` to `0x7558`) suggest:
+- Before asking entry, a roll announces either sounds or silence. Declining also pauses.
+- In a noisy hut, meet the sick old man, hungry puppy, or hermit with a dragon. Helping the man uses one medicine if available, otherwise comforts him. Helping the puppy uses one food if available, otherwise pets it. These two scenes do not give rewards in slot 7: earlier string-led reward guesses belong to the separate later block around `0x91D0`–`0x95xx`, not this routine.
+- The hermit offers doubled possessions after defeating the dragon. On a betrayal outcome he announces taking female servants but does not actually subtract them. Refusing his challenge instead offers to kill him, provoking the dragon without a doubling/betrayal reward afterward.
+- Quiet-hut finds include a sword, arrows, a rare Staff, gold, either sex of servant, a bow, an astral gate, or nothing. A gate can close or summon one of five creatures.
+- A surviving creature fight grants experience and one of six rewards. All displayed “50 Lbs of food” outcomes actually add 250 food. The remake preserves both that discrepancy and the hermit's announced-only theft.
 
-- An old hermit with a dragon offers to double possessions if the player beats the dragon.
-- The hermit may disappear with female servants; the player can be offered a choice to kill him, provoking the dragon.
-- Find a rusty sword, arrows, the Staff, gold, servants, or a bow.
-- Discover an astral gate through which a creature can appear.
-
-These branches need control-flow verification before their grouping under the hut is considered confirmed. A later block repeats the old-man and puppy scenes and describes a watching deity rewarding a good deed or reducing the player's level. Possible rewards include servants, food, poison, and the Talisman.
-
-Session 04 entered a grass hut and found nothing. After its pause, status showed only the ordinary 0.10 HP healing and 42 food consumed for 84 servants plus the player. This verifies one empty visit, not the other hut branches.
+Session 04's ordinary empty-hut visit remains recorded separately: after its pause, status showed only the normal 0.10 HP healing and 42 food consumed for 84 servants plus the player. The new probes modify player state and RNG; they are not additional ordinary visits.
 
 ## Mountain trail and guru
 
@@ -194,7 +189,7 @@ Strings from around `0xDEF5` describe a dark dwelling or laboratory, with a roas
 
 - Find food and wine, servants, gold, or the Staff.
 - Find potions and choose whether to try them.
-- Potion messages describe losing one level, gaining two levels, changing hair color, losing servants transformed into fleeing gremlins, restoring 10 hit points, preventing servant illnesses, charming the next dragon, curing plague, curing ugliness, or drinking water or a zombie urine sample.
+- Potion messages describe losing one level, gaining two levels, changing hair color, losing servants transformed into fleeing gremlins, restoring 10 hit points, preventing servant illnesses, charming a dragon (the text says “Next meeting,” but the dragon routine does not consume the counter), curing plague, curing ugliness, or drinking water or a zombie urine sample.
 - On leaving, discover a pentacle and choose whether to step into it.
 - Pentacle messages describe receiving a golden ring, being thrown out by a freezing wind, being hit by a pie, a figure appearing, or being raised to level 20 and given the Staff.
 
@@ -215,6 +210,6 @@ Session 04 played Dagger's Hand: the player succeeded, the opponent hit a finger
 
 ## Additional player state to investigate
 
-State beyond the visible status screen includes the Ring of Doom, plague, protection from servant illnesses, the ability to charm a dragon on the next meeting, and knowledge of the prime command. Ring acquisition through shared combat, attack bonuses, forced fighting, growth, plague progression, the illness-protection gate, and prime-command generation are documented in `mechanics.md`. Other acquisition paths and effects still need reconstruction; these state variables are not additional main-loop events.
+State beyond the visible status screen includes the Ring of Doom, plague, protection from servant illnesses, a persistent dragon-charm counter, and knowledge of the prime command. Ring acquisition through shared combat, attack bonuses, forced fighting, growth, plague progression, the illness-protection gate, and prime-command generation are documented in `mechanics.md`. Other acquisition paths and effects still need reconstruction; these state variables are not additional main-loop events.
 
 The main-loop slots are now mapped in `mechanics.md`. The completeness of nested encounters and their conditions still needs investigation.

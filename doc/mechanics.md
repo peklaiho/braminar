@@ -236,7 +236,7 @@ These rules were checked in [controlled original-game probes](combat-research.md
 
 ## Shared combat
 
-`0x2DB4`–`0x3E6B` implements the shared routine called by band encounters and the river's champion path (`0x9D99`). Wizard, dragon, Mad King, and other specialized fights use separate routines and remain unfinished; these rules must not be applied to them without checking their code.
+`0x2DB4`–`0x3E6B` implements the shared routine called by band encounters and the river's champion path (`0x9D99`). Wizard, dragon, Mad King, and gate-creature fights use separate routines; these shared rules must not be applied to them. Dragon and gate-creature combat are now recovered and implemented for the grass hut below; wizard and Mad King combat remain unfinished.
 
 ### Setup and round selection
 
@@ -374,3 +374,103 @@ After any entered visit, ask `will you buy some advice?` for ten gold (`0xCF7C`�
 A funded Y draws `Roll(35)` and displays the corresponding fixed rumor (`0xD046`–`0xD8B3`). All 35 branches are populated; none is conditional on player inventory or prior knowledge. It then subtracts ten gold and pauses once (`0xD8B6`–`0xD8D4`). Repeated visits may give the same rumor. Hints only print text; buying advice does not grant quest items, change flags, or generate Pan's command. Slave references become servants in the remake; other rumor wording is preserved.
 
 See [research and comparison coverage](gypsy-research.md) and [retained checkpoints](gypsy-checkpoints.json).
+
+## Grass hut
+
+Recovered from `0x6CC5`–`0x7579`, dispatched by slot 7. This is separate from the repeated old-man/puppy scenes around `0x91D0`–`0x95xx`; helping someone in this hut does not call that later good-deed reward routine. See [research and validation limits](hut-research.md).
+
+### Entry and occupants
+
+The hut draws `Roll(100)` before the entry answer. Values 51–100 announce sounds within; 1–50 announce silence (`0x6CFA`–`0x6D57`). Both ask `Will you enter?`. Declining prints `You move on.` and pauses once. Every completed hut path ends with this same single outer keypress pause (`0x756A`–`0x7570`); fights may additionally pause after each round.
+
+Entering a noisy hut draws `Roll(3)` (`0x6D93`–`0x6DA2`):
+
+| Roll | Occupant | Behavior |
+| --- | --- | --- |
+| 1 | Sick old man | Ask to cure him. Y uses one medicine if positive, otherwise comforts him. Both print that he seems better, then delay one second. N does nothing further. No reward, HP gain, or experience change (`0x6DAA`–`0x6E9D`). |
+| 2 | Hungry puppy | Ask to share food. Y uses one food if positive, otherwise pets the puppy, then delays one second. N does nothing further. No reward or experience change (`0x6EAB`–`0x6FAD`). Starvation can follow at bookkeeping. |
+| 3 | Hermit with dragon | Offers to double possessions for defeating the dragon. See below. |
+
+### Hermit
+
+Accepting the challenge calls the separate dragon routine (`0x7065`–`0x706B`). If the player is alive afterward, draw `Roll(100)`; 1–20 announces that the hermit disappears with `min(Roll(10), female servants)` females. This prints the count but never subtracts it (`0x7083`–`0x710F`), preserving another original discrepancy between text and state. The count draw occurs even with zero females.
+
+Values 21–100 double male servants, female servants, gold, medicine, food, poison, swords, bows, arrows, and daggers, in that order (`0x7112`–`0x71DD`). HP, experience, level, quest items, ring, charm, horse, and cart are not doubled. The parent skips both outcome draws and rewards after death.
+
+Refusing the challenge instead asks `Kill the hermit?` (`0x71E3`–`0x720C`). Y announces his death and calls the dragon routine; this path never doubles possessions or rolls for betrayal. N proceeds to the outer pause.
+
+### Quiet-hut finds
+
+Entering a quiet hut draws `Roll(9)` (`0x7255`–`0x7264`).
+
+| Roll | Result | Extra draws and state changes |
+| --- | --- | --- |
+| 1 | Rusty sword | +1 sword |
+| 2 | Quiver | +12 arrows |
+| 3 | Staff or nothing | Always draw `Roll(100)`, including if already held. Award the Staff only if absent and the roll is 1–4; otherwise print nothing found (`0x72E5`–`0x735F`). |
+| 4 | Gold | Add `Roll(25)` gold |
+| 5 | Female servant | +1 female |
+| 6 | Male servant | +1 male |
+| 7 | Bow | +1 bow |
+| 8 | Astral gate | Draw `Roll(100)`: 1–12 summons a creature and calls `0x4B67`; 13–100 closes the gate. |
+| 9 | Nothing | No extra draws |
+
+### Dragon combat
+
+The separate routine is `0x56C6`–`0x5DBD`. It does not use shared band combat, weapon bonuses, ring bonuses, or arrows.
+
+- A positive signed charm word at `DS:029A` prints submission, adds `Roll(3)` experience, and returns without other combat draws or a pause. The word is not consumed or cleared (`0x56D0`–`0x5731`). Startup clears it (`0xA467`–`0xA46D`); a laboratory potion increments it (`0xE7B1`–`0xE7B7`). Despite the potion's “Next meeting” text, the recovered dragon routine leaves it persistent. Acquisition through that potion is still unimplemented.
+- Without charm, draw dragon level `Roll(14)`, then HP `Roll(50) + 30` (31–80). If poison is positive, offer its use. Y consumes one dose, sets dragon HP to zero without a saving throw, and prints use (`0x5734`–`0x57F2`).
+- While both HP values are positive, draw player attack `Roll(7)`, then dragon attack `Roll(7)`. The dragon retaliates even if the player's attack killed it. Weapons, servants, ring, and level do not alter these draws or damage.
+- Display both HP values to two decimals and pause after each round (`0x5C5E`–`0x5CC5`). At the end print player victory/death and dragon victory/slain independently. A surviving player gains integer `dragon level / 2` experience. No final combat pause, loot, or ring draw; the hut performs the outer pause and any hermit reward.
+
+| Roll | Player damage to dragon | Dragon damage to player |
+| --- | --- | --- |
+| 1 | 0 | 0 |
+| 2 | 0.1 | 0.1 |
+| 3 | 0.7 | 0.6 |
+| 4 | 1.2 | 1.4 |
+| 5 | 2 | 2 |
+| 6 | 4.3 | 3.4 |
+| 7 | 5.1 | 4.2 |
+
+Fractional values simplify embedded Real48 constants according to the existing precision policy.
+
+### Gate-creature combat
+
+The separate routine is `0x4B67`–`0x56C5`. Draw `Roll(5)` for the type, then its HP die (`0x4B71`–`0x4CD8`). Original spellings are retained.
+
+| Roll | Name | Level | Starting HP |
+| --- | --- | --- | --- |
+| 1 | Cerberus | 16 | `Roll(5) * 14` |
+| 2 | Collosus | 16 | `Roll(7) * 12` |
+| 3 | Lolth | 18 | `Roll(10) * 10` |
+| 4 | Vaprak | 20 | `Roll(11) * 10` |
+| 5 | The Lich King | 22 | `Roll(14) * 12` |
+
+Announce the creature and delay 500 ms. If poison is positive, offer its use; Y consumes one dose and draws `Roll(100)`. A value strictly greater than creature level sets its HP to zero; equality or below saves (`0x4D0B`–`0x4DD8`). Refusal has no poison draw.
+
+Each round draws player attack `Roll(7)` followed by creature attack `Roll(7)`, with any extra player-damage draw between them. The creature retaliates even after a killing hit. No equipment, ring, servant, or player-level modifier applies. Display HP to two decimals and pause after each round (`0x4DDB`–`0x532D`).
+
+| Roll | Player damage to creature | Creature damage to player |
+| --- | --- | --- |
+| 1 | 0 | 0 |
+| 2 | 0.2 | 1 |
+| 3 | 1.4 | 3 |
+| 4 | 2.5 | 5 |
+| 5 | 3.4 | 7 |
+| 6 | `Random(10)`, 0–9 | 9 |
+| 7 | `Roll(5) + 7`, 8–12 | 11.5 |
+
+At the end print player victory/death and creature survival/disappearance independently. A surviving player gains integer `creature level / 2` experience and receives one unconditional `Roll(6)` reward (`0x5330`–`0x56BF`). No final combat pause; return to the hut's outer pause.
+
+| Reward roll | State effect |
+| --- | --- |
+| 1 | Award Staff if absent; otherwise +250 food |
+| 2 | Award Talisman if absent; otherwise +250 food |
+| 3 | +250 food |
+| 4 | +5 poison |
+| 5 | Set HP to `player level * 10`, even if previously above this |
+| 6 | +20 food, +10 medicine, +2 poison; set horse and cart true |
+
+All three food paths announce `50 Lbs of food.` but add 250 (`0x54EC`–`0x54F5`, `0x5566`–`0x556F`, `0x55A5`–`0x55AE`). The remake preserves both the message and the arithmetic. Experience promotion and normal food consumption follow at turn bookkeeping, after the hut pause.
