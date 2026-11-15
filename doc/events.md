@@ -6,7 +6,7 @@ Recovered rules and their binary evidence belong in [mechanics.md](mechanics.md)
 
 Preserve the player-visible experience when implementing these findings. Minor numeric precision details with no observable effect may be simplified under the guideline in `mechanics.md`; record intentional differences in [CHANGES.md](../CHANGES.md). Keep original observations distinct from those implementation choices.
 
-The main loop selects one of 16 slots, with state-dependent substitutions and two separate hollow-tree routines. The recovered dispatch, healing, food consumption, starvation, and level advancement are described in [mechanics.md](mechanics.md#main-turn-loop). Band encounters and shared combat, the river, the enchanted forest, both branches of the slot-6 hollow tree, storms, servant illness, and the Keep's prerequisite rejection are implemented; other location bodies remain incomplete.
+The main loop selects one of 16 slots, with state-dependent substitutions and two separate hollow-tree routines. The recovered dispatch, healing, food consumption, starvation, and level advancement are described in [mechanics.md](mechanics.md#main-turn-loop). Band encounters and shared combat, the river, the enchanted forest, both branches of the slot-6 hollow tree, storms, servant illness, Pan, City/Village, and the Keep's prerequisite rejection are implemented; other location bodies remain incomplete.
 
 ## Recorded playthroughs
 
@@ -17,15 +17,17 @@ Capture every encountered event, including encounters outside the current resear
 - [2026-11-14, session 03](session-03.md): five ordinary turns covering a city visit, a victorious Drow fight after failed flight, a river vision, Keep rejection, and servant illness; five separate controlled river checks.
 - [2026-11-14, session 04](session-04.md): ordinary play reaching an empty gnome home, Anthrax's laboratory, and a Gypsy camp; eight separate controlled empty-home checks.
 
-Additional targeted research: [storms and servant illness](storm-illness-research.md), with controlled comparisons and explicit blank-input behavior differences.
+- [2026-11-15, town research](town-research.md#ordinary-discovery-pass): a separate ordinary five-turn pass paid Gremlins, declined three river visits, and treated servant flu; no town appeared. Forty controlled City/Village cases are documented separately in the same ledger.
+
+Additional targeted research: [City and Village](town-research.md), [Pan](pan-research.md), and [storms and servant illness](storm-illness-research.md), with controlled comparisons and explicit blank-input behavior differences.
 
 ## City and Village
 
-City and Village are similar.
+City and Village now have shared service implementations and complete location wrappers. [Forty controlled comparisons](town-research.md) establish the implemented scope; [mechanics](mechanics.md#city-and-village) records binary-verified rules. Historical observations and provisional string findings below are retained as the discovery record.
 
 Observed village sequence in session 01: enter → market → sell (male and female numeric quantities) → buy → tavern → drink → socialize → darts → store. Selling zero of each sex was accepted. A two-gold drink produced `It wasn't so hot.`; socializing produced `No one to socialize with.`; darts offered a five-gold ante and was declined. This is one path through the location, not a complete branch map. See the capture ledger for store offers and the eventual exit state.
 
-The combat research playthrough sold two males and five females for 81 gold at its fixed prices, bought a bow, twelve arrows, and ten food, and paid twenty gold for room 3. Female servants bandaged wounds during lodging; the next status showed three HP restored plus normal turn healing. Store offer prices differed from session 01, and `You have:` followed the gold balance after each purchase rather than item stocks. Store price generation and inn healing formulas still need binary verification.
+The combat research playthrough sold two males and five females for 81 gold at its fixed prices, bought a bow, twelve arrows, and ten food, and paid twenty gold for room 3. Female servants bandaged wounds during lodging; the next status showed three HP restored plus normal turn healing. Store offer prices differed from session 01, and `You have:` followed the gold balance after each purchase rather than item stocks. Price generation and inn healing have since been [recovered](mechanics.md#general-store).
 
 Binary inspection confirms that male and female servant prices are generated separately during player setup as `Random(10) + 5`, giving prices from 5 to 14 gold pieces. They stay fixed during the game and are used for both buying and selling. The two prices are displayed after gender selection, followed by a keypress pause. See [the binary findings](mechanics.md#servant-prices) for offsets and arithmetic.
 
@@ -56,9 +58,9 @@ Additional string findings:
 - Socializing can recruit a patron as a servant.
 - Rats may eat food while resting; female servants may bandage wounds.
 
-The placement of the cleric and mugger encounters within city or village visits still needs verification.
+Subsequent binary inspection places the extra marketplace after the City store, then the inn, cleric, and muggers. The Village instead checks for a pickpocket before shared services; it has none of those City-only extras. Muggers require no servants; the cleric can remove the ring before their protection check. [Recovered flow](mechanics.md#entry-and-location-differences).
 
-Session 03 entered a city and declined market, tavern, store, and inn in that order. It returned directly to status with only normal healing and food use. No extra marketplace, cleric, or mugger scene appeared on this visit; this does not establish when those branches occur.
+Session 03 entered a city and declined market, tavern, store, and inn in that order. It returned directly to status with only normal healing and food use. No extra marketplace, cleric, or mugger scene appeared on this visit; their triggers have since been recovered in the [town rules](mechanics.md#city-and-village).
 
 ## Combat
 

@@ -173,3 +173,18 @@ failure, decline, invalid answer keys, and question records 1, 3, and 20.
 input counts without DOSBox, and checks all 20 embedded question records against
 `BRAM.DAT` with the approved correction. See the [ledger](pan-research.md) for
 scope and limits.
+
+## City and Village probes
+
+`./town_probe.py > doc/captures/2026-11-15-town-probes.txt` captures 40 controlled
+City/Village cases and saves `doc/town-checkpoints.json`. It resets player memory,
+servant prices (8/13), and RNG before each case and records memory at every input
+boundary. Pass case names to update selected cases. `--output PATH` allows
+independent capture batches. The runner restarts after fatal poisoning or the
+original zero-gold pickpocket abort when more cases remain.
+
+`./check_towns.py --sanitize` compares state, RNG, prompt order, input counts, and
+requested delays without DOSBox. `--fixtures PATH` selects another checkpoint
+file. Fatal poisoning compares event state before bookkeeping because DOS has
+reclaimed DS after death; the abort case checks unsuccessful termination.
+See [town research](town-research.md) for captures, reproduction, and limits.

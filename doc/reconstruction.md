@@ -25,10 +25,12 @@ The boxes above are a reusable workflow, not claims that every target needs ever
 - [x] Storms: implemented and compared across all eight types, shelter, zero/small parties, tidal losses, and starvation. [Evidence and limits](storm-illness-research.md).
 - [x] Servant illness: implemented and compared for medicine allocation, zero/one-sex parties, excessive cures, protection, and numeric input. Original excessive cures are preserved; integer input now follows the intentional shared-reader policy in CHANGES.md. Original bare-token/input-length behavior remains research-only. [Evidence and limits](storm-illness-research.md).
 - [x] Pan: implemented all 20 decoded questions, random answers, and prime-command generation; compared success, failure, decline, invalid answer keys, and command replacement/preservation. [Evidence and limits](pan-research.md).
-- [ ] Keep command branch: recover exact input/comparison behavior and connect successful entry to the final-battle stub after turn bookkeeping. Check level/Staff gates, wrong command, and correct command.
-- [ ] After these bounded targets, run an ordinary integration pass, choosing unfinished branches and checking interactions such as Pan's command followed by the Keep.
+- [x] City/Village: shared servant market, tavern, store, inn, and both complete location wrappers; City marketplace/cleric/muggers and Village pickpocket. Forty controlled comparisons. [Evidence and limits](town-research.md).
+- [ ] Town follow-up: compare City shared-service purchases plus the bargain marketplace in one visit, and cleric/ring/mugger interactions. Continue ordinary integration play for discovery.
+- [ ] Keep command branch (deferred in priority until endgame work): recover exact input/comparison behavior and connect successful entry to the final-battle stub after turn bookkeeping. Check level/Staff gates, wrong command, and correct command.
+- [ ] When returning to endgame work, run an ordinary integration pass checking Pan's command followed by the Keep.
 
-This is a suggested order based on existing evidence, not a requirement to ignore new findings. Guru removal is another small candidate once its remaining flow and text are verified. Split city/village and specialized combat work into smaller targets when selecting them.
+City/Village took priority at the user's request; the Keep is for later endgame work. Guru removal is another small candidate once its remaining flow and text are verified. Split specialized combat work into bounded targets when selecting it.
 
 ## Core systems
 
@@ -49,12 +51,12 @@ Slot numbers follow the [recovered dispatch](mechanics.md#event-selection). “P
 
 | Slot | Event or branch | Rules / implementation | Validation and next gap |
 | --- | --- | --- | --- |
-| 1, 2 | Village/city entry and visit sequence | Partial / placeholder | Ordinary market/tavern/store/inn visits and city skip sequence. Recover entry/exit conditions and exact pauses. [Evidence](events.md#city-and-village) |
-| 1, 2 | Servant market | Prices recovered; transactions partial / placeholder | Observed sales and zero-quantity input. Recover quantity limits, affordability, buying and selling flow. [Prices](mechanics.md#servant-prices) |
-| 1, 2 | Tavern: drinks, socializing, darts | Partial / placeholder | Some ordinary outcomes; recover each activity's costs, probabilities, effects, and return flow. [Evidence](events.md#city-and-village) |
-| 1, 2 | Store | Partial / placeholder | Purchases observed; recover price generation, quantities, affordability, and equipment effects. [Ledger](combat-research.md#ordinary-playthrough) |
-| 1, 2 | Inn | Partial / placeholder | Room 3 lodging and bandaging observed; recover room prices, healing, rats, and prerequisites. [Evidence](events.md#city-and-village) |
-| 1, 2 | Pickpocket, extra marketplace, cleric, muggers | String findings / placeholder | Establish grouping, triggers, ring interactions, and effects before implementation. [Evidence](events.md#city-and-village) |
+| 1, 2 | Village/city entry and visit sequence | Recovered / implemented | Both wrappers share services; controlled entry/decline/skip order and ring warnings. [Evidence and limits](town-research.md) |
+| 1, 2 | Servant market | Recovered / implemented | Sale caps, exact funds, male-first spending, unaffordable request checked. Shared integer policy applies. [Rules](mechanics.md#servant-market) |
+| 1, 2 | Tavern: drinks, socializing, darts | Recovered / implemented | All drink outcomes including fatal poison, both recruitment sexes/looks gate/decline, darts win/tie/loss/ring checked. Remaining combinations in [ledger](town-research.md). |
+| 1, 2 | Store | Recovered / implemented | All merchandise, exact/insufficient funds, supply retries, owned transport prompts/draws checked. Prices follow binary. [Rules](mechanics.md#general-store) |
+| 1, 2 | Inn | Recovered / implemented | All rooms, uncapped healing, bandaging, exact/insufficient funds, rat food loss checked. Rat roll at zero food lacks retained probe. [Rules](mechanics.md#inn) |
+| 1, 2 | Pickpocket, extra marketplace, cleric, muggers | Recovered / implemented | Village-only pickpocket; City-only marketplace/cleric/muggers. Purchases, cures, ring protection, theft/abort checked; cross-service combinations remain. [Ledger](town-research.md) |
 | 3 | Gypsy camp: Dagger's Hand and advice | Partial / placeholder | One game victory and paid advice observed. Recover betting, losses, probabilities, rumor selection, and flow. [Pass](session-04.md) |
 | 4; guarded 8, 9 | Band encounter | Recovered / implemented | Twelve combat scenarios cover payment, escape, forced fighting, and shared combat. [Ledger and limits](combat-research.md) |
 | 5 | Thicket/laboratory, potions, pentacle | Partial / placeholder | Laboratory entry and wizard victory observed; recover encounter selection, exploration, potion/pentacle effects and conditions. [Evidence](events.md#thicket-in-the-woods) |

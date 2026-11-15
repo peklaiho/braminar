@@ -107,7 +107,7 @@ The two guarded slots do not reroll when their conditions fail. At character cre
 
 The [first recorded session](captures/2026-11-14-session-01.md) independently shows HP increasing by 0.10 per completed turn and food decreasing by five for a party with nine servants. An elves' gift adds ten food before the five-unit consumption. These observations corroborate the binary calculations; they do not independently test every boundary above.
 
-The remake implements the dispatch, bookkeeping, band encounters and shared combat, river, forest, both branches of the slot-6 hollow tree, storms, servant illness, Pan, and the Keep's prerequisite rejection, with explicit placeholders for other encounters. Some event bodies and their random calls are still missing, so subsequent event sequences will differ even with equal initial seeds. The remake intentionally uses `double` for HP and experience without Real48 emulation, as recorded in `CHANGES.md`. Food is currently integer; whether inventory calculations require visible fractional quantities remains unresolved and must be checked as those mechanics are recovered. The final-assault transition is still deferred with the eligible Keep branch; `start_final_battle()` remains its intended stub entry point.
+The remake implements the dispatch, bookkeeping, band encounters and shared combat, river, forest, both branches of the slot-6 hollow tree, storms, servant illness, Pan, City/Village, and the Keep's prerequisite rejection, with explicit placeholders for other encounters. Some event bodies and their random calls are still missing, so subsequent event sequences will differ even with equal initial seeds. The remake intentionally uses `double` for HP and experience without Real48 emulation, as recorded in `CHANGES.md`. Food is currently integer; whether inventory calculations require visible fractional quantities remains unresolved and must be checked as those mechanics are recovered. The final-assault transition is still deferred with the eligible Keep branch; `start_final_battle()` remains its intended stub entry point.
 
 ## Enchanted forest
 
@@ -199,7 +199,7 @@ The observed 9 sick males / 1 sick female, treated with 2 / 1 from three medicin
 
 The original token reader at `0x2618`–`0x2653` skips whitespace within the active read and reads a token up to whitespace; an empty `ReadLn` can return without assigning its destination. The parser at `0x105D`–`0x10CB` accepts decimal and `$`-prefixed hexadecimal, with an optional leading minus. Decimal input is bounded to signed 16-bit values; hexadecimal can represent a full 16-bit word, interpreted as signed before the event tests for negativity. Negative treatment values retry without another prompt. `0x2654`–`0x2660` sets the I/O error on an invalid token or overflow. These original limits are reference evidence; they are no longer the remake's input policy. Controlled checks cover decimal negatives, blank input, whitespace-delimited trailing text, positive hexadecimal, and the two abort cases above. A blank male-treatment line in the controlled run advanced to the female prompt and reused a stale local value, consuming all three medicine. The destination is not initialized at routine entry (`0x7705`); an empty read can leave it untouched (`0x2618`–`0x2694`). The remake deliberately retries blank lines instead of emulating uninitialized stack contents; this difference is recorded in CHANGES.md. Bare signs/prefixes and original input-length limits remain outside the original-game comparisons. Extreme inventory arithmetic remains unresolved.
 
-The shared `read_integer` now accepts only nonnegative decimal digits with optional surrounding whitespace, up to C `INT_MAX`. Other nonempty input silently yields zero; blank/whitespace-only lines retry and EOF returns failure. Hexadecimal, signs, mixed text, and fractions are rejected as zero. Nonblank lines filling the 159-character buffer also yield zero. These intentional changes replace the original negative retries, token parsing, and invalid-number aborts; see CHANGES.md. Illness uses this generic reader, which is available for future market quantities. The retained original fixtures are unchanged; comparison checks explicitly account for the new input policy.
+The shared `read_integer` now accepts only nonnegative decimal digits with optional surrounding whitespace, up to C `INT_MAX`. Other nonempty input silently yields zero; blank/whitespace-only lines retry and EOF returns failure. Hexadecimal, signs, mixed text, and fractions are rejected as zero. Nonblank lines filling the 159-character buffer also yield zero. These intentional changes replace the original negative retries, token parsing, and invalid-number aborts; see CHANGES.md. Illness and town quantities use this generic reader. The retained original fixtures are unchanged; comparison checks explicitly account for the new input policy.
 
 ## Implementation checks, 2026-11-14
 
@@ -275,3 +275,67 @@ Always roll `Random(100) + 1` after the fight, even if the player died or alread
 Survivors next roll male servants 1–20, female servants 1–20, and gold 1–50, in that order. Add all three to inventory and add food equal to the sum of those two servant awards (`0x3CED`–`0x3E57`). No loot calls are made for a dead player. Both success and death end with a keypress pause (`0x3E5A`–`0x3E60`). End-of-turn bookkeeping then runs, consuming food for the enlarged party and checking for level advancement or death.
 
 The [probe ledger](combat-research.md) records scenarios and validation. Round HP, arrow use, equipment loss, experience, ring acquisition, rewards, end-of-turn state, and RNG progression were compared against original memory checkpoints. These checks establish the recorded cases, not complete parity for every possible state or for the specialized combat routines.
+
+## City and Village
+
+The Village (`0xC2B9`–`0xC4C0`) and City (`0xC4C1`–`0xCB85`) call the same servant market, tavern, store, and inn routines. The remake uses `event_town(player, city)` and shared service functions. These rules come from binary inspection, with [40 controlled comparisons and an ordinary pass](town-research.md). `Roll(n)` below means `Random(n) + 1`.
+
+### Entry and location differences
+
+- Both ask whether to enter. Declining prints `You go on.` and returns without a pause or encounter random draw. Normal turn bookkeeping still follows.
+- On entry, ring power strictly greater than 10 triggers a warning. The Village peasant says `Mercy is for the Weak!` without a random draw. The City centurion rolls 1–100: below 51 gives the liars warning; otherwise the Ford remark (`0xC30E`–`0xC358`, `0xC513`–`0xC5C2`).
+- The Village then rolls 1–100 for a pickpocket: below 8 (7%) triggers a detection roll. Below `25 + level` prints the three-line discovery/nose-punch message. Otherwise silently subtract `Roll(trunc(gold))` gold (`0xC35B`–`0xC479`). With zero gold, this calls `Random(0)` and aborts the original with runtime error 04. The remake preserves termination, using a POSIX diagnostic instead of reproducing the Pascal runtime's address report. This is not a player death and does not run turn bookkeeping.
+- Both visit servant market → tavern → store in that order. The City then rolls for its extra marketplace; both next visit the inn. The City alone then rolls for a cleric and muggers. The Village has no extra marketplace, cleric, or muggers. The wrappers do not test HP between services, so a fatal drink does not immediately skip later prompts.
+- None of the four common services ends with a keypress pause. Successful lodging requests a two-second delay. The City mugger encounter has an explicit result pause; declining or skipping everything else returns directly to status.
+
+### Servant market
+
+The common routine is `0xAB46`–`0xAD79`. After accepting the market invitation, independently ask to sell and to buy. Each accepted action reads male then female quantities before applying either transaction. It uses the fixed [session prices](#servant-prices) and consumes no random numbers.
+
+Sales cap each quantity to the count held, subtract those servants, and add the corresponding gold. Purchases process males first: if their entire requested cost exceeds current gold, buy zero males; otherwise buy the full quantity and deduct its cost. Then do the same for females against the remaining gold. Exact funds suffice. There is no partial affordable-quantity purchase, transaction retry, or failure message. Each accepted action prints `Done`, even if both quantities are zero or unaffordable.
+
+The remake uses the shared nonnegative integer reader. Its documented malformed/negative/blank-input policy replaces Pascal input behavior; normal decimal transactions preserve the above arithmetic. Extreme signed-integer overflow remains outside the reconstructed scope.
+
+### Tavern
+
+The common routine is `0xAD7A`–`0xB7EF`. Once inside, ask about a drink, socializing, then darts, in that order, and print `You leave the tavern.` No outcome adds an input pause.
+
+- A drink requires at least two gold; otherwise silently skip its effects. Deduct two gold and always draw `Roll(5)` for potential healing first. Next draw `Roll(100)`; below 30 (29%) prints that healing amount, adds it, then caps HP at `level * 10` even if HP was already above that maximum (`0xAE13`–`0xAED8`).
+- Only when the healing check fails, draw another 1–100. Below 15 (14% conditional) selects poison. Draw another 1–100: below `level + 20` lets the player notice and save the poison, adding one poison dose. Otherwise consume one medicine if available, or set HP to zero if none. The remaining drink outcome prints `It wasn't so hot.` (`0xAEDB`–`0xB078`).
+- Accepted socializing draws 1–100: 1–10 meets a girl, 11–20 a guy, 21–100 nobody. An encountered patron always consumes a hair roll and an appearance roll, each 1–5, before asking `Will you Move in?` Hair is Blonde, Gold, Brown, Black, or bald; appearance spans ugly through beautiful/gorgeous. Accepting consumes a 1–100 charm roll even when the player lacks good looks. A roll below 20 together with good looks adds one servant of the patron's sex; otherwise the patron rejects the player. Declining consumes no charm roll (`0xB07B`–`0xB62A`). Player gender does not select the patron.
+- Darts asks every tavern visitor. If accepted with at least five gold, request a 500 ms delay, then draw player score 1–50 and opponent score 1–50. Player score greater than or equal to the opponent's wins and adds ten gold; no ante is deducted first. A loss subtracts five gold unless ring power is strictly greater than 60, in which case the player takes the money and runs without changing gold (`0xB62D`–`0xB7C7`). Insufficient funds silently skip the game and its draws/delay.
+
+### General store
+
+The shared store is `0xB7F0`–`0xBEDB`. On entry, offer each item once, in this order: sword, bow, dagger, twelve arrows, food, medicine, horse if absent, cart if absent. There is no return-to-menu loop.
+
+| Offer | Price | Award |
+| --- | --- | --- |
+| Sword, bow, dagger | Independent `Roll(100)` for each | One of the selected weapon |
+| Twelve arrows | `Roll(20)` | Twelve arrows |
+| Food | One gold per unit | Requested units |
+| Medicine | Three gold per unit | Requested units |
+| Horse, only if absent | `Roll(150)` | Set horse flag |
+| Cart, only if absent | `Roll(250)` | Set cart flag |
+
+Prices are generated immediately before each applicable offer, whether or not the player can afford it. Already owning a horse/cart skips both its price draw and prompt. A cart does not require a horse. `You have:` displays current gold, not inventory. For the sword, the price precedes that balance; later offers show the balance first.
+
+Yes/no purchases silently do nothing when unaffordable; exact funds suffice. Food and medicine repeatedly read quantities until their full cost fits the remaining gold, without a new question or error message on retry (`0xBC14`–`0xBC34`, `0xBCE8`–`0xBD0D`). Their quantities use the remake's shared integer-input policy. The code checks affordability before multiplication to avoid introducing C integer overflow for oversized requested quantities; original extreme 16-bit overflow is not emulated.
+
+### City marketplace
+
+After the general store and before the inn, draw 1–100. Below 18 (17%) offers `It seems that the Market Place is open. Enter?` (`0xC5E0`–`0xC63F`). Declining prints `You proceed on.` with no pause or further marketplace draws.
+
+Accepted entry first asks about food, then poison. Food's entered quantity is gold to spend: subtract that amount and add five times that amount to food, rather than charging one fifth of a gold per individually requested unit (`0xC642`–`0xC726`). Poison costs 100 gold per requested dose (`0xC732`–`0xC807`). Each quantity retries with `? ` until affordable, then applies the purchase; zero is accepted. No marketplace prices or transaction outcomes consume random draws. The store does not sell poison.
+
+### Inn
+
+The shared routine is `0xBEDC`–`0xC2B8`. Accepted entry reads one of the keys 1, 2, 3 (retry invalid keys). Costs are 5, 10, 20 gold. Deduct the chosen cost first; if gold becomes negative, print the insufficient-funds ejection, reset gold to zero, and return without healing or delay (`0xC087`–`0xC161`). Exact funds qualify for lodging.
+
+Successful lodging adds `Roll(room cost)` HP without a maximum clamp. Only if there are no male servants, draw 1–100; below 15 (14%) lets rats eat one food, but only if food is positive. The rat roll is consumed even when food is zero (`0xC193`–`0xC24C`). More than one female servant prints the bandaging line and adds integer `female servants / 2` HP, also without clamping. Then delay two seconds and return (`0xC24F`–`0xC2AF`). Room quality affects the healing roll, not rat probability. Normal turn healing follows only if HP is still below its ordinary maximum.
+
+### City cleric and muggers
+
+After the inn, always draw 1–100 for a cleric. Above 88 (12%) offers a cure for all current gold (`0xC832`–`0xC8EA`). Acceptance sets gold to zero, restores good looks and Brown hair, clears plague and ring, and raises HP to `level * 10` only when below it. It does not remove quest items or clear the servant-illness protection flag. Declining prints `He leaves.` Either response delays 500 ms, without a keypress pause (`0xC8ED`–`0xC9A5`).
+
+Then always draw another 1–100, even with servants. Only when the combined servant count is zero and that roll is below 11 (10%) do muggers appear (`0xC9A8`–`0xC9D8`). Ring power strictly greater than 30 drives them away with lightning, with no loss draws or robbery delay. Otherwise draw gold loss 1–100, cap it to current gold, then food loss 1–20, cap it to current food, announce and subtract both, and delay one second. Either mugger outcome ends in a keypress pause (`0xC9DB`–`0xCB62`). Cleric removal of the ring happens before this protection check.

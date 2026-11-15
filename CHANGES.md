@@ -41,4 +41,8 @@ This document records intentional differences between the classic DOS game and t
 ## Integer input
 
 - Use the shared `read_integer` for nonnegative decimal quantities. Negative numbers, letters, signs, hexadecimal, fractions, mixed text, overflow beyond C `INT_MAX`, and lines of 159 or more characters silently become zero. Surrounding whitespace and leading zeroes are accepted; empty or whitespace-only lines retry. EOF still ends input.
-- This replaces the classic treatment reader's negative-number retries, hexadecimal/token parsing, signed 16-bit limit, and invalid-number aborts. The shared reader is intended for future buying/selling and other integer prompts as they are implemented.
+- This replaces the classic treatment reader's negative-number retries, hexadecimal/token parsing, signed 16-bit limit, and invalid-number aborts. The same policy applies to servant-market, store, and City-marketplace quantities.
+
+## Runtime diagnostics
+
+- An undetected Village pickpocket with zero gold still terminates the game, as the original does when it calls `Random(0)`. The remake prints `Division by zero.` to standard error and exits unsuccessfully instead of showing the Pascal runtime error number and code address.
