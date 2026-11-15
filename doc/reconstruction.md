@@ -27,11 +27,12 @@ The boxes above are a reusable workflow, not claims that every target needs ever
 - [x] Pan: implemented all 20 decoded questions, random answers, and prime-command generation; compared success, failure, decline, invalid answer keys, and command replacement/preservation. [Evidence and limits](pan-research.md).
 - [x] City/Village: shared servant market, tavern, store, inn, and both complete location wrappers; City marketplace/cleric/muggers and Village pickpocket. Forty controlled comparisons. [Evidence and limits](town-research.md).
 - [x] Mountain trail/guru: climb, refusal, ring removal, optional Staff loss, and pause implemented; five controlled comparisons. [Evidence and limits](mountain-research.md).
+- [x] Gypsy camp: Dagger’s Hand and all 35 fortune-teller hints implemented; controlled comparison scope in [research notes](gypsy-research.md).
 - [ ] Town follow-up: compare City shared-service purchases plus the bargain marketplace in one visit, and cleric/ring/mugger interactions. Continue ordinary integration play for discovery.
 - [ ] Keep command branch (deferred in priority until endgame work): recover exact input/comparison behavior and connect successful entry to the final-battle stub after turn bookkeeping. Check level/Staff gates, wrong command, and correct command.
 - [ ] When returning to endgame work, run an ordinary integration pass checking Pan's command followed by the Keep.
 
-City/Village took priority at the user's request; the Keep is for later endgame work. Gypsy camp is the next bounded event candidate: recover Dagger’s Hand and paid advice. Split specialized combat work into bounded targets when selecting it.
+City/Village took priority at the user's request; the Keep is for later endgame work. The grass hut is the next small location candidate: verify its occupants, good deeds, and rewards. Split specialized combat work into bounded targets when selecting it.
 
 ## Core systems
 
@@ -58,7 +59,7 @@ Slot numbers follow the [recovered dispatch](mechanics.md#event-selection). “P
 | 1, 2 | Store | Recovered / implemented | All merchandise, exact/insufficient funds, supply retries, owned transport prompts/draws checked. Prices follow binary. [Rules](mechanics.md#general-store) |
 | 1, 2 | Inn | Recovered / implemented | All rooms, uncapped healing, bandaging, exact/insufficient funds, rat food loss checked. Rat roll at zero food lacks retained probe. [Rules](mechanics.md#inn) |
 | 1, 2 | Pickpocket, extra marketplace, cleric, muggers | Recovered / implemented | Village-only pickpocket; City-only marketplace/cleric/muggers. Purchases, cures, ring protection, theft/abort checked; cross-service combinations remain. [Ledger](town-research.md) |
-| 3 | Gypsy camp: Dagger's Hand and advice | Partial / placeholder | One game victory and paid advice observed. Recover betting, losses, probabilities, rumor selection, and flow. [Pass](session-04.md) |
+| 3 | Gypsy camp: Dagger's Hand and advice | Recovered / implemented | Betting, injuries, both-hit outcome, repeat rounds, last-coin results, advice affordability, and all 35 hints compared with the original. [Evidence and limits](gypsy-research.md). |
 | 4; guarded 8, 9 | Band encounter | Recovered / implemented | Twelve combat scenarios cover payment, escape, forced fighting, and shared combat. [Ledger and limits](combat-research.md) |
 | 5 | Thicket/laboratory, potions, pentacle | Partial / placeholder | Laboratory entry and wizard victory observed; recover encounter selection, exploration, potion/pentacle effects and conditions. [Evidence](events.md#thicket-in-the-woods) |
 | 6 | Occupied gnome home | Recovered / implemented | Several ordinary food/healing observations. Food addition intentionally fixed; healing threshold/over-cap boundaries lack retained original probes. [Rules](mechanics.md#gnomes-announced-food-gift) |

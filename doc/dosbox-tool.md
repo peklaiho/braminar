@@ -198,3 +198,16 @@ temporary player memory and RNG before each case.
 `./check_mountain.py --sanitize` compares state, RNG, normalized text, and input
 counts without DOSBox, and checks EOF at both questions. See the
 [research notes](mountain-research.md) for scope and limits.
+
+## Gypsy camp probes
+
+`./gypsy_probe.py > doc/captures/2026-11-15-gypsy-probes.txt` captures 51 controlled
+camp cases and saves `doc/gypsy-checkpoints.json`. These include all 35 advice
+results, gambling outcomes, and resource boundaries. Pass case names to update
+selected entries, or use `--output PATH` for a separate fixture file. The probe
+waits for automatic gambling rounds to finish before advancing their pause.
+
+`./check_gypsy.py --sanitize` compares state and RNG at each input, normalized
+event text, key counts, and requested delays without DOSBox. Fatal injury
+compares event state before bookkeeping because DOS reclaims DS after death.
+See [research notes](gypsy-research.md) for scope and limits.

@@ -1334,9 +1334,113 @@ static void event_thicket(void)
     puts("\nYou find a thicket in the woods.");
 }
 
-static void event_gypsy_camp(void)
+static bool event_gypsy_camp(Player* player)
 {
-    puts("\nYou come upon a wandering Gypsy camp.");
+    static const char* advice[] = {
+        "Beasts from Pentacles guard their pendants!",
+        "Beware pick-pockets in the village!",
+        "Someone may poison your drink at the tavern!",
+        "Better Bedding means Better healing!",
+        "Rats plague the man with no male servants!",
+        "Many bargains are found at the City Market",
+        "Beware the Ring of Doom!!  It will seduce you!",
+        "Drow elves will destroy your bows & arrows!",
+        "If you run from battle, own a horse and cart!",
+        "The Wizard can give you the plague!",
+        "The Staff of Aviatar may be with the Wizard.",
+        "Beware of pentacles!",
+        "Feed a puppy and you may be rewarded.",
+        "The hermit may betray you!",
+        "The Guru can remove the Ring of Doom.",
+        "Bad weather kills servants.",
+        "Drop no gold from the Mad King's chest.",
+        "A nymph may win your heart in the forest.",
+        "Don't use the Staff without the Command.",
+        "Don't piss on a spark plug!",
+        "Beware, the Divine beings watch you.",
+        "The Talisman may be in the river.",
+        "Pan will tell you the Prime Command.",
+        "Don't stay at a brawl if your low on hit points",
+        "Cure ugliness before you become King!",
+        "Don't accumulate too many servants.",
+        "The Ring of Doom will aid you in battle.",
+        "The Wizard hordes servants and gold.",
+        "Never moon a Tarkanian Butt-Biter.",
+        "Watch out for sheep that carry Profalactics.",
+        "Listen for the Mad King sneaking up on you.",
+        "Enter no dungeon without a dagger.",
+        "Seek the Crystal ball in the Galley.",
+        "The Mad King is crazy, but very strong.",
+        "You may find poison in the Mad Kings dungeon.",
+    };
+    int choice = ask_yes_no("\nYou come upon a Wandering Gypsy Camp.  Enter?");
+    if (choice == EOF) {
+        return false;
+    }
+    if (choice == 'N') {
+        puts("You move on.");
+        return true;
+    }
+    puts("One thin-looking man offers you a game of Dagger's Hand.");
+    puts("(this is where you put your hand down on a board, and you");
+    puts("Stab a dagger between each finger.  If it hits your hand,");
+    puts("you lose.  Each round, you put in a gold piece.)");
+    choice = ask_yes_no("Play the game?");
+    if (choice == EOF) {
+        return false;
+    }
+    if (choice == 'Y' && player->gold > 0) {
+        int pot = 0;
+        int player_roll = 100;
+        int opponent_roll = 100;
+        struct timespec delay = {0, 500000000};
+        while (player->gold > 0 && player_roll > 15 && opponent_roll > 15) {
+            puts("You Ante");
+            --player->gold;
+            pot += 2;
+            nanosleep(&delay, NULL);
+            printf("You go...");
+            player_roll = random_number(100) + 1;
+            if (player_roll < 16) {
+                puts("Ouch!   You hit a finger.");
+                player->hit_points -= 0.4;
+                puts("You lose.");
+            } else {
+                puts("You made it.");
+            }
+            nanosleep(&delay, NULL);
+            printf("He goes...");
+            opponent_roll = random_number(100) + 1;
+            if (opponent_roll < 16) {
+                puts("Ouch!  He hit a finger.");
+                player->gold += pot;
+                puts("You win!");
+            } else {
+                puts("He made it.");
+            }
+            nanosleep(&delay, NULL);
+        }
+        if (player->gold == 0) {
+            puts("You ran out of money.");
+        }
+        if (!wait_for_key()) {
+            return false;
+        }
+    } else if (player->gold <= 0) {
+        puts("You have insufficient funds.");
+    }
+    puts("\nOn your way out, you discover a fortune teller.");
+    puts("the old lady says, \"10 gold buys good advice.\"");
+    choice = ask_yes_no("will you buy some advice?");
+    if (choice == EOF) {
+        return false;
+    }
+    if (choice == 'Y' && player->gold >= 10) {
+        puts(advice[random_number(35)]);
+        player->gold -= 10;
+        return wait_for_key();
+    }
+    return true;
 }
 
 static bool event_mountain_trail(Player* player)
@@ -1376,7 +1480,7 @@ static bool run_event(Player* player)
     switch (random_number(16) + 1) {
     case 1: return event_town(player, false);
     case 2: return event_town(player, true);
-    case 3: event_gypsy_camp(); break;
+    case 3: return event_gypsy_camp(player);
     case 4: return event_combat(player);
     case 5: event_thicket(); break;
     case 6: return event_hollow_tree(player);

@@ -204,12 +204,14 @@ Potion and pentacle details above remain string findings; selection, effects wit
 
 ## Wandering Gypsy Camp
 
+The current [research ledger](gypsy-research.md) also records a separate ordinary discovery pass: Village declined, hollow tree declined, and a Gremlin demand left at its choice prompt. Every encountered screen is retained; no camp appeared in that pass.
+
 - Play a game of Dagger's Hand
 - Fortune teller
 
 The fortune teller offers advice for 10 gold. Rumors mention the Ring of Doom aiding combat and compelling or corrupting its owner, the guru removing it, and other encounter hints.
 
-Session 04 played Dagger's Hand: the player succeeded, the opponent hit a finger, and the player won. After the result pause, the fortune teller offered advice; buying it produced `Pan will tell you the Prime Command.` Gold changed from 108 to 99 across the game and advice together. This supports a net one-gold game prize on this path, but betting arithmetic and probabilities still need binary verification. See [the ledger](session-04.md).
+Session 04 played Dagger's Hand: the player succeeded, the opponent hit a finger, and the player won. After the result pause, the fortune teller offered advice; buying it produced `Pan will tell you the Prime Command.` Gold changed from 108 to 99 across the game and advice together. This ordinary observation is retained in [the ledger](session-04.md). Subsequent binary inspection recovered the accumulating pot, 1–15 injury thresholds, both participants' turns even after injury, and all 35 paid rumors. The camp is now implemented; [controlled research](gypsy-research.md) checks losses, wins, simultaneous injuries, multiple rounds, money boundaries, advice, and fatal injury followed by advice. These probes reset player state and RNG and are separate from the ordinary pass.
 
 ## Additional player state to investigate
 

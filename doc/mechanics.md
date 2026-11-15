@@ -350,3 +350,27 @@ Slot 8 selects the mountain trail only when ring power is positive; without a ri
 - Both questions use the shared case-insensitive Y/N reader. Every completed path pauses once (`0x76EE`–`0x76F4`), followed by ordinary turn bookkeeping. A retained ring therefore gains five power when below 100; a removed ring stays zero.
 
 Five [controlled comparisons](mountain-research.md) check state, RNG, normalized text, and input counts, including invalid keys and ring powers 1 and 100. The remake corrects `lookes` to `looks`, as recorded in CHANGES.md.
+
+## Wandering Gypsy camp
+
+Recovered from file offsets `0xCB86`–`0xD8F9`. Slot 3 always offers entry. N prints `You move on.` and returns without a pause or further random draw. Y offers Dagger's Hand, then the fortune teller regardless of whether the game was played (`0xCBD9`–`0xCD24`, `0xCF7C`).
+
+### Dagger's Hand
+
+- Ask `Play the game?` even when gold is zero. Play requires Y and strictly positive gold (`0xCD09`–`0xCD24`). Otherwise, gold at or below zero prints `You have insufficient funds.` even if the answer was N; a funded refusal is silent (`0xCF3E`–`0xCF79`). Neither skipped path pauses or draws RNG. No dagger, level, ring, servant, or appearance prerequisite is checked.
+- Start a pot at zero, with both previous rolls at 100. Repeat while gold is positive and both previous rolls exceed 15 (`0xCD27`–`0xCD6D`). There is no further choice between rounds.
+- Each round prints `You Ante`, subtracts one gold, and adds two to the pot (`0xCD70`–`0xCDA3`). The opponent's contribution is represented by the pot increment; it is not taken from the player.
+- Delay 500 ms, print `You go...` without a newline, and draw `Roll(100)`. Below 16 (rolls 1–15) prints the finger injury, subtracts the Real48 constant at `0xCE11` (approximately 0.4 HP), and prints `You lose.` Otherwise print `You made it.` (`0xCDA6`–`0xCE4C`).
+- Always delay another 500 ms and let the opponent draw `Roll(100)`, even when the player was injured or HP is nonpositive. Print `He goes...` without a newline. Below 16 prints his finger injury, adds the whole accumulated pot to player gold, and prints `You win!` Otherwise print `He made it.` (`0xCE4F`–`0xCEEF`). Both participants can therefore hit a finger, producing both loss and win messages; the pot is still awarded.
+- Delay 500 ms after the opponent's outcome, then reevaluate the loop. Both successful rolls continue if any gold remains. A last-coin win restores gold before this check; a last-coin round without an opponent injury leaves zero gold.
+- After any played game, zero gold prints `You ran out of money.` The result always ends with a single keypress pause (`0xCEFB`–`0xCF38`), then the fortune teller is offered. There is no HP gate before advice, so even a fatal injury allows that interaction before turn bookkeeping.
+
+The injury threshold occupies 15 of the 100 bounded results. The existing generator's remainder mapping is preserved; this is not a claim of perfectly independent or unbiased rolls. The C remake uses 0.4 HP under the documented double-precision policy.
+
+### Fortune teller
+
+After any entered visit, ask `will you buy some advice?` for ten gold (`0xCF7C`–`0xD039`). Acceptance requires at least ten gold, including equality. A refusal or insufficient funds silently ends the visit without a pause or RNG call.
+
+A funded Y draws `Roll(35)` and displays the corresponding fixed rumor (`0xD046`–`0xD8B3`). All 35 branches are populated; none is conditional on player inventory or prior knowledge. It then subtracts ten gold and pauses once (`0xD8B6`–`0xD8D4`). Repeated visits may give the same rumor. Hints only print text; buying advice does not grant quest items, change flags, or generate Pan's command. Slave references become servants in the remake; other rumor wording is preserved.
+
+See [research and comparison coverage](gypsy-research.md) and [retained checkpoints](gypsy-checkpoints.json).
