@@ -161,3 +161,15 @@ it if further cases remain. Every encountered screen and input is captured.
 RNG, normalized text order, input counts, and requested delays. Input cases explicitly check the documented shared-reader differences, and the
 suite also checks integer parsing directly. See the
 [research ledger](storm-illness-research.md) for evidence and validation limits.
+
+## Pan probes
+
+`./pan_probe.py > doc/captures/2026-11-15-pan-probes.txt` captures five controlled
+Pan cases and saves `doc/pan-checkpoints.json`. It resets temporary player state,
+RNG, and an existing prime command before each case. Captures include success,
+failure, decline, invalid answer keys, and question records 1, 3, and 20.
+
+`./check_pan.py --sanitize` compares state, command, RNG, normalized text, and
+input counts without DOSBox, and checks all 20 embedded question records against
+`BRAM.DAT` with the approved correction. See the [ledger](pan-research.md) for
+scope and limits.

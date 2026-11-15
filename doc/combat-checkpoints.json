@@ -1,0 +1,194 @@
+[
+  {
+    "name": "arrows",
+    "source": "doc/captures/2026-11-14-combat-arrows.txt",
+    "config": {"arrows": 2, "bows": 1, "cart": false, "choice": "f", "daggers": 0, "female": 12, "food": 100, "gold": 100, "horse": false, "hp": 50, "level": 8, "male": 12, "poison": 0, "ring": 0, "seed": 6427, "swords": 0, "use_poison": false},
+    "died": false,
+    "checkpoints": [
+      {"arrows": 2, "bows": 1, "daggers": 0, "experience": 0.0, "female": 12, "food": 100.0, "gold": 100.0, "hp": 50.0, "level": 8, "male": 12, "poison": 0, "ring": 0, "seed": 1997953064, "swords": 0},
+      {"arrows": 1, "bows": 1, "daggers": 0, "experience": 0.0, "female": 12, "food": 100.0, "gold": 100.0, "hp": 50.0, "level": 8, "male": 12, "poison": 0, "ring": 0, "seed": 2694442700, "swords": 0},
+      {"arrows": 0, "bows": 1, "daggers": 0, "experience": 0.0, "female": 12, "food": 100.0, "gold": 100.0, "hp": 49.99, "level": 8, "male": 12, "poison": 0, "ring": 0, "seed": 4113819399, "swords": 0},
+      {"arrows": 0, "bows": 1, "daggers": 0, "experience": 0.0, "female": 12, "food": 100.0, "gold": 100.0, "hp": 49.99, "level": 8, "male": 12, "poison": 0, "ring": 0, "seed": 2613110873, "swords": 0},
+      {"arrows": 0, "bows": 1, "daggers": 0, "experience": 0.0, "female": 12, "food": 100.0, "gold": 100.0, "hp": 49.89, "level": 8, "male": 12, "poison": 0, "ring": 0, "seed": 262388651, "swords": 0},
+      {"arrows": 0, "bows": 1, "daggers": 0, "experience": 0.0, "female": 12, "food": 100.0, "gold": 100.0, "hp": 47.79, "level": 8, "male": 12, "poison": 0, "ring": 0, "seed": 456024317, "swords": 0},
+      {"arrows": 0, "bows": 1, "daggers": 0, "experience": 0.0, "female": 12, "food": 100.0, "gold": 100.0, "hp": 42.79, "level": 8, "male": 12, "poison": 0, "ring": 0, "seed": 1521670223, "swords": 0},
+      {"arrows": 0, "bows": 1, "daggers": 0, "experience": 0.0, "female": 12, "food": 100.0, "gold": 100.0, "hp": 40.69, "level": 8, "male": 12, "poison": 0, "ring": 0, "seed": 1015226785, "swords": 0},
+      {"arrows": 0, "bows": 1, "daggers": 0, "experience": 0.0, "female": 12, "food": 100.0, "gold": 100.0, "hp": 40.59, "level": 8, "male": 12, "poison": 0, "ring": 0, "seed": 15809779, "swords": 0},
+      {"arrows": 0, "bows": 1, "daggers": 0, "experience": 1.25, "female": 23, "food": 119.0, "gold": 148.0, "hp": 40.59, "level": 8, "male": 20, "poison": 0, "ring": 0, "seed": 1290725783, "swords": 0},
+      {"arrows": 0, "bows": 1, "daggers": 0, "experience": 1.25, "female": 23, "food": 97.0, "gold": 148.0, "hp": 40.69, "level": 8, "male": 20, "poison": 0, "ring": 0, "seed": 1290725783, "swords": 0}
+    ]
+  },
+  {
+    "name": "bare",
+    "source": "doc/captures/2026-11-14-combat-bare.txt",
+    "config": {"arrows": 0, "bows": 0, "cart": false, "choice": "f", "daggers": 0, "female": 12, "food": 100, "gold": 100, "horse": false, "hp": 50, "level": 8, "male": 12, "poison": 0, "ring": 0, "seed": 6427, "swords": 0, "use_poison": false},
+    "died": false,
+    "checkpoints": [
+      {"arrows": 0, "bows": 0, "daggers": 0, "experience": 0.0, "female": 12, "food": 100.0, "gold": 100.0, "hp": 50.0, "level": 8, "male": 12, "poison": 0, "ring": 0, "seed": 1997953064, "swords": 0},
+      {"arrows": 0, "bows": 0, "daggers": 0, "experience": 0.0, "female": 12, "food": 100.0, "gold": 100.0, "hp": 46.8, "level": 8, "male": 12, "poison": 0, "ring": 0, "seed": 13851235, "swords": 0},
+      {"arrows": 0, "bows": 0, "daggers": 0, "experience": 0.0, "female": 12, "food": 100.0, "gold": 100.0, "hp": 46.79, "level": 8, "male": 12, "poison": 0, "ring": 0, "seed": 598390709, "swords": 0},
+      {"arrows": 0, "bows": 0, "daggers": 0, "experience": 0.0, "female": 12, "food": 100.0, "gold": 100.0, "hp": 46.78, "level": 8, "male": 12, "poison": 0, "ring": 0, "seed": 4113819399, "swords": 0},
+      {"arrows": 0, "bows": 0, "daggers": 0, "experience": 0.0, "female": 12, "food": 100.0, "gold": 100.0, "hp": 46.78, "level": 8, "male": 12, "poison": 0, "ring": 0, "seed": 2613110873, "swords": 0},
+      {"arrows": 0, "bows": 0, "daggers": 0, "experience": 0.0, "female": 12, "food": 100.0, "gold": 100.0, "hp": 46.68, "level": 8, "male": 12, "poison": 0, "ring": 0, "seed": 262388651, "swords": 0},
+      {"arrows": 0, "bows": 0, "daggers": 0, "experience": 0.0, "female": 12, "food": 100.0, "gold": 100.0, "hp": 44.58, "level": 8, "male": 12, "poison": 0, "ring": 0, "seed": 456024317, "swords": 0},
+      {"arrows": 0, "bows": 0, "daggers": 0, "experience": 0.0, "female": 12, "food": 100.0, "gold": 100.0, "hp": 39.58, "level": 8, "male": 12, "poison": 0, "ring": 0, "seed": 1521670223, "swords": 0},
+      {"arrows": 0, "bows": 0, "daggers": 0, "experience": 0.0, "female": 12, "food": 100.0, "gold": 100.0, "hp": 37.48, "level": 8, "male": 12, "poison": 0, "ring": 0, "seed": 1015226785, "swords": 0},
+      {"arrows": 0, "bows": 0, "daggers": 0, "experience": 0.0, "female": 12, "food": 100.0, "gold": 100.0, "hp": 37.38, "level": 8, "male": 12, "poison": 0, "ring": 0, "seed": 15809779, "swords": 0},
+      {"arrows": 0, "bows": 0, "daggers": 0, "experience": 1.25, "female": 23, "food": 119.0, "gold": 148.0, "hp": 37.38, "level": 8, "male": 20, "poison": 0, "ring": 0, "seed": 1290725783, "swords": 0},
+      {"arrows": 0, "bows": 0, "daggers": 0, "experience": 1.25, "female": 23, "food": 97.0, "gold": 148.0, "hp": 37.48, "level": 8, "male": 20, "poison": 0, "ring": 0, "seed": 1290725783, "swords": 0}
+    ]
+  },
+  {
+    "name": "blade",
+    "source": "doc/captures/2026-11-14-combat-blade.txt",
+    "config": {"arrows": 0, "bows": 0, "cart": false, "choice": "f", "daggers": 0, "female": 12, "food": 100, "gold": 100, "horse": false, "hp": 50, "level": 8, "male": 12, "poison": 0, "ring": 0, "seed": 6427, "swords": 1, "use_poison": false},
+    "died": false,
+    "checkpoints": [
+      {"arrows": 0, "bows": 0, "daggers": 0, "experience": 0.0, "female": 12, "food": 100.0, "gold": 100.0, "hp": 50.0, "level": 8, "male": 12, "poison": 0, "ring": 0, "seed": 1997953064, "swords": 1},
+      {"arrows": 0, "bows": 0, "daggers": 0, "experience": 0.0, "female": 12, "food": 100.0, "gold": 100.0, "hp": 50.0, "level": 8, "male": 12, "poison": 0, "ring": 0, "seed": 2694442700, "swords": 1},
+      {"arrows": 0, "bows": 0, "daggers": 0, "experience": 0.0, "female": 12, "food": 100.0, "gold": 100.0, "hp": 49.99, "level": 8, "male": 12, "poison": 0, "ring": 0, "seed": 4113819399, "swords": 1},
+      {"arrows": 0, "bows": 0, "daggers": 0, "experience": 0.0, "female": 12, "food": 100.0, "gold": 100.0, "hp": 44.99, "level": 8, "male": 12, "poison": 0, "ring": 0, "seed": 2991486914, "swords": 1},
+      {"arrows": 0, "bows": 0, "daggers": 0, "experience": 0.0, "female": 12, "food": 100.0, "gold": 100.0, "hp": 42.89, "level": 8, "male": 12, "poison": 0, "ring": 0, "seed": 456024317, "swords": 1},
+      {"arrows": 0, "bows": 0, "daggers": 0, "experience": 0.0, "female": 12, "food": 100.0, "gold": 100.0, "hp": 42.89, "level": 8, "male": 12, "poison": 0, "ring": 0, "seed": 3929563832, "swords": 1},
+      {"arrows": 0, "bows": 0, "daggers": 0, "experience": 0.0, "female": 12, "food": 100.0, "gold": 100.0, "hp": 42.79, "level": 8, "male": 12, "poison": 0, "ring": 0, "seed": 15809779, "swords": 1},
+      {"arrows": 0, "bows": 0, "daggers": 0, "experience": 0.0, "female": 12, "food": 100.0, "gold": 100.0, "hp": 42.79, "level": 8, "male": 12, "poison": 0, "ring": 0, "seed": 402501550, "swords": 1},
+      {"arrows": 0, "bows": 0, "daggers": 0, "experience": 0.0, "female": 12, "food": 100.0, "gold": 100.0, "hp": 40.69, "level": 8, "male": 12, "poison": 0, "ring": 0, "seed": 1864530665, "swords": 1},
+      {"arrows": 0, "bows": 0, "daggers": 0, "experience": 0.0, "female": 12, "food": 100.0, "gold": 100.0, "hp": 38.59, "level": 8, "male": 12, "poison": 0, "ring": 0, "seed": 2101632676, "swords": 1},
+      {"arrows": 0, "bows": 0, "daggers": 0, "experience": 1.25, "female": 25, "food": 114.0, "gold": 102.0, "hp": 38.59, "level": 8, "male": 13, "poison": 0, "ring": 0, "seed": 177139016, "swords": 1},
+      {"arrows": 0, "bows": 0, "daggers": 0, "experience": 1.25, "female": 25, "food": 95.0, "gold": 102.0, "hp": 38.69, "level": 8, "male": 13, "poison": 0, "ring": 0, "seed": 177139016, "swords": 1}
+    ]
+  },
+  {
+    "name": "drow",
+    "source": "doc/captures/2026-11-14-combat-drow.txt",
+    "config": {"arrows": 12, "bows": 1, "cart": false, "choice": "f", "daggers": 0, "female": 12, "food": 100, "gold": 100, "horse": false, "hp": 50, "level": 8, "male": 12, "poison": 0, "ring": 0, "seed": 6411, "swords": 0, "use_poison": false},
+    "died": false,
+    "checkpoints": [
+      {"arrows": 12, "bows": 1, "daggers": 0, "experience": 0.0, "female": 12, "food": 100.0, "gold": 100.0, "hp": 50.0, "level": 8, "male": 12, "poison": 0, "ring": 0, "seed": 1659777048, "swords": 0},
+      {"arrows": 0, "bows": 0, "daggers": 0, "experience": 0.0, "female": 12, "food": 100.0, "gold": 100.0, "hp": 49.99, "level": 8, "male": 12, "poison": 0, "ring": 0, "seed": 2422413907, "swords": 0},
+      {"arrows": 0, "bows": 0, "daggers": 0, "experience": 0.0, "female": 12, "food": 100.0, "gold": 100.0, "hp": 48.97, "level": 8, "male": 12, "poison": 0, "ring": 0, "seed": 855009189, "swords": 0},
+      {"arrows": 0, "bows": 0, "daggers": 0, "experience": 0.0, "female": 12, "food": 100.0, "gold": 100.0, "hp": 45.77, "level": 8, "male": 12, "poison": 0, "ring": 0, "seed": 1009485559, "swords": 0},
+      {"arrows": 0, "bows": 0, "daggers": 0, "experience": 0.0, "female": 12, "food": 100.0, "gold": 100.0, "hp": 45.67, "level": 8, "male": 12, "poison": 0, "ring": 0, "seed": 3260315721, "swords": 0},
+      {"arrows": 0, "bows": 0, "daggers": 0, "experience": 0.0, "female": 12, "food": 100.0, "gold": 100.0, "hp": 45.66, "level": 8, "male": 12, "poison": 0, "ring": 0, "seed": 2915253147, "swords": 0},
+      {"arrows": 0, "bows": 0, "daggers": 0, "experience": 0.0, "female": 12, "food": 100.0, "gold": 100.0, "hp": 43.56, "level": 8, "male": 12, "poison": 0, "ring": 0, "seed": 3100233965, "swords": 0},
+      {"arrows": 0, "bows": 0, "daggers": 0, "experience": 0.0, "female": 12, "food": 100.0, "gold": 100.0, "hp": 40.36, "level": 8, "male": 12, "poison": 0, "ring": 0, "seed": 1874475071, "swords": 0},
+      {"arrows": 0, "bows": 0, "daggers": 0, "experience": 0.0, "female": 12, "food": 100.0, "gold": 100.0, "hp": 39.34, "level": 8, "male": 12, "poison": 0, "ring": 0, "seed": 820408721, "swords": 0},
+      {"arrows": 0, "bows": 0, "daggers": 0, "experience": 0.0, "female": 12, "food": 100.0, "gold": 100.0, "hp": 39.34, "level": 8, "male": 12, "poison": 0, "ring": 0, "seed": 748715235, "swords": 0},
+      {"arrows": 0, "bows": 0, "daggers": 0, "experience": 0.0, "female": 12, "food": 100.0, "gold": 100.0, "hp": 36.14, "level": 8, "male": 12, "poison": 0, "ring": 0, "seed": 1698322997, "swords": 0},
+      {"arrows": 0, "bows": 0, "daggers": 0, "experience": 0.0, "female": 12, "food": 100.0, "gold": 100.0, "hp": 35.12, "level": 8, "male": 12, "poison": 0, "ring": 0, "seed": 2936408455, "swords": 0},
+      {"arrows": 0, "bows": 0, "daggers": 0, "experience": 0.0, "female": 12, "food": 100.0, "gold": 100.0, "hp": 35.02, "level": 8, "male": 12, "poison": 0, "ring": 0, "seed": 2958396121, "swords": 0},
+      {"arrows": 0, "bows": 0, "daggers": 0, "experience": 0.0, "female": 12, "food": 100.0, "gold": 100.0, "hp": 31.82, "level": 8, "male": 12, "poison": 0, "ring": 0, "seed": 3782925867, "swords": 0},
+      {"arrows": 0, "bows": 0, "daggers": 0, "experience": 0.0, "female": 12, "food": 100.0, "gold": 100.0, "hp": 29.72, "level": 8, "male": 12, "poison": 0, "ring": 0, "seed": 2361918333, "swords": 0},
+      {"arrows": 0, "bows": 0, "daggers": 0, "experience": 0.0, "female": 12, "food": 100.0, "gold": 100.0, "hp": 24.72, "level": 8, "male": 12, "poison": 0, "ring": 0, "seed": 3465476815, "swords": 0},
+      {"arrows": 0, "bows": 0, "daggers": 0, "experience": 0.0, "female": 12, "food": 100.0, "gold": 100.0, "hp": 24.72, "level": 8, "male": 12, "poison": 0, "ring": 0, "seed": 2502018081, "swords": 0},
+      {"arrows": 0, "bows": 0, "daggers": 0, "experience": 0.0, "female": 12, "food": 100.0, "gold": 100.0, "hp": 24.71, "level": 8, "male": 12, "poison": 0, "ring": 0, "seed": 2698141555, "swords": 0},
+      {"arrows": 0, "bows": 0, "daggers": 0, "experience": 0.0, "female": 12, "food": 100.0, "gold": 100.0, "hp": 24.7, "level": 8, "male": 12, "poison": 0, "ring": 0, "seed": 2213727429, "swords": 0},
+      {"arrows": 0, "bows": 0, "daggers": 0, "experience": 0.0, "female": 12, "food": 100.0, "gold": 100.0, "hp": 24.6, "level": 8, "male": 12, "poison": 0, "ring": 0, "seed": 2731871255, "swords": 0},
+      {"arrows": 0, "bows": 0, "daggers": 0, "experience": 0.0, "female": 12, "food": 100.0, "gold": 100.0, "hp": 21.4, "level": 8, "male": 12, "poison": 0, "ring": 0, "seed": 868949353, "swords": 0},
+      {"arrows": 0, "bows": 0, "daggers": 0, "experience": 0.0, "female": 12, "food": 100.0, "gold": 100.0, "hp": 20.38, "level": 8, "male": 12, "poison": 0, "ring": 0, "seed": 1059520699, "swords": 0},
+      {"arrows": 0, "bows": 0, "daggers": 0, "experience": 0.0, "female": 12, "food": 100.0, "gold": 100.0, "hp": 17.18, "level": 8, "male": 12, "poison": 0, "ring": 0, "seed": 2671425037, "swords": 0},
+      {"arrows": 0, "bows": 0, "daggers": 0, "experience": 0.0, "female": 12, "food": 100.0, "gold": 100.0, "hp": 15.08, "level": 8, "male": 12, "poison": 0, "ring": 0, "seed": 5782879, "swords": 0},
+      {"arrows": 0, "bows": 0, "daggers": 0, "experience": 0.0, "female": 12, "food": 100.0, "gold": 100.0, "hp": 15.08, "level": 8, "male": 12, "poison": 0, "ring": 0, "seed": 3771831985, "swords": 0},
+      {"arrows": 0, "bows": 0, "daggers": 0, "experience": 3.0, "female": 26, "food": 131.0, "gold": 144.0, "hp": 15.08, "level": 8, "male": 29, "poison": 0, "ring": 0, "seed": 857718613, "swords": 0},
+      {"arrows": 0, "bows": 0, "daggers": 0, "experience": 3.0, "female": 26, "food": 103.0, "gold": 144.0, "hp": 15.18, "level": 8, "male": 29, "poison": 0, "ring": 0, "seed": 857718613, "swords": 0}
+    ]
+  },
+  {
+    "name": "fight-death",
+    "source": "doc/captures/2026-11-14-combat-fight-death.txt",
+    "config": {"arrows": 0, "bows": 0, "cart": false, "choice": "f", "daggers": 0, "female": 12, "food": 100, "gold": 100, "horse": false, "hp": 0.1, "level": 8, "male": 12, "poison": 0, "ring": 0, "seed": 6427, "swords": 0, "use_poison": false},
+    "died": true,
+    "checkpoints": [
+      {"arrows": 0, "bows": 0, "daggers": 0, "experience": 0.0, "female": 12, "food": 100.0, "gold": 100.0, "hp": 0.1, "level": 8, "male": 12, "poison": 0, "ring": 0, "seed": 1997953064, "swords": 0},
+      {"arrows": 0, "bows": 0, "daggers": 0, "experience": 0.0, "female": 12, "food": 100.0, "gold": 100.0, "hp": -3.1, "level": 8, "male": 12, "poison": 0, "ring": 0, "seed": 13851235, "swords": 0},
+      {"arrows": 0, "bows": 0, "daggers": 0, "experience": 0.0, "female": 12, "food": 100.0, "gold": 100.0, "hp": -3.1, "level": 8, "male": 12, "poison": 0, "ring": 0, "seed": 2694442700, "swords": 0}
+    ]
+  },
+  {
+    "name": "flee-caught",
+    "source": "doc/captures/2026-11-14-combat-flee-caught.txt",
+    "config": {"arrows": 0, "bows": 0, "cart": false, "choice": "r", "daggers": 0, "female": 12, "food": 100, "gold": 100, "horse": false, "hp": 50, "level": 8, "male": 12, "poison": 1, "ring": 0, "seed": 6419, "swords": 0, "use_poison": true},
+    "died": false,
+    "checkpoints": [
+      {"arrows": 0, "bows": 0, "daggers": 0, "experience": 0.0, "female": 12, "food": 100.0, "gold": 100.0, "hp": 50.0, "level": 8, "male": 12, "poison": 1, "ring": 0, "seed": 3976348704, "swords": 0},
+      {"arrows": 0, "bows": 0, "daggers": 0, "experience": 0.0, "female": 12, "food": 100.0, "gold": 100.0, "hp": 50.0, "level": 8, "male": 12, "poison": 1, "ring": 0, "seed": 2755507977, "swords": 0},
+      {"arrows": 0, "bows": 0, "daggers": 0, "experience": 3.5, "female": 21, "food": 118.0, "gold": 125.0, "hp": 50.0, "level": 8, "male": 21, "poison": 0, "ring": 0, "seed": 2310129942, "swords": 0},
+      {"arrows": 0, "bows": 0, "daggers": 0, "experience": 3.5, "female": 21, "food": 118.0, "gold": 125.0, "hp": 50.0, "level": 8, "male": 21, "poison": 0, "ring": 0, "seed": 2310129942, "swords": 0},
+      {"arrows": 0, "bows": 0, "daggers": 0, "experience": 3.5, "female": 21, "food": 118.0, "gold": 125.0, "hp": 50.0, "level": 8, "male": 21, "poison": 0, "ring": 0, "seed": 2310129942, "swords": 0},
+      {"arrows": 0, "bows": 0, "daggers": 0, "experience": 3.5, "female": 21, "food": 118.0, "gold": 125.0, "hp": 50.0, "level": 8, "male": 21, "poison": 0, "ring": 0, "seed": 2310129942, "swords": 0},
+      {"arrows": 0, "bows": 0, "daggers": 0, "experience": 3.5, "female": 21, "food": 118.0, "gold": 125.0, "hp": 50.0, "level": 8, "male": 21, "poison": 0, "ring": 0, "seed": 2310129942, "swords": 0},
+      {"arrows": 0, "bows": 0, "daggers": 0, "experience": 3.5, "female": 21, "food": 97.0, "gold": 125.0, "hp": 50.1, "level": 8, "male": 21, "poison": 0, "ring": 0, "seed": 2310129942, "swords": 0}
+    ]
+  },
+  {
+    "name": "flee-horse",
+    "source": "doc/captures/2026-11-14-combat-flee-horse.txt",
+    "config": {"arrows": 0, "bows": 0, "cart": false, "choice": "r", "daggers": 0, "female": 12, "food": 100, "gold": 100, "horse": true, "hp": 50, "level": 8, "male": 12, "poison": 0, "ring": 0, "seed": 6466, "swords": 0, "use_poison": false},
+    "died": false,
+    "checkpoints": [
+      {"arrows": 0, "bows": 0, "daggers": 0, "experience": 0.0, "female": 12, "food": 100.0, "gold": 100.0, "hp": 50.0, "level": 8, "male": 12, "poison": 0, "ring": 0, "seed": 3627563471, "swords": 0},
+      {"arrows": 0, "bows": 0, "daggers": 0, "experience": 0.0, "female": 1, "food": 100.0, "gold": 100.0, "hp": 50.0, "level": 8, "male": 1, "poison": 0, "ring": 0, "seed": 711885880, "swords": 0},
+      {"arrows": 0, "bows": 0, "daggers": 0, "experience": 0.0, "female": 1, "food": 99.0, "gold": 100.0, "hp": 50.1, "level": 8, "male": 1, "poison": 0, "ring": 0, "seed": 711885880, "swords": 0}
+    ]
+  },
+  {
+    "name": "payment-death",
+    "source": "doc/captures/2026-11-14-combat-payment-death.txt",
+    "config": {"arrows": 0, "bows": 0, "cart": false, "choice": "g", "daggers": 0, "female": 12, "food": 100, "gold": 100, "horse": false, "hp": 50, "level": 8, "male": 0, "poison": 0, "ring": 0, "seed": 6450, "swords": 0, "use_poison": false},
+    "died": true,
+    "checkpoints": [
+      {"arrows": 0, "bows": 0, "daggers": 0, "experience": 0.0, "female": 12, "food": 100.0, "gold": 100.0, "hp": 50.0, "level": 8, "male": 0, "poison": 0, "ring": 0, "seed": 3289387455, "swords": 0}
+    ]
+  },
+  {
+    "name": "payment",
+    "source": "doc/captures/2026-11-14-combat-payment.txt",
+    "config": {"arrows": 0, "bows": 0, "cart": false, "choice": "g", "daggers": 0, "female": 12, "food": 100, "gold": 100, "horse": false, "hp": 50, "level": 8, "male": 12, "poison": 0, "ring": 0, "seed": 6450, "swords": 0, "use_poison": false},
+    "died": false,
+    "checkpoints": [
+      {"arrows": 0, "bows": 0, "daggers": 0, "experience": 0.0, "female": 12, "food": 100.0, "gold": 100.0, "hp": 50.0, "level": 8, "male": 12, "poison": 0, "ring": 0, "seed": 3289387455, "swords": 0},
+      {"arrows": 0, "bows": 0, "daggers": 0, "experience": 0.0, "female": 7, "food": 100.0, "gold": 93.0, "hp": 50.0, "level": 8, "male": 10, "poison": 0, "ring": 0, "seed": 3289387455, "swords": 0},
+      {"arrows": 0, "bows": 0, "daggers": 0, "experience": 0.0, "female": 7, "food": 91.0, "gold": 93.0, "hp": 50.1, "level": 8, "male": 10, "poison": 0, "ring": 0, "seed": 3289387455, "swords": 0}
+    ]
+  },
+  {
+    "name": "poison",
+    "source": "doc/captures/2026-11-14-combat-poison.txt",
+    "config": {"arrows": 0, "bows": 0, "cart": false, "choice": "f", "daggers": 3, "female": 12, "food": 100, "gold": 100, "horse": false, "hp": 50, "level": 8, "male": 12, "poison": 1, "ring": 0, "seed": 6443, "swords": 2, "use_poison": true},
+    "died": false,
+    "checkpoints": [
+      {"arrows": 0, "bows": 0, "daggers": 3, "experience": 0.0, "female": 12, "food": 100.0, "gold": 100.0, "hp": 50.0, "level": 8, "male": 12, "poison": 1, "ring": 0, "seed": 2336129080, "swords": 2},
+      {"arrows": 0, "bows": 0, "daggers": 0, "experience": 0.0, "female": 12, "food": 100.0, "gold": 100.0, "hp": 50.0, "level": 8, "male": 12, "poison": 1, "ring": 0, "seed": 2336129080, "swords": 0},
+      {"arrows": 0, "bows": 0, "daggers": 0, "experience": 1.5, "female": 18, "food": 124.0, "gold": 108.0, "hp": 50.0, "level": 8, "male": 30, "poison": 0, "ring": 0, "seed": 341772229, "swords": 0},
+      {"arrows": 0, "bows": 0, "daggers": 0, "experience": 1.5, "female": 18, "food": 100.0, "gold": 108.0, "hp": 50.1, "level": 8, "male": 30, "poison": 0, "ring": 0, "seed": 341772229, "swords": 0}
+    ]
+  },
+  {
+    "name": "ring-forced",
+    "source": "doc/captures/2026-11-14-combat-ring-forced.txt",
+    "config": {"arrows": 0, "bows": 0, "cart": false, "choice": "f", "daggers": 0, "female": 12, "food": 100, "gold": 100, "horse": false, "hp": 50, "level": 8, "male": 12, "poison": 0, "ring": 46, "seed": 6427, "swords": 0, "use_poison": false},
+    "died": false,
+    "checkpoints": [
+      {"arrows": 0, "bows": 0, "daggers": 0, "experience": 0.0, "female": 12, "food": 100.0, "gold": 100.0, "hp": 46.8, "level": 8, "male": 12, "poison": 0, "ring": 46, "seed": 13851235, "swords": 0},
+      {"arrows": 0, "bows": 0, "daggers": 0, "experience": 0.0, "female": 12, "food": 100.0, "gold": 100.0, "hp": 46.79, "level": 8, "male": 12, "poison": 0, "ring": 46, "seed": 598390709, "swords": 0},
+      {"arrows": 0, "bows": 0, "daggers": 0, "experience": 0.0, "female": 12, "food": 100.0, "gold": 100.0, "hp": 46.78, "level": 8, "male": 12, "poison": 0, "ring": 46, "seed": 4113819399, "swords": 0},
+      {"arrows": 0, "bows": 0, "daggers": 0, "experience": 0.0, "female": 12, "food": 100.0, "gold": 100.0, "hp": 46.78, "level": 8, "male": 12, "poison": 0, "ring": 46, "seed": 2613110873, "swords": 0},
+      {"arrows": 0, "bows": 0, "daggers": 0, "experience": 0.0, "female": 12, "food": 100.0, "gold": 100.0, "hp": 46.68, "level": 8, "male": 12, "poison": 0, "ring": 46, "seed": 262388651, "swords": 0},
+      {"arrows": 0, "bows": 0, "daggers": 0, "experience": 0.0, "female": 12, "food": 100.0, "gold": 100.0, "hp": 44.58, "level": 8, "male": 12, "poison": 0, "ring": 46, "seed": 456024317, "swords": 0},
+      {"arrows": 0, "bows": 0, "daggers": 0, "experience": 1.25, "female": 13, "food": 111.0, "gold": 146.0, "hp": 44.58, "level": 8, "male": 22, "poison": 0, "ring": 46, "seed": 1015226785, "swords": 0},
+      {"arrows": 0, "bows": 0, "daggers": 0, "experience": 1.25, "female": 13, "food": 93.0, "gold": 146.0, "hp": 44.68, "level": 8, "male": 22, "poison": 0, "ring": 51, "seed": 1015226785, "swords": 0}
+    ]
+  },
+  {
+    "name": "ring-gift",
+    "source": "doc/captures/2026-11-14-combat-ring-gift.txt",
+    "config": {"arrows": 0, "bows": 0, "cart": false, "choice": "f", "daggers": 0, "female": 12, "food": 100, "gold": 100, "horse": false, "hp": 50, "level": 8, "male": 12, "poison": 1, "ring": 0, "seed": 6410, "swords": 0, "use_poison": true},
+    "died": false,
+    "checkpoints": [
+      {"arrows": 0, "bows": 0, "daggers": 0, "experience": 0.0, "female": 12, "food": 100.0, "gold": 100.0, "hp": 50.0, "level": 8, "male": 12, "poison": 1, "ring": 0, "seed": 296463767, "swords": 0},
+      {"arrows": 0, "bows": 0, "daggers": 0, "experience": 0.0, "female": 12, "food": 100.0, "gold": 100.0, "hp": 50.0, "level": 8, "male": 12, "poison": 1, "ring": 0, "seed": 296463767, "swords": 0},
+      {"arrows": 0, "bows": 0, "daggers": 0, "experience": 2.75, "female": 21, "food": 124.0, "gold": 102.0, "hp": 50.0, "level": 8, "male": 27, "poison": 0, "ring": 5, "seed": 65741476, "swords": 0},
+      {"arrows": 0, "bows": 0, "daggers": 0, "experience": 2.75, "female": 21, "food": 100.0, "gold": 102.0, "hp": 50.1, "level": 8, "male": 27, "poison": 0, "ring": 10, "seed": 65741476, "swords": 0}
+    ]
+  }
+]

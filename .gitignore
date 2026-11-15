@@ -2,3 +2,4 @@ braminar
 braminar.o
 extract_data
 doc/captures/
+__pycache__/

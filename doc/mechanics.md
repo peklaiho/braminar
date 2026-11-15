@@ -107,7 +107,7 @@ The two guarded slots do not reroll when their conditions fail. At character cre
 
 The [first recorded session](captures/2026-11-14-session-01.md) independently shows HP increasing by 0.10 per completed turn and food decreasing by five for a party with nine servants. An elves' gift adds ten food before the five-unit consumption. These observations corroborate the binary calculations; they do not independently test every boundary above.
 
-The remake implements the dispatch, bookkeeping, band encounters and shared combat, river, forest, both branches of the slot-6 hollow tree, storms, servant illness, and the Keep's prerequisite rejection, with explicit placeholders for other encounters. Some event bodies and their random calls are still missing, so subsequent event sequences will differ even with equal initial seeds. The remake intentionally uses `double` for HP and experience without Real48 emulation, as recorded in `CHANGES.md`. Food is currently integer; whether inventory calculations require visible fractional quantities remains unresolved and must be checked as those mechanics are recovered. The final-assault transition is still deferred with the eligible Keep branch; `start_final_battle()` remains its intended stub entry point.
+The remake implements the dispatch, bookkeeping, band encounters and shared combat, river, forest, both branches of the slot-6 hollow tree, storms, servant illness, Pan, and the Keep's prerequisite rejection, with explicit placeholders for other encounters. Some event bodies and their random calls are still missing, so subsequent event sequences will differ even with equal initial seeds. The remake intentionally uses `double` for HP and experience without Real48 emulation, as recorded in `CHANGES.md`. Food is currently integer; whether inventory calculations require visible fractional quantities remains unresolved and must be checked as those mechanics are recovered. The final-assault transition is still deferred with the eligible Keep branch; `start_final_battle()` remains its intended stub entry point.
 
 ## Enchanted forest
 
@@ -128,6 +128,10 @@ The [first session](captures/2026-11-14-session-01.md) records one incorrect ans
 - After accepting a key from `1`, `2`, `3`, the game rolls `Random(3) + 1` and compares it with the chosen digit (`0x9F54`–`0x9FAD`). The answer is random, not a stored factual answer to the question. On failure it displays that rolled answer number.
 - Success generates five letters independently with `Random(26) + 1 + 64` (`A`–`Z`) and stores them in the prime-command string at `DS:0x04F9` (`0x9FCF`–`0xA007`). It displays that string and tells the player to remember it. Startup initializes this string to five spaces (`0xED26`–`0xED38`); success replaces its five characters without changing its length.
 - Either answered outcome pauses; declining the initial approach prints `You move on.` without that pause (`0xA0A1`–`0xA0C6`).
+- Invalid answer keys retry before the answer roll (`0x9F54`–`0x9F85`); they consume no random draws. Failure and decline leave the current command unchanged. A subsequent success overwrites it.
+- No inventory, HP, or experience changes occur within Pan's routine. Ordinary end-of-turn bookkeeping still follows, including after declining.
+
+Pan is implemented with all 20 question records embedded in C; record 3 changes only `=` to a space as recorded in [CHANGES.md](../CHANGES.md#typo-corrections). Five [controlled DOS cases](pan-research.md) compare command, state, RNG progression, text, and input counts. Success overwrote `PRIOR` with `SKJFJ`, `WINIP`, and `YYDGX`; failure and decline preserved it. All 20 embedded questions are separately checked against the declared data strings. The Keep's command input and transition remain the next target.
 
 ## Gnome's announced food gift
 

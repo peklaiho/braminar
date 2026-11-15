@@ -173,7 +173,7 @@ Session 03 observed 9 males and 1 female with Old-Timer's disease. Treating 2 ma
 
 - Ask a riddle, right answer gives the prime command
 
-Session 01 asked `How much weight can an unladen swallow bear?` with choices `2 oz.`, `3 lbs.`, and `1.2 tons`. Choosing `1` produced `Nope.  The answer is # 2 The statue Disappears.` The [binary establishes](mechanics.md#statue-of-pan) that the answer number is rolled after the choice, rather than determined by the question. Questions use only the first 20 data records. The event remains unimplemented.
+Session 01 asked `How much weight can an unladen swallow bear?` with choices `2 oz.`, `3 lbs.`, and `1.2 tons`. Choosing `1` produced `Nope.  The answer is # 2 The statue Disappears.` The [binary establishes](mechanics.md#statue-of-pan) that the answer number is rolled after the choice, rather than determined by the question. Questions use only the first 20 data records. The event is now implemented. Five [controlled cases](pan-research.md) additionally captured success, failure, decline, invalid answer keys, and records 1, 3, and 20; success replaced an existing command, while failure and decline preserved it. These experiments modified player memory and RNG and are separate from Session 01 ordinary play.
 
 ## Storm
 

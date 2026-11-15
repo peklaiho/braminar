@@ -63,7 +63,7 @@ The tool rejects partial records and lengths greater than the field capacity. It
 - Records 1 through 20 contain questions and three answer choices.
 - Records 21 through 30 have zero lengths for all four fields. Their storage still contains nonzero bytes, so empty fields must be identified by length rather than by their entire storage area.
 - Unused space after string contents includes old text and Pascal source fragments such as `Player.Daggers:=Player.Daggers+1;`. These bytes are outside the declared strings and must not be displayed as question or answer text.
-- Record 3's third answer is actually declared as `Do Lake:=1 to 5`, including the apparent source fragment. This is inside its 15-byte string length, so the extractor preserves it. Whether to correct it for gameplay needs separate investigation.
+- Record 3's third answer is actually declared as `Do Lake:=1 to 5`, including the apparent source fragment. This is inside its 15-byte string length, so the extractor preserves it. The remake replaces only `=` with a space, displaying `Do Lake: 1 to 5`, as requested; the extractor preserves the original.
 
 The first record decodes to:
 
@@ -76,7 +76,7 @@ The first record decodes to:
 
 ### Question selection and answers
 
-There is no separate answer-key field in this record layout. Binary inspection now confirms that Pan selects only the first 20 records and rolls the answer number after the player chooses; success generates a five-letter prime command. See [the recovered Pan rules](mechanics.md#statue-of-pan) for offsets and the observed example. The event has not yet been implemented in the remake.
+There is no separate answer-key field in this record layout. Binary inspection now confirms that Pan selects only the first 20 records and rolls the answer number after the player chooses; success generates a five-letter prime command. See [the recovered Pan rules](mechanics.md#statue-of-pan) for offsets and the observed example. The remake embeds all 20 populated records in the Pan routine, with the single approved correction to record 3. [Comparison evidence](pan-research.md).
 
 ## Binary text extraction
 

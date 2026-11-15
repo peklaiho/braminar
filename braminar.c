@@ -37,6 +37,7 @@ typedef struct {
     uint8_t ring_power;
     uint8_t plague;
     bool illness_protection;
+    char prime_command[6];
 } Player;
 
 typedef struct {
@@ -264,6 +265,7 @@ static void generate_player_stats(Player* player)
     player->ring_power = 0;
     player->plague = 0;
     player->illness_protection = false;
+    strcpy(player->prime_command, "     ");
 
     male_servant_price = random_number(10) + 5;
     female_servant_price = random_number(10) + 5;
@@ -808,9 +810,65 @@ static bool event_sick_servants(Player* player)
     return true;
 }
 
-static void event_statue_of_pan(void)
+static bool event_statue_of_pan(Player* player)
 {
-    puts("\nYou find a statue of Pan.");
+    /* Original routine at 0x9DC8-0xA0CC; see doc/mechanics.md#statue-of-pan. */
+    static const char* const questions[20][4] = {
+        {"What does the Harkonen frog taste like?", "Spinach", "Orange Sherbert", "Guacamole Dip"},
+        {"What size underwear does Zeus wear?", "35 Large", "85 Large", "None"},
+        {"What does the \"Du Lake\" stand for in Launcelot Du Lake's Name?", "Shake 'n Bake", "Wake the Rake", "Do Lake: 1 to 5"},
+        {"What is the Meaning of Life?", "Hamburgers", "Doughnuts", "None of the Above"},
+        {"How much weight can an unladen swallow bear?", "2 oz.", "3 lbs.", "1.2 tons"},
+        {"How much weight can an unladen bear swallow?", "2 oz.", "3 lbs.", "1.2 tons"},
+        {"Why did the Monkey fall out of the tree?", "He was Dead.", "87 income taxes.", "He saw Hellen Reddy"},
+        {"What does CTHULHU mean?", "Octopuss-Head", "Trouble", "The Spotted-Tick Flu"},
+        {"Apollo's Sun Chariot really runs on?", "Un-leaded", "rubber-bands", "pedal-power"},
+        {"What are Aphrodite's measurements?", "35\" 23\" 34\"", "37\" 20\" 30\"", "48\" 16\" 24\""},
+        {"One of the direct descendants of Athena is ?", "Joan Collins", "Ethel Murmin", "Miss Piggy"},
+        {"What will cause a Cyclops to run in terror?", "Hellen Reddy", "Nutrasweet", "Bi-focals"},
+        {"Why does HADES let no one leave the Underworld?", "It's a One-way Trip", "He needs friends.", "Why not?"},
+        {"Why is HERMES so fast?", "Caffeine", "Addidas", "He uses U.P.S."},
+        {"Why does Pan play the flute?", "His Sax is broke", "His Tuba is broke", "cause it's there."},
+        {"What does Poseidon fear about the land?", "Yuppies", "McDonalds", "Hellen Reddy"},
+        {"What one item will send Lolth back to her Plane?", "Underoos", "Raid", "Taxes"},
+        {"What was Thors hammer constructed from ?", "Used Auto Parts", "Metal Alloy", "Chicken Parts"},
+        {"Who invented the first Hamburger?", "Cleavon Little", "Ernest Borgnine", "Howdy Duty"},
+        {"What is the favorite food of Eganiod moose birds?", "Duncin' Doughnuts", "Snickers", "Granola Dipps"}
+    };
+    puts("\nYou find a Statue of Pan.  Approach the statue?");
+    printf("(Y/N) ");
+    int choice = read_choice("YN");
+    if (choice == EOF) {
+        return false;
+    }
+    if (choice == 'N') {
+        puts("You move on.");
+        return true;
+    }
+    const char* const* question = questions[random_number(20)];
+    puts("The statue suddenly animates, & asks you the following riddle.");
+    printf("\n%s\n\n", question[0]);
+    for (int i = 1; i <= 3; ++i) {
+        printf("%d - %s\n", i, question[i]);
+    }
+    puts("Choose (1,2,3): ");
+    choice = read_choice("123");
+    if (choice == EOF) {
+        return false;
+    }
+    int answer = random_number(3) + 1;
+    if (choice - '0' == answer) {
+        puts("You guessed right!");
+        for (int i = 0; i < 5; ++i) {
+            player->prime_command[i] = (char)('A' + random_number(26));
+        }
+        player->prime_command[5] = '\0';
+        printf("The prime command is: %s\n", player->prime_command);
+        puts("Remember it!!!");
+    } else {
+        printf("Nope.  The answer is # %d The statue Disappears.\n", answer);
+    }
+    return wait_for_key();
 }
 
 static bool event_storm(Player* player)
@@ -908,7 +966,7 @@ static bool run_event(Player* player)
     case 12: return event_enchanted_forest(player);
     case 13: event_empty_tree(); break;
     case 14: return event_flowing_river(player);
-    case 15: event_statue_of_pan(); break;
+    case 15: return event_statue_of_pan(player);
     case 16: return event_overlords_keep(player);
     }
     /* TODO: Recover these branches and their pauses; see doc/events.md. */

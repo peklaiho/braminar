@@ -1,0 +1,930 @@
+[
+  {
+    "name": "storm-rain",
+    "config": {
+      "seed": 12523,
+      "male": 12,
+      "female": 12,
+      "medicine": 3,
+      "food": 100,
+      "protection": false,
+      "inputs": [
+        "n"
+      ]
+    },
+    "final": {
+      "arrows": 0,
+      "bows": 0,
+      "daggers": 0,
+      "experience": 0.0,
+      "female": 12,
+      "food": 88.0,
+      "gold": 100.0,
+      "hp": 50.1,
+      "level": 8,
+      "male": 12,
+      "medicine": 3,
+      "plague": 0,
+      "poison": 0,
+      "protection": false,
+      "ring": 0,
+      "seed": 2236618301,
+      "swords": 0
+    },
+    "screen": "While you are walking along, the weather suddenly changes.\nA rain storm comes.\nWill you Take shelter? (alternative is move on.)\n(Y/N)\nPress any key..."
+  },
+  {
+    "name": "storm-hail",
+    "config": {
+      "seed": 12531,
+      "male": 12,
+      "female": 12,
+      "medicine": 3,
+      "food": 100,
+      "protection": false,
+      "inputs": [
+        "n"
+      ]
+    },
+    "final": {
+      "arrows": 0,
+      "bows": 0,
+      "daggers": 0,
+      "experience": 0.0,
+      "female": 7,
+      "food": 91.0,
+      "gold": 100.0,
+      "hp": 50.1,
+      "level": 8,
+      "male": 10,
+      "medicine": 3,
+      "plague": 0,
+      "poison": 0,
+      "protection": false,
+      "ring": 0,
+      "seed": 3622165911,
+      "swords": 0
+    },
+    "screen": "While you are walking along, the weather suddenly changes.\nA Hail storm comes.\nWill you Take shelter? (alternative is move on.)\n(Y/N)\nYou may of lost some slaves in the storm.\nPress any key..."
+  },
+  {
+    "name": "storm-snow",
+    "config": {
+      "seed": 12539,
+      "male": 12,
+      "female": 12,
+      "medicine": 3,
+      "food": 100,
+      "protection": false,
+      "inputs": [
+        "n"
+      ]
+    },
+    "final": {
+      "arrows": 0,
+      "bows": 0,
+      "daggers": 0,
+      "experience": 0.0,
+      "female": 8,
+      "food": 91.0,
+      "gold": 100.0,
+      "hp": 50.1,
+      "level": 8,
+      "male": 9,
+      "medicine": 3,
+      "plague": 0,
+      "poison": 0,
+      "protection": false,
+      "ring": 0,
+      "seed": 1542581663,
+      "swords": 0
+    },
+    "screen": "While you are walking along, the weather suddenly changes.\nA Snow storm comes.\nWill you Take shelter? (alternative is move on.)\n(Y/N)\nYou may of lost some slaves in the storm.\nPress any key..."
+  },
+  {
+    "name": "storm-wind",
+    "config": {
+      "seed": 12547,
+      "male": 12,
+      "female": 12,
+      "medicine": 3,
+      "food": 100,
+      "protection": false,
+      "inputs": [
+        "n"
+      ]
+    },
+    "final": {
+      "arrows": 0,
+      "bows": 0,
+      "daggers": 0,
+      "experience": 0.0,
+      "female": 11,
+      "food": 90.0,
+      "gold": 100.0,
+      "hp": 50.1,
+      "level": 8,
+      "male": 8,
+      "medicine": 3,
+      "plague": 0,
+      "poison": 0,
+      "protection": false,
+      "ring": 0,
+      "seed": 3757964711,
+      "swords": 0
+    },
+    "screen": "While you are walking along, the weather suddenly changes.\nA Wind storm comes.\nWill you Take shelter? (alternative is move on.)\n(Y/N)\nYou may of lost some slaves in the storm.\nPress any key..."
+  },
+  {
+    "name": "storm-tornado",
+    "config": {
+      "seed": 12555,
+      "male": 12,
+      "female": 12,
+      "medicine": 3,
+      "food": 100,
+      "protection": false,
+      "inputs": [
+        "n"
+      ]
+    },
+    "final": {
+      "arrows": 0,
+      "bows": 0,
+      "daggers": 0,
+      "experience": 0.0,
+      "female": 11,
+      "food": 91.0,
+      "gold": 100.0,
+      "hp": 50.1,
+      "level": 8,
+      "male": 7,
+      "medicine": 3,
+      "plague": 0,
+      "poison": 0,
+      "protection": false,
+      "ring": 0,
+      "seed": 1678380463,
+      "swords": 0
+    },
+    "screen": "While you are walking along, the weather suddenly changes.\nA Tornado comes.\nWill you Take shelter? (alternative is move on.)\n(Y/N)\nYou may of lost some slaves in the storm.\nPress any key..."
+  },
+  {
+    "name": "storm-hurricane",
+    "config": {
+      "seed": 12505,
+      "male": 12,
+      "female": 12,
+      "medicine": 3,
+      "food": 100,
+      "protection": false,
+      "inputs": [
+        "n"
+      ]
+    },
+    "final": {
+      "arrows": 0,
+      "bows": 0,
+      "daggers": 0,
+      "experience": 0.0,
+      "female": 10,
+      "food": 89.0,
+      "gold": 100.0,
+      "hp": 50.1,
+      "level": 8,
+      "male": 11,
+      "medicine": 3,
+      "plague": 0,
+      "poison": 0,
+      "protection": false,
+      "ring": 0,
+      "seed": 717138301,
+      "swords": 0
+    },
+    "screen": "While you are walking along, the weather suddenly changes.\nA Hurricane comes.\nWill you Take shelter? (alternative is move on.)\n(Y/N)\nYou may of lost some slaves in the storm.\nPress any key..."
+  },
+  {
+    "name": "storm-monsoon",
+    "config": {
+      "seed": 12507,
+      "male": 12,
+      "female": 12,
+      "medicine": 3,
+      "food": 100,
+      "protection": false,
+      "inputs": [
+        "n"
+      ]
+    },
+    "final": {
+      "arrows": 0,
+      "bows": 0,
+      "daggers": 0,
+      "experience": 0.0,
+      "female": 10,
+      "food": 91.0,
+      "gold": 100.0,
+      "hp": 50.1,
+      "level": 8,
+      "male": 8,
+      "medicine": 3,
+      "plague": 0,
+      "poison": 0,
+      "protection": false,
+      "ring": 0,
+      "seed": 1270984063,
+      "swords": 0
+    },
+    "screen": "While you are walking along, the weather suddenly changes.\nA Monsoon comes.\nWill you Take shelter? (alternative is move on.)\n(Y/N)\nYou may of lost some slaves in the storm.\nPress any key..."
+  },
+  {
+    "name": "storm-tidal",
+    "config": {
+      "seed": 12515,
+      "male": 12,
+      "female": 12,
+      "medicine": 3,
+      "food": 100,
+      "protection": false,
+      "inputs": [
+        "n"
+      ]
+    },
+    "final": {
+      "arrows": 0,
+      "bows": 0,
+      "daggers": 0,
+      "experience": 0.0,
+      "female": 0,
+      "food": 0.0,
+      "gold": 100.0,
+      "hp": 50.1,
+      "level": 8,
+      "male": 0,
+      "medicine": 3,
+      "plague": 0,
+      "poison": 0,
+      "protection": false,
+      "ring": 0,
+      "seed": 2236485173,
+      "swords": 0
+    },
+    "screen": "While you are walking along, the weather suddenly changes.\nA Tidal Wave comes.\nWill you Take shelter? (alternative is move on.)\n(Y/N)\nAll slaves & food is lost.\nPress any key..."
+  },
+  {
+    "name": "storm-shelter-1",
+    "config": {
+      "seed": 12523,
+      "male": 12,
+      "female": 12,
+      "medicine": 3,
+      "food": 100,
+      "protection": false,
+      "inputs": [
+        "y"
+      ]
+    },
+    "final": {
+      "arrows": 0,
+      "bows": 0,
+      "daggers": 0,
+      "experience": 0.0,
+      "female": 12,
+      "food": 88.0,
+      "gold": 100.0,
+      "hp": 50.1,
+      "level": 8,
+      "male": 12,
+      "medicine": 3,
+      "plague": 0,
+      "poison": 0,
+      "protection": false,
+      "ring": 0,
+      "seed": 1668585382,
+      "swords": 0
+    },
+    "screen": "While you are walking along, the weather suddenly changes.\nA rain storm comes.\nWill you Take shelter? (alternative is move on.)\n(Y/N)\nYou and your slaves take shelter.\nWaiting for storm to pass..The storm is gone.\nPress any key..."
+  },
+  {
+    "name": "storm-shelter-8",
+    "config": {
+      "seed": 12516,
+      "male": 12,
+      "female": 12,
+      "medicine": 3,
+      "food": 100,
+      "protection": false,
+      "inputs": [
+        "y"
+      ]
+    },
+    "final": {
+      "arrows": 0,
+      "bows": 0,
+      "daggers": 0,
+      "experience": 0.0,
+      "female": 12,
+      "food": 88.0,
+      "gold": 100.0,
+      "hp": 50.1,
+      "level": 8,
+      "male": 12,
+      "medicine": 3,
+      "plague": 0,
+      "poison": 0,
+      "protection": false,
+      "ring": 0,
+      "seed": 1653558559,
+      "swords": 0
+    },
+    "screen": "While you are walking along, the weather suddenly changes.\nA Tidal Wave comes.\nWill you Take shelter? (alternative is move on.)\n(Y/N)\nYou and your slaves take shelter.\nWaiting for storm to pass.........The storm is gone.\nPress any key..."
+  },
+  {
+    "name": "storm-small-party",
+    "config": {
+      "seed": 12555,
+      "male": 1,
+      "female": 2,
+      "medicine": 3,
+      "food": 100,
+      "protection": false,
+      "inputs": [
+        "n"
+      ]
+    },
+    "final": {
+      "arrows": 0,
+      "bows": 0,
+      "daggers": 0,
+      "experience": 0.0,
+      "female": 1,
+      "food": 99.0,
+      "gold": 100.0,
+      "hp": 50.1,
+      "level": 8,
+      "male": 0,
+      "medicine": 3,
+      "plague": 0,
+      "poison": 0,
+      "protection": false,
+      "ring": 0,
+      "seed": 1678380463,
+      "swords": 0
+    },
+    "screen": "While you are walking along, the weather suddenly changes.\nA Tornado comes.\nWill you Take shelter? (alternative is move on.)\n(Y/N)\nYou may of lost some slaves in the storm.\nPress any key..."
+  },
+  {
+    "name": "storm-no-males",
+    "config": {
+      "seed": 12555,
+      "male": 0,
+      "female": 12,
+      "medicine": 3,
+      "food": 100,
+      "protection": false,
+      "inputs": [
+        "n"
+      ]
+    },
+    "final": {
+      "arrows": 0,
+      "bows": 0,
+      "daggers": 0,
+      "experience": 0.0,
+      "female": 11,
+      "food": 94.0,
+      "gold": 100.0,
+      "hp": 50.1,
+      "level": 8,
+      "male": 0,
+      "medicine": 3,
+      "plague": 0,
+      "poison": 0,
+      "protection": false,
+      "ring": 0,
+      "seed": 1678380463,
+      "swords": 0
+    },
+    "screen": "While you are walking along, the weather suddenly changes.\nA Tornado comes.\nWill you Take shelter? (alternative is move on.)\n(Y/N)\nYou may of lost some slaves in the storm.\nPress any key..."
+  },
+  {
+    "name": "storm-empty-party",
+    "config": {
+      "seed": 12555,
+      "male": 0,
+      "female": 0,
+      "medicine": 3,
+      "food": 100,
+      "protection": false,
+      "inputs": [
+        "n"
+      ]
+    },
+    "final": {
+      "arrows": 0,
+      "bows": 0,
+      "daggers": 0,
+      "experience": 0.0,
+      "female": 0,
+      "food": 100.0,
+      "gold": 100.0,
+      "hp": 50.1,
+      "level": 8,
+      "male": 0,
+      "medicine": 3,
+      "plague": 0,
+      "poison": 0,
+      "protection": false,
+      "ring": 0,
+      "seed": 1678380463,
+      "swords": 0
+    },
+    "screen": "While you are walking along, the weather suddenly changes.\nA Tornado comes.\nWill you Take shelter? (alternative is move on.)\n(Y/N)\nYou may of lost some slaves in the storm.\nPress any key..."
+  },
+  {
+    "name": "storm-starvation",
+    "config": {
+      "seed": 12555,
+      "male": 12,
+      "female": 12,
+      "medicine": 3,
+      "food": 0,
+      "protection": false,
+      "inputs": [
+        "n"
+      ]
+    },
+    "final": {
+      "arrows": 0,
+      "bows": 0,
+      "daggers": 0,
+      "experience": 0.0,
+      "female": 10,
+      "food": 0.0,
+      "gold": 100.0,
+      "hp": 50.1,
+      "level": 8,
+      "male": 6,
+      "medicine": 3,
+      "plague": 0,
+      "poison": 0,
+      "protection": false,
+      "ring": 0,
+      "seed": 1678380463,
+      "swords": 0
+    },
+    "screen": "While you are walking along, the weather suddenly changes.\nA Tornado comes.\nWill you Take shelter? (alternative is move on.)\n(Y/N)\nYou may of lost some slaves in the storm.\nPress any key...\nYou lose some slaves due to starvation."
+  },
+  {
+    "name": "illness-partial",
+    "config": {
+      "seed": 11489,
+      "male": 12,
+      "female": 12,
+      "medicine": 3,
+      "food": 100,
+      "protection": false,
+      "inputs": [
+        "2",
+        "1"
+      ]
+    },
+    "final": {
+      "arrows": 0,
+      "bows": 0,
+      "daggers": 0,
+      "experience": 0.0,
+      "female": 9,
+      "food": 90.0,
+      "gold": 100.0,
+      "hp": 50.1,
+      "level": 8,
+      "male": 11,
+      "medicine": 0,
+      "plague": 0,
+      "poison": 0,
+      "protection": false,
+      "ring": 0,
+      "seed": 2831332741,
+      "swords": 0
+    },
+    "screen": "3 male and 4 female slaves have come down with: Small Pox\nHow many males to cure? 2\nHow many females to cure? 1\nAny not cured pass away.\nPress any key..."
+  },
+  {
+    "name": "illness-no-medicine",
+    "config": {
+      "seed": 11489,
+      "male": 12,
+      "female": 12,
+      "medicine": 0,
+      "food": 100,
+      "protection": false,
+      "inputs": [
+        "10",
+        "10"
+      ]
+    },
+    "final": {
+      "arrows": 0,
+      "bows": 0,
+      "daggers": 0,
+      "experience": 0.0,
+      "female": 8,
+      "food": 91.0,
+      "gold": 100.0,
+      "hp": 50.1,
+      "level": 8,
+      "male": 9,
+      "medicine": 0,
+      "plague": 0,
+      "poison": 0,
+      "protection": false,
+      "ring": 0,
+      "seed": 2831332741,
+      "swords": 0
+    },
+    "screen": "3 male and 4 female slaves have come down with: Small Pox\nHow many males to cure? 10\nHow many females to cure? 10\nAny not cured pass away.\nPress any key..."
+  },
+  {
+    "name": "illness-full-cure",
+    "config": {
+      "seed": 11489,
+      "male": 1,
+      "female": 2,
+      "medicine": 3,
+      "food": 100,
+      "protection": false,
+      "inputs": [
+        "1",
+        "2"
+      ]
+    },
+    "final": {
+      "arrows": 0,
+      "bows": 0,
+      "daggers": 0,
+      "experience": 0.0,
+      "female": 2,
+      "food": 98.0,
+      "gold": 100.0,
+      "hp": 50.1,
+      "level": 8,
+      "male": 1,
+      "medicine": 0,
+      "plague": 0,
+      "poison": 0,
+      "protection": false,
+      "ring": 0,
+      "seed": 2831332741,
+      "swords": 0
+    },
+    "screen": "1 male and 2 female slaves have come down with: Small Pox\nHow many males to cure? 1\nHow many females to cure? 2\nAny not cured pass away.\nPress any key..."
+  },
+  {
+    "name": "illness-excess",
+    "config": {
+      "seed": 11489,
+      "male": 1,
+      "female": 2,
+      "medicine": 20,
+      "food": 100,
+      "protection": false,
+      "inputs": [
+        "10",
+        "10"
+      ]
+    },
+    "final": {
+      "arrows": 0,
+      "bows": 0,
+      "daggers": 0,
+      "experience": 0.0,
+      "female": 10,
+      "food": 90.0,
+      "gold": 100.0,
+      "hp": 50.1,
+      "level": 8,
+      "male": 10,
+      "medicine": 0,
+      "plague": 0,
+      "poison": 0,
+      "protection": false,
+      "ring": 0,
+      "seed": 2831332741,
+      "swords": 0
+    },
+    "screen": "1 male and 2 female slaves have come down with: Small Pox\nHow many males to cure? 10\nHow many females to cure? 10\nAny not cured pass away.\nPress any key..."
+  },
+  {
+    "name": "illness-no-males",
+    "config": {
+      "seed": 11489,
+      "male": 0,
+      "female": 12,
+      "medicine": 3,
+      "food": 100,
+      "protection": false,
+      "inputs": [
+        "0",
+        "3"
+      ]
+    },
+    "final": {
+      "arrows": 0,
+      "bows": 0,
+      "daggers": 0,
+      "experience": 0.0,
+      "female": 11,
+      "food": 94.0,
+      "gold": 100.0,
+      "hp": 50.1,
+      "level": 8,
+      "male": 0,
+      "medicine": 0,
+      "plague": 0,
+      "poison": 0,
+      "protection": false,
+      "ring": 0,
+      "seed": 2831332741,
+      "swords": 0
+    },
+    "screen": "0 male and 4 female slaves have come down with: Small Pox\nHow many males to cure? 0\nHow many females to cure? 3\nAny not cured pass away.\nPress any key..."
+  },
+  {
+    "name": "illness-no-females",
+    "config": {
+      "seed": 11489,
+      "male": 12,
+      "female": 0,
+      "medicine": 3,
+      "food": 100,
+      "protection": false,
+      "inputs": [
+        "3",
+        "0"
+      ]
+    },
+    "final": {
+      "arrows": 0,
+      "bows": 0,
+      "daggers": 0,
+      "experience": 0.0,
+      "female": 0,
+      "food": 94.0,
+      "gold": 100.0,
+      "hp": 50.1,
+      "level": 8,
+      "male": 12,
+      "medicine": 0,
+      "plague": 0,
+      "poison": 0,
+      "protection": false,
+      "ring": 0,
+      "seed": 2831332741,
+      "swords": 0
+    },
+    "screen": "3 male and 0 female slaves have come down with: Small Pox\nHow many males to cure? 3\nHow many females to cure? 0\nAny not cured pass away.\nPress any key..."
+  },
+  {
+    "name": "illness-empty-party",
+    "config": {
+      "seed": 11489,
+      "male": 0,
+      "female": 0,
+      "medicine": 3,
+      "food": 100,
+      "protection": false,
+      "inputs": []
+    },
+    "final": {
+      "arrows": 0,
+      "bows": 0,
+      "daggers": 0,
+      "experience": 0.0,
+      "female": 0,
+      "food": 100.0,
+      "gold": 100.0,
+      "hp": 50.1,
+      "level": 8,
+      "male": 0,
+      "medicine": 3,
+      "plague": 0,
+      "poison": 0,
+      "protection": false,
+      "ring": 0,
+      "seed": 909115466,
+      "swords": 0
+    },
+    "screen": "There seems to be a bug going around."
+  },
+  {
+    "name": "illness-negative",
+    "config": {
+      "seed": 11489,
+      "male": 12,
+      "female": 12,
+      "medicine": 3,
+      "food": 100,
+      "protection": false,
+      "inputs": [
+        "-1",
+        "2",
+        "-2",
+        "1"
+      ]
+    },
+    "final": {
+      "arrows": 0,
+      "bows": 0,
+      "daggers": 0,
+      "experience": 0.0,
+      "female": 9,
+      "food": 90.0,
+      "gold": 100.0,
+      "hp": 50.1,
+      "level": 8,
+      "male": 11,
+      "medicine": 0,
+      "plague": 0,
+      "poison": 0,
+      "protection": false,
+      "ring": 0,
+      "seed": 2831332741,
+      "swords": 0
+    },
+    "screen": "3 male and 4 female slaves have come down with: Small Pox\nHow many males to cure? -1\n2\nHow many females to cure? -2\n1\nAny not cured pass away.\nPress any key..."
+  },
+  {
+    "name": "illness-protected",
+    "config": {
+      "seed": 11489,
+      "male": 12,
+      "female": 12,
+      "medicine": 3,
+      "food": 100,
+      "protection": true,
+      "inputs": [
+        "g"
+      ]
+    },
+    "final": {
+      "arrows": 0,
+      "bows": 0,
+      "daggers": 0,
+      "experience": 0.0,
+      "female": 10,
+      "food": 91.0,
+      "gold": 90.0,
+      "hp": 50.1,
+      "level": 8,
+      "male": 8,
+      "medicine": 3,
+      "plague": 0,
+      "poison": 0,
+      "protection": true,
+      "ring": 0,
+      "seed": 1077336814,
+      "swords": 0
+    },
+    "screen": "Things seem strangely quite when out of no where jumps\nA band of Orcs.  They look grumpy.\nThey say they will let you pass if you give them:\n4  Male slaves.\n2  Female slaves.\n10  gold pieces.\nor you may fight their champ, and win their horde.\n\nDo you wish to (F)ight (G)ive, or (R)un?\nThey take their goodies and leave."
+  },
+  {
+    "name": "illness-hex",
+    "config": {
+      "seed": 11489,
+      "male": 12,
+      "female": 12,
+      "medicine": 3,
+      "food": 100,
+      "protection": false,
+      "inputs": [
+        "$0002",
+        "1"
+      ]
+    },
+    "final": {
+      "arrows": 0,
+      "bows": 0,
+      "daggers": 0,
+      "experience": 0.0,
+      "female": 9,
+      "food": 90.0,
+      "gold": 100.0,
+      "hp": 50.1,
+      "level": 8,
+      "male": 11,
+      "medicine": 0,
+      "plague": 0,
+      "poison": 0,
+      "protection": false,
+      "ring": 0,
+      "seed": 2831332741,
+      "swords": 0
+    },
+    "screen": "3 male and 4 female slaves have come down with: Small Pox\nHow many males to cure? $0002\nHow many females to cure? 1\nAny not cured pass away.\nPress any key..."
+  },
+  {
+    "name": "illness-blank",
+    "config": {
+      "seed": 11489,
+      "male": 12,
+      "female": 12,
+      "medicine": 3,
+      "food": 100,
+      "protection": false,
+      "inputs": [
+        "",
+        "2",
+        "1"
+      ]
+    },
+    "final": {
+      "arrows": 0,
+      "bows": 0,
+      "daggers": 0,
+      "experience": 0.0,
+      "female": 8,
+      "food": 90.0,
+      "gold": 100.0,
+      "hp": 50.1,
+      "level": 8,
+      "male": 12,
+      "medicine": 0,
+      "plague": 0,
+      "poison": 0,
+      "protection": false,
+      "ring": 0,
+      "seed": 2831332741,
+      "swords": 0
+    },
+    "screen": "3 male and 4 female slaves have come down with: Small Pox\nHow many males to cure?\nHow many females to cure? 2\nAny not cured pass away.\nPress any key...",
+    "compare_as": "illness-partial"
+  },
+  {
+    "name": "illness-whitespace",
+    "config": {
+      "seed": 11489,
+      "male": 12,
+      "female": 12,
+      "medicine": 3,
+      "food": 100,
+      "protection": false,
+      "inputs": [
+        " 2 extra",
+        "1"
+      ]
+    },
+    "final": {
+      "arrows": 0,
+      "bows": 0,
+      "daggers": 0,
+      "experience": 0.0,
+      "female": 9,
+      "food": 90.0,
+      "gold": 100.0,
+      "hp": 50.1,
+      "level": 8,
+      "male": 11,
+      "medicine": 0,
+      "plague": 0,
+      "poison": 0,
+      "protection": false,
+      "ring": 0,
+      "seed": 2831332741,
+      "swords": 0
+    },
+    "screen": "3 male and 4 female slaves have come down with: Small Pox\nHow many males to cure?  2 extra\nHow many females to cure? 1\nAny not cured pass away.\nPress any key..."
+  },
+  {
+    "name": "illness-invalid",
+    "config": {
+      "seed": 11489,
+      "male": 12,
+      "female": 12,
+      "medicine": 3,
+      "food": 100,
+      "protection": false,
+      "inputs": [
+        "abc"
+      ]
+    },
+    "aborted": true,
+    "screen": "3 male and 4 female slaves have come down with: Small Pox\nHow many males to cure? abc\n\nI/O error 10, PC=7A3D\nProgram aborted\n\nC:\\>"
+  },
+  {
+    "name": "illness-overflow",
+    "config": {
+      "seed": 11489,
+      "male": 12,
+      "female": 12,
+      "medicine": 3,
+      "food": 100,
+      "protection": false,
+      "inputs": [
+        "32768"
+      ]
+    },
+    "aborted": true,
+    "screen": "3 male and 4 female slaves have come down with: Small Pox\nHow many males to cure? 32768\n\nI/O error 10, PC=7A3D\nProgram aborted\n\nC:\\>"
+  }
+]

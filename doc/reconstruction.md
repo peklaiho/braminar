@@ -24,7 +24,7 @@ The boxes above are a reusable workflow, not claims that every target needs ever
 
 - [x] Storms: implemented and compared across all eight types, shelter, zero/small parties, tidal losses, and starvation. [Evidence and limits](storm-illness-research.md).
 - [x] Servant illness: implemented and compared for medicine allocation, zero/one-sex parties, excessive cures, protection, and numeric input. Original excessive cures are preserved; integer input now follows the intentional shared-reader policy in CHANGES.md. Original bare-token/input-length behavior remains research-only. [Evidence and limits](storm-illness-research.md).
-- [ ] Pan: implement the decoded questions and recovered random-answer/command generation; capture success, failure, and decline.
+- [x] Pan: implemented all 20 decoded questions, random answers, and prime-command generation; compared success, failure, decline, invalid answer keys, and command replacement/preservation. [Evidence and limits](pan-research.md).
 - [ ] Keep command branch: recover exact input/comparison behavior and connect successful entry to the final-battle stub after turn bookkeeping. Check level/Staff gates, wrong command, and correct command.
 - [ ] After these bounded targets, run an ordinary integration pass, choosing unfinished branches and checking interactions such as Pan's command followed by the Keep.
 
@@ -41,7 +41,7 @@ This is a suggested order based on existing evidence, not a requirement to ignor
 | Event dispatch and substitutions | Recovered / implemented | All dispatch call sites checked against binary. Missing event bodies still change subsequent RNG sequences. [Rules](mechanics.md#event-selection) |
 | Turn healing, experience, ring/plague progression, food, starvation, death | Recovered / implemented | Temporary boundary harness plus encounter comparisons; no retained standalone boundary suite. Successful Keep transition remains unconnected. [Rules and check limits](mechanics.md#main-turn-loop) |
 | Band choices and shared combat | Recovered / implemented | Twelve retained controlled comparisons via `./check_combat.py --sanitize`. Remaining validation gaps include simultaneous deaths and resource boundaries; specialized fights are separate. [Ledger](combat-research.md) |
-| Question data | Format and selection recovered / extractor implemented | First 20 populated records decoded; game does not yet use them. Record 3 contains a declared source-fragment answer needing an explicit text decision. [Format](data-format.md) |
+| Question data | Recovered / extractor and gameplay implemented | All 20 populated records are used and checked against the original data. Record 3 replaces `=` with a space as recorded in CHANGES.md. [Format](data-format.md) |
 
 ## Main-game event coverage
 
@@ -68,7 +68,7 @@ Slot numbers follow the [recovered dispatch](mechanics.md#event-selection). “P
 | 12 | Enchanted forest | Recovered / implemented | Ordinary nymph resistance/elves gift and temporary remake harness. Capture fatal lure, ring exclusion, faerie plague cure versus healing, and decline. [Rules](mechanics.md#enchanted-forest) |
 | 13 | Separate empty-tree routine | String findings / placeholder | Inspect independently; do not reuse slot 6's rules without verifying them. [Evidence](events.md#hollow-tree-with-a-door) |
 | 14 | Flowing river | Recovered / implemented | Five saved cases: harmless vision, both items, held items, poisoned champion, decline. Comparison harness was temporary; fixtures retained. [Ledger](session-03.md#controlled-river-checks) |
-| 15 | Statue of Pan | Core rules recovered / placeholder | One wrong answer observed. Decode/use question texts and compare success, failure, and decline. [Rules](mechanics.md#statue-of-pan) |
+| 15 | Statue of Pan | Recovered / implemented | Five retained DOS comparisons cover success, failure, decline, invalid answer keys, command replacement/preservation, and question records 1, 3, 20. All 20 embedded records checked against data. [Evidence and limits](pan-research.md) |
 | 16 | Keep prerequisite rejection | Recovered / implemented | Ordinary rejection; temporary harness checked level 19 with Staff and level 20 without it. [Rules](mechanics.md#overlords-keep-prerequisite) |
 | 16 | Keep command and final-assault transition | Partial / placeholder | Gate, success flag, and wrong-command Staff loss inspected; input/comparison and transition remain unfinished. [Rules](mechanics.md#overlords-keep-prerequisite) |
 

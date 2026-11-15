@@ -1,0 +1,142 @@
+[
+  {
+    "name": "success",
+    "config": {
+      "seed": 1465,
+      "choice": "y",
+      "answer": "x02",
+      "command": "PRIOR"
+    },
+    "final": {
+      "level": 8,
+      "male": 5,
+      "female": 5,
+      "poison": 0,
+      "swords": 0,
+      "bows": 0,
+      "arrows": 2,
+      "daggers": 0,
+      "hp": 50.1,
+      "gold": 8.0,
+      "food": 95.0,
+      "experience": 0.0,
+      "ring": 0,
+      "seed": 181911297,
+      "medicine": 3,
+      "command": "SKJFJ"
+    },
+    "screen": "You find a Statue of Pan.  Approach the statue?\n(Y/N)\nThe statue suddenly animates, & asks you the following riddle.\n\nWhat does the Harkonen frog taste like?\n\n1 - Spinach\n2 - Orange Sherbert\n3 - Guacamole Dip\nChoose (1,2,3):\nYou guessed right!\nThe prime command is: SKJFJ\nRemember it!!!\nPress any key..."
+  },
+  {
+    "name": "failure",
+    "config": {
+      "seed": 1465,
+      "choice": "y",
+      "answer": "3",
+      "command": "PRIOR"
+    },
+    "final": {
+      "level": 8,
+      "male": 5,
+      "female": 5,
+      "poison": 0,
+      "swords": 0,
+      "bows": 0,
+      "arrows": 2,
+      "daggers": 0,
+      "hp": 50.1,
+      "gold": 8.0,
+      "food": 95.0,
+      "experience": 0.0,
+      "ring": 0,
+      "seed": 3700302196,
+      "medicine": 3,
+      "command": "PRIOR"
+    },
+    "screen": "You find a Statue of Pan.  Approach the statue?\n(Y/N)\nThe statue suddenly animates, & asks you the following riddle.\n\nWhat does the Harkonen frog taste like?\n\n1 - Spinach\n2 - Orange Sherbert\n3 - Guacamole Dip\nChoose (1,2,3):\nNope.  The answer is # 2 The statue Disappears.\nPress any key..."
+  },
+  {
+    "name": "decline",
+    "config": {
+      "seed": 1465,
+      "choice": "n",
+      "answer": "",
+      "command": "PRIOR"
+    },
+    "final": {
+      "level": 8,
+      "male": 5,
+      "female": 5,
+      "poison": 0,
+      "swords": 0,
+      "bows": 0,
+      "arrows": 2,
+      "daggers": 0,
+      "hp": 50.1,
+      "gold": 8.0,
+      "food": 95.0,
+      "experience": 0.0,
+      "ring": 0,
+      "seed": 907822370,
+      "medicine": 3,
+      "command": "PRIOR"
+    },
+    "screen": "You find a Statue of Pan.  Approach the statue?\n(Y/N)"
+  },
+  {
+    "name": "malformed",
+    "config": {
+      "seed": 1328,
+      "choice": "y",
+      "answer": "2",
+      "command": "PRIOR"
+    },
+    "final": {
+      "level": 8,
+      "male": 5,
+      "female": 5,
+      "poison": 0,
+      "swords": 0,
+      "bows": 0,
+      "arrows": 2,
+      "daggers": 0,
+      "hp": 50.1,
+      "gold": 8.0,
+      "food": 95.0,
+      "experience": 0.0,
+      "ring": 0,
+      "seed": 3893795448,
+      "medicine": 3,
+      "command": "WINIP"
+    },
+    "screen": "You find a Statue of Pan.  Approach the statue?\n(Y/N)\nThe statue suddenly animates, & asks you the following riddle.\n\nWhat does the \"Du Lake\" stand for in Launcelot Du Lake's Name?\n\n1 - Shake 'n Bake\n2 - Wake the Rake\n3 - Do Lake:=1 to 5\nChoose (1,2,3):\nYou guessed right!\nThe prime command is: WINIP\nRemember it!!!\nPress any key..."
+  },
+  {
+    "name": "last-question",
+    "config": {
+      "seed": 1457,
+      "choice": "y",
+      "answer": "3",
+      "command": "PRIOR"
+    },
+    "final": {
+      "level": 8,
+      "male": 5,
+      "female": 5,
+      "poison": 0,
+      "swords": 0,
+      "bows": 0,
+      "arrows": 2,
+      "daggers": 0,
+      "hp": 50.1,
+      "gold": 8.0,
+      "food": 95.0,
+      "experience": 0.0,
+      "ring": 0,
+      "seed": 3533676281,
+      "medicine": 3,
+      "command": "YYDGX"
+    },
+    "screen": "You find a Statue of Pan.  Approach the statue?\n(Y/N)\nThe statue suddenly animates, & asks you the following riddle.\n\nWhat is the favorite food of Eganiod moose birds?\n\n1 - Duncin' Doughnuts\n2 - Snickers\n3 - Granola Dipps\nChoose (1,2,3):\nYou guessed right!\nThe prime command is: YYDGX\nRemember it!!!\nPress any key..."
+  }
+]

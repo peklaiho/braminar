@@ -1,0 +1,122 @@
+[
+  {
+    "name": "plain",
+    "seed": 312,
+    "held": false,
+    "answer": "y",
+    "result": {
+      "level": 8,
+      "male": 12,
+      "female": 12,
+      "poison": 1,
+      "swords": 0,
+      "bows": 0,
+      "arrows": 0,
+      "daggers": 0,
+      "hp": 50.1,
+      "gold": 100.0,
+      "food": 88.0,
+      "experience": 0.0,
+      "ring": 0,
+      "seed": 1868761285,
+      "staff": false,
+      "talisman": false
+    }
+  },
+  {
+    "name": "both",
+    "seed": 798,
+    "held": false,
+    "answer": "y",
+    "result": {
+      "level": 8,
+      "male": 12,
+      "female": 12,
+      "poison": 1,
+      "swords": 0,
+      "bows": 0,
+      "arrows": 0,
+      "daggers": 0,
+      "hp": 50.1,
+      "gold": 100.0,
+      "food": 88.0,
+      "experience": 0.0,
+      "ring": 0,
+      "seed": 3014052267,
+      "staff": true,
+      "talisman": true
+    }
+  },
+  {
+    "name": "held",
+    "seed": 798,
+    "held": true,
+    "answer": "y",
+    "result": {
+      "level": 8,
+      "male": 12,
+      "female": 12,
+      "poison": 1,
+      "swords": 0,
+      "bows": 0,
+      "arrows": 0,
+      "daggers": 0,
+      "hp": 50.1,
+      "gold": 100.0,
+      "food": 88.0,
+      "experience": 0.0,
+      "ring": 0,
+      "seed": 3014052267,
+      "staff": true,
+      "talisman": true
+    }
+  },
+  {
+    "name": "fight",
+    "seed": 324,
+    "held": false,
+    "answer": "y",
+    "result": {
+      "level": 8,
+      "male": 14,
+      "female": 32,
+      "poison": 0,
+      "swords": 0,
+      "bows": 0,
+      "arrows": 0,
+      "daggers": 0,
+      "hp": 50.1,
+      "gold": 125.0,
+      "food": 99.0,
+      "experience": 2.75,
+      "ring": 0,
+      "seed": 2650844382,
+      "staff": false,
+      "talisman": false
+    }
+  },
+  {
+    "name": "decline",
+    "seed": 798,
+    "held": false,
+    "answer": "n",
+    "result": {
+      "level": 8,
+      "male": 12,
+      "female": 12,
+      "poison": 1,
+      "swords": 0,
+      "bows": 0,
+      "arrows": 0,
+      "daggers": 0,
+      "hp": 50.1,
+      "gold": 100.0,
+      "food": 88.0,
+      "experience": 0.0,
+      "ring": 0,
+      "seed": 907736327,
+      "staff": false,
+      "talisman": false
+    }
+  }
+]
