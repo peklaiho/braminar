@@ -256,3 +256,17 @@ text/prompt order, key counts, and requested delays without DOSBox. Fatal cases
 compare event state at the final pause, before bookkeeping. See
 [castle research](castle-research.md) for evidence, limits, and the deliberate
 resolution of the original's uninitialized fear local.
+
+## Watched tree and hut probes
+
+`./watched_home_probe.py > doc/captures/2026-11-15-watched-home-probes.txt`
+captures 32 controlled slot-13 cases and writes
+`doc/watched-home-checkpoints.json`. Named arguments select cases in the
+requested order; `--output PATH` selects an independent fixture file. The
+runner resets temporary player state and RNG and waits through the care delay
+before recording the next input boundary.
+
+`./check_watched_home.py --sanitize` compares state, RNG, normalized text and
+prompt order, key counts, requested delays, and EOF handling without DOSBox.
+See [research notes](watched-home-research.md) for how the watched tree and hut
+differ from the independently implemented slot-6 and slot-7 events.

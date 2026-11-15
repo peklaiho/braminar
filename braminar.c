@@ -2280,9 +2280,98 @@ static bool event_mountain_trail(Player* player)
     return wait_for_key();
 }
 
-static void event_empty_tree(void)
+static bool event_empty_tree(Player* player)
 {
-    puts("\nYou find a hollow tree with a door.  No one seems to be home.");
+    /* Slot 13 at 0x8F9B-0x96E6; see doc/mechanics.md#watched-tree-and-hut. */
+    int deed = ' ';
+    if (random_number(100) + 1 < 51) {
+        int choice = ask_yes_no("\nYou come up to a hollow tree with a door.  Enter? ");
+        if (choice == EOF) {
+            return false;
+        }
+        if (choice == 'Y') {
+            puts("No one seems to be home.");
+            puts("There is a kettle of stew over a fire, and a large");
+            puts("wooden trunk next to the wall.");
+            puts("\nyou may (S)teal food, (T)ake from trunk or (L)eave.");
+            deed = read_choice("STL");
+            if (deed == EOF) {
+                return false;
+            }
+        }
+    } else {
+        puts("\nYou come upon a grass hut.  You hear sounds from within.");
+        int choice = ask_yes_no("Will you enter?");
+        if (choice == EOF) {
+            return false;
+        }
+        if (choice == 'Y') {
+            bool old_man = random_number(2) == 0;
+            choice = ask_yes_no(old_man
+                ? "You discover an old man in the corner.  He looks ill.  Try to cure him?"
+                : "You find a hungry little puppy in the room.  Share some of your food?");
+            if (choice == EOF) {
+                return false;
+            }
+            deed = choice == 'Y' ? 'L' : 'S';
+            if (choice == 'Y') {
+                if (old_man) {
+                    if (player->medicine > 0) {
+                        puts("you give him some medicine.");
+                        --player->medicine;
+                    } else {
+                        puts("You try to comfort him.");
+                    }
+                    puts("The old man seems better.");
+                } else if (player->food > 0) {
+                    --player->food;
+                    puts("You feed the puppy.  It is greatful.");
+                } else {
+                    puts("You have no food, so you pet thepuppy.  ");
+                }
+                struct timespec delay = {1, 0};
+                nanosleep(&delay, NULL);
+            }
+        }
+    }
+    if (deed == 'S' || deed == 'T') {
+        puts("You suddenly hear a big booming voice say,");
+        puts("\"Alright!  I saw that!!\"  You realize that");
+        puts("A deity was watching your act.");
+        puts("\"For that, I drop you down a level!!\"");
+        --player->level;
+    } else if (deed == 'L') {
+        puts("A bright light fills the room & you are confronted by a");
+        puts("deity.  He says, \"Good job.  For doing a good deed,I give you: ");
+        switch (random_number(5) + 1) {
+        case 1:
+            puts("A dozen Male Servants.");
+            player->male_servants += 12;
+            break;
+        case 2:
+            puts("A dozen Female Servants.");
+            player->female_servants += 12;
+            break;
+        case 3:
+            puts("A giant Hamburger!");
+            player->food += 50;
+            break;
+        case 4:
+            puts("A bottle of poison.");
+            ++player->poison;
+            break;
+        case 5:
+            if (!player->talisman_of_braminar) {
+                puts("The Talisman of Braminar!");
+                player->talisman_of_braminar = true;
+            } else {
+                puts("a box of Duncin' Doughnuts!");
+                player->food += 12;
+            }
+            break;
+        }
+    }
+    return wait_for_key();
 }
 
 static bool run_event(Player* player)
@@ -2311,7 +2400,7 @@ static bool run_event(Player* player)
     case 10: return event_storm(player);
     case 11: return event_dark_castle(player);
     case 12: return event_enchanted_forest(player);
-    case 13: event_empty_tree(); break;
+    case 13: return event_empty_tree(player);
     case 14: return event_flowing_river(player);
     case 15: return event_statue_of_pan(player);
     case 16: return event_overlords_keep(player);

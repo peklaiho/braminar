@@ -10,6 +10,7 @@ This document records intentional differences between the classic DOS game and t
 
 | Location | Classic text | Remake text |
 | --- | --- | --- |
+| Slot-13 deity judgment/reward | `diety` | `deity` |
 | Pan, question 3 answer 3 | `Do Lake:=1 to 5` | `Do Lake: 1 to 5` |
 | Mountain trail | `He lookes up` | `He looks up` |
 | Character status | `Mecidine:` | `Medicine:` |

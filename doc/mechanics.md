@@ -107,7 +107,7 @@ The two guarded slots do not reroll when their conditions fail. At character cre
 
 The [first recorded session](captures/2026-11-14-session-01.md) independently shows HP increasing by 0.10 per completed turn and food decreasing by five for a party with nine servants. An elves' gift adds ten food before the five-unit consumption. These observations corroborate the binary calculations; they do not independently test every boundary above.
 
-The remake implements the dispatch, bookkeeping, band encounters and shared combat, river, forest, both branches of the slot-6 hollow tree, storms, servant illness, Pan, City/Village, and the Keep's prerequisite rejection, with explicit placeholders for other encounters. Some event bodies and their random calls are still missing, so subsequent event sequences will differ even with equal initial seeds. The remake intentionally uses `double` for HP and experience without Real48 emulation, as recorded in `CHANGES.md`. Food is currently integer; whether inventory calculations require visible fractional quantities remains unresolved and must be checked as those mechanics are recovered. The final-assault transition is still deferred with the eligible Keep branch; `start_final_battle()` remains its intended stub entry point.
+The remake implements the dispatch, bookkeeping, band encounters and shared combat, river, forest, both branches of the slot-6 hollow tree, the separate slot-13 watched tree/hut, storms, servant illness, Pan, City/Village, and the Keep's prerequisite rejection, with the eligible Keep command/transition still unfinished. Original startup seeding and full-run parity remain unverified. The remake intentionally uses `double` for HP and experience without Real48 emulation, as recorded in `CHANGES.md`. Food is currently integer; whether inventory calculations require visible fractional quantities remains unresolved and must be checked as those mechanics are recovered. The final-assault transition is still deferred with the eligible Keep branch; `start_final_battle()` remains its intended stub entry point.
 
 ## Enchanted forest
 
@@ -139,13 +139,13 @@ In the occupied branch of the hollow-tree routine, the original announces a gift
 
 The remake intentionally fixes this classic bug: add the announced 3–8 food to inventory before normal turn consumption. With the captured example's starting food of 95, a gift of three and consumption of five now leave 93 food, rather than the classic's 90. This difference is recorded in [CHANGES.md](../CHANGES.md#bug-fixes); the original capture remains evidence of classic behavior.
 
-After entering slot 6's tree, `Roll(100) < 56` selects the occupied gnome branch (`0x67C0`–`0x67D4`). If HP is below `level * 10`, the gnome rolls 1–5, announces that many HP restored, and adds it without a subsequent cap (`0x68D8`–`0x696A`). The captured five-HP ointment changed 49.30 HP to 54.40 after turn healing. The remake implements this occupied branch, including its pause, and pauses after declining entry as the original does (`0x6C9C`–`0x6CBB`). The empty-home branch is now implemented as described below. The separate slot 13 tree remains unfinished.
+After entering slot 6's tree, `Roll(100) < 56` selects the occupied gnome branch (`0x67C0`–`0x67D4`). If HP is below `level * 10`, the gnome rolls 1–5, announces that many HP restored, and adds it without a subsequent cap (`0x68D8`–`0x696A`). The captured five-HP ointment changed 49.30 HP to 54.40 after turn healing. The remake implements this occupied branch, including its pause, and pauses after declining entry as the original does (`0x6C9C`–`0x6CBB`). The empty-home branch is now implemented as described below. The separate slot-13 watched tree/hut is independently implemented [below](#watched-tree-and-hut).
 
 ## Empty gnome home
 
 Session 04 entered main-loop slot 6's empty home and took the Staff from its trunk during ordinary play. The remainder of this branch was checked against the executable and eight separately labelled [controlled DOS captures](captures/2026-11-14-tree-probes.txt); [saved checkpoints](tree-checkpoints.json) retain their final states. See [the pass ledger](session-04.md) for the distinction between ordinary and controlled observations.
 
-- The initial entry choice and occupied/empty split are shared with the occupied branch above. An occupied roll is `Roll(100) < 56`; rolls 56–100 select the empty home, irrespective of inventory. Do not reuse this implementation for slot 13 without inspecting that separate routine.
+- The initial entry choice and occupied/empty split are shared with the occupied branch above. An occupied roll is `Roll(100) < 56`; rolls 56–100 select the empty home, irrespective of inventory. Slot 13 instead judges S/T/L as bad/good deeds; its independently recovered rules are [below](#watched-tree-and-hut).
 - The empty home offers `(S)teal food, (T)ake from trunk or (L)eave.` Read one character, case-insensitively, retrying invalid choices (`0x6A48`–`0x6A87`). There is one action per visit.
 - S rolls 1–100, announces that quantity, and adds it to food (`0x6A94`–`0x6AE6`). Unlike the occupied gnome's gift, this food addition exists in the classic.
 - T rolls 1–4 with equal probability (`0x6AF4`–`0x6B03`). Result 1 adds 1–20 arrows (`0x6B0B`–`0x6B45`); result 2 adds 1–10 medicine (`0x6B53`–`0x6B8E`). Result 3 awards the Staff if absent, without another random draw (`0x6B9C`–`0x6BDA`); if already held, it instead adds 1–10 medicine (`0x6BE0`–`0x6C1C`). Result 4 releases a Rune Guardian and subtracts 1–5 HP (`0x6C2A`–`0x6C96`). This is direct damage, with no combat choice or retaliation.
@@ -620,3 +620,33 @@ Each round, while both participants have positive HP:
 Shouts in roll order are `You will not be King, Duncan!!`, `Hold the Pickle, Hold the Lettuce!`, `Eat my Shorts!!`, `Beware of brave Sir Robin!!`, `Wouldn't you like to be a Pepper too?`, and `I just want a Condo with a view!`, printed in quotation marks following `The King yells:`.
 
 Print the player's victory/death independently of the King's survival/disappearance. Only if player HP is positive, add `R(3) + 2` experience, announce fleeing before the King re-materializes, and add `R(10)` gold without announcing its amount. No loot, ring-acquisition roll, or extra combat pause follows; the caller supplies the castle's final pause. [Comparison scope](castle-research.md) covers equipment, poison, state/RNG progression, and fatal handling.
+
+## Watched tree and hut
+
+Slot 13 calls `0x8F9B`–`0x96E6`, a separate event containing both a tree and hut. Here `R(n) = Random(n) + 1`. Initialize the deed to blank, then always draw `R(100)` before asking entry: below 51 selects the hollow tree; 51–100 selects a noisy grass hut. This differs from slot 6's occupied/empty gnome split and slot 7's three hut occupants. [Research, captures, and limits](watched-home-research.md).
+
+### Tree path
+
+At `0x8FC0`–`0x9127`, ask whether to enter. Declining leaves the deed blank and prints no departure message. Accepting prints the empty-home, stew, and trunk description and offers S/T/L, retrying invalid keys case-insensitively. Unlike slot 6, stealing grants no food, taking opens no trunk and grants no item, and neither consumes an action-specific random draw. S/T mark a bad deed; L marks a good deed. There is one action per visit.
+
+### Hut path
+
+At `0x9128`–`0x93DC`, announce sounds from within and ask entry. Declining silently leaves the deed blank and skips the occupant roll. Accepting draws `R(2)`: one is the ill old man, two the hungry puppy. Ask whether to help; refusing marks a bad deed without spending supplies, waiting, or drawing a reward.
+
+Helping marks a good deed even with no supplies. For the man, consume one medicine if positive, otherwise print comfort; always print that he seems better. For the puppy, consume one food if positive and print feeding/gratitude; otherwise print petting. Either accepted help waits one second. This care processing matches slot 7's visible behavior, but slot 13 continues to the judgment below.
+
+### Judgment and exit
+
+At `0x93DD`–`0x96D6`, S/T (including refusing hut help, represented internally as S) print the booming voice and reduce level by exactly one. There is no minimum-level check, HP recalculation, experience change, item loss, ring exemption, or random draw. Level one becomes zero. Subsequent ordinary healing uses the new level, so HP above its new maximum remains unchanged.
+
+L (leaving the entered tree or accepting hut help) prints the deity's good-deed text and draws `R(5)`:
+
+| Roll | Reward |
+| --- | --- |
+| 1 | Add twelve male servants. |
+| 2 | Add twelve female servants. |
+| 3 | Announce a giant hamburger and add fifty food. |
+| 4 | Add one poison dose. |
+| 5 | Acquire the Talisman if absent; otherwise announce Duncin' Doughnuts and add twelve food. No substitute roll. |
+
+Blank deeds receive no judgment, reward, or extra draw. Every path, including declining entry, ends with one common keypress pause at `0x96D7`–`0x96DF`. End-of-turn bookkeeping follows, including healing with the changed level and consumption with newly rewarded servants. Within-event draw order is selection; optional hut occupant; optional good-deed reward. No Staff acquisition or combat occurs here.

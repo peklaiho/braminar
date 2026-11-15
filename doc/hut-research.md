@@ -4,7 +4,7 @@
 
 The entire slot-7 hut (`dos/BRAMINAR.COM`, file offsets `0x6CC5`–`0x7579`) is recovered and implemented. This includes its dragon caller and astral gate, so this target also recovers the separate dragon routine (`0x56C6`–`0x5DBD`) and gate-creature routine (`0x4B67`–`0x56C5`). The shared band-combat routine is not used for either fight. [Mechanics](mechanics.md#grass-hut) contains the exact draws, damage tables, text/state discrepancies, prerequisites, and reward order.
 
-Control-flow inspection resolves an earlier string-grouping assumption: the sick old man and puppy in this hut do not award good-deed rewards. Similar scenes and reward strings later in the executable are separate code, still awaiting reconstruction with the slot-13 tree. The old ordinary empty-hut visit remains in [session 04](session-04.md); it establishes that visit only.
+Control-flow inspection resolves an earlier string-grouping assumption: the sick old man and puppy in this hut do not award good-deed rewards. Similar scenes and reward strings later in the executable are separate code, now independently recovered and compared with the [slot-13 watched tree/hut](watched-home-research.md). The old ordinary empty-hut visit remains in [session 04](session-04.md); it establishes that visit only.
 
 ## Controlled captures
 

@@ -31,11 +31,12 @@ The boxes above are a reusable workflow, not claims that every target needs ever
 - [x] Grass hut: all occupants/finds, hermit outcomes, dragon combat, and gate-creature combat/rewards implemented. [Evidence and limits](hut-research.md).
 - [x] Thicket/laboratory: exploration, all potion effects, pentacle, and Anthrax implemented; 61 controlled cases include potion-acquired charm followed by the hut dragon. [Evidence and limits](thicket-research.md).
 - [x] Dark Castle/Mad King: all three rooms, ghost minstrels, theft/noise, crystal-ball hints, traps/rewards, and independent King combat implemented; 46 retained controlled comparisons pass. [Evidence and limits](castle-research.md).
+- [x] Slot-13 watched tree/hut: separate tree judgments, old-man/puppy help, all five rewards and held-Talisman substitute implemented; 32 retained controlled comparisons pass, plus a separate ordinary decline pass. [Evidence and limits](watched-home-research.md).
 - [ ] Town follow-up: compare City shared-service purchases plus the bargain marketplace in one visit, and cleric/ring/mugger interactions. Continue ordinary integration play for discovery.
 - [ ] Keep command branch (deferred in priority until endgame work): recover exact input/comparison behavior and connect successful entry to the final-battle stub after turn bookkeeping. Check level/Staff gates, wrong command, and correct command.
 - [ ] When returning to endgame work, run an ordinary integration pass checking Pan's command followed by the Keep.
 
-City/Village took priority at the user's request; the Keep is for later endgame work. The separate slot-13 tree is the next location candidate: verify its independent flow and the later good-deed scenes before sharing any code. Split specialized combat work into bounded targets when selecting it.
+City/Village took priority at the user's request; the Keep is for later endgame work. The separate slot-13 tree/hut and its good-deed judgments are now recovered. The remaining event-body gap is the eligible Keep command/transition, still deferred to endgame work; continue ordinary integration play and the listed validation follow-ups. Split specialized combat work into bounded targets when selecting it.
 
 ## Core systems
 
@@ -73,7 +74,7 @@ Slot numbers follow the [recovered dispatch](mechanics.md#event-selection). “P
 | 10 | Storms | Recovered / implemented | Controlled checks for all eight types, two shelter durations, zero/small/one-sex parties, and starvation; requested delays checked against dots and binary loop. [Validation](storm-illness-research.md) |
 | 11 | Dark Castle: dungeon, throne room, galley | Recovered / implemented | Controlled room, ghost, item, food/pit, theft/noise, poison, equipment/ring, full-combat, and fatal comparisons. Original uninitialized fear local intentionally resolved. [Evidence and limits](castle-research.md). |
 | 12 | Enchanted forest | Recovered / implemented | Ordinary nymph resistance/elves gift and temporary remake harness. Capture fatal lure, ring exclusion, faerie plague cure versus healing, and decline. [Rules](mechanics.md#enchanted-forest) |
-| 13 | Separate empty-tree routine | String findings / placeholder | Inspect independently; do not reuse slot 6's rules without verifying them. [Evidence](events.md#hollow-tree-with-a-door) |
+| 13 | Watched empty tree and old-man/puppy hut | Recovered / implemented | Independent tree and hut selection, bad-deed level loss, all rewards, supply boundaries, held-Talisman substitute, and invalid choice. [Evidence and limits](watched-home-research.md). |
 | 14 | Flowing river | Recovered / implemented | Five saved cases: harmless vision, both items, held items, poisoned champion, decline. Comparison harness was temporary; fixtures retained. [Ledger](session-03.md#controlled-river-checks) |
 | 15 | Statue of Pan | Recovered / implemented | Five retained DOS comparisons cover success, failure, decline, invalid answer keys, command replacement/preservation, and question records 1, 3, 20. All 20 embedded records checked against data. [Evidence and limits](pan-research.md) |
 | 16 | Keep prerequisite rejection | Recovered / implemented | Ordinary rejection; temporary harness checked level 19 with Staff and level 20 without it. [Rules](mechanics.md#overlords-keep-prerequisite) |
