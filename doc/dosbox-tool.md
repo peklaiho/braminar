@@ -240,3 +240,19 @@ comparison ignores whitespace, including DOS line wrapping inside words, and
 normalizes servant terminology. Fatal cases compare event state before
 bookkeeping because DOS has reclaimed DS after exit. See the
 [research notes](thicket-research.md) for captures and validation limits.
+
+## Dark Castle and Mad King probes
+
+`./castle_probe.py > doc/captures/2026-11-15-castle-probes.txt` captures controlled
+castle visits and writes `doc/castle-checkpoints.json`. Pass case names to select
+visits (in the requested order); `--output PATH` selects an independent fixture
+file. Every case resets temporary player state and RNG; drop probes wait through
+the sound before sampling the next input boundary. Fatal cases restart the
+original when more cases remain. Punctuation in the theft sequence is sent as
+literal text because xdotool does not accept `/` or `=` as key names.
+
+`./check_castle.py --sanitize` compares per-input and final state, RNG, normalized
+text/prompt order, key counts, and requested delays without DOSBox. Fatal cases
+compare event state at the final pause, before bookkeeping. See
+[castle research](castle-research.md) for evidence, limits, and the deliberate
+resolution of the original's uninitialized fear local.

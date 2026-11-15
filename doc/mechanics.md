@@ -236,7 +236,7 @@ These rules were checked in [controlled original-game probes](combat-research.md
 
 ## Shared combat
 
-`0x2DB4`–`0x3E6B` implements the shared routine called by band encounters and the river's champion path (`0x9D99`). Wizard, dragon, Mad King, and gate-creature fights use separate routines; these shared rules must not be applied to them. Dragon and gate-creature combat are now recovered and implemented for the grass hut below; Anthrax combat is recovered below; Mad King combat remains unfinished.
+`0x2DB4`–`0x3E6B` implements the shared routine called by band encounters and the river's champion path (`0x9D99`). Wizard, dragon, Mad King, and gate-creature fights use separate routines; these shared rules must not be applied to them. Dragon and gate-creature combat are now recovered and implemented for the grass hut below; Anthrax combat is recovered below; Mad King combat is independently recovered and implemented [below](#mad-king-combat).
 
 ### Setup and round selection
 
@@ -564,3 +564,59 @@ Fractional values simplify the embedded Real48 constants under the existing prec
 | 9 | Lightning: player loses `Roll(5)` HP. |
 
 After each round display player and wizard HP to two decimals and pause (`0x4A17`–`0x4A76`). At the end print player victory/death and wizard survival/disappearance independently. Add integer `wizard level / 2` experience unconditionally, even after player death (`0x4A7C`–`0x4B5D`); normal death bookkeeping later clears experience. There is no additional pause or inventory reward inside this routine. The laboratory parent awards loot only to survivors.
+
+## Dark Castle
+
+Slot 11 calls `0x7E15`–`0x8BA6`. Decline prints `You continue on.` without a pause or additional random draws. After accepting, `R(100) < 26` produces ghost minstrels; only then draw another `R(100)`. If this second roll is below `level + 25`, print fear, pause, and return. Otherwise offer Dungeons/Throne Room/Galley, accepting case-insensitive D/T/G. Here `R(n) = Random(n) + 1`. Each completed room ends in one outer pause, including fatal outcomes and the King's completed fight. There is no return to the room menu.
+
+The original fear byte `[BP-5]` lacks initialization on the no-minstrel path. The remake explicitly proceeds to the menu on that path; see CHANGES.md. [Research and captures](castle-research.md) distinguish this choice from verified deterministic rules.
+
+### Dungeon
+
+At `0x806B`–`0x83A4`, resolve these operations in order, without skipping later operations when HP falls to zero:
+
+1. Add `R(10)` gold, announced only as a few gold pieces.
+2. Draw `R(100)`; below 19, smell subtracts 0.1 HP.
+3. Draw `R(100)`; below 6, acquire the Staff if absent. A held Staff still consumes the roll.
+4. Draw `R(100)`; below 11, add `R(5)` male servants (the count draw is conditional).
+5. Draw `R(100)`; below 4, add one poison dose.
+6. Draw `R(100)`; below 13, close the door. Escape if the current combined servant count is positive or at least one dagger is held; nothing is consumed. Otherwise set HP to zero with the starvation text. Food, swords, and other items do not help. Newly rescued servants count.
+
+### Throne room
+
+At `0x83AD`–`0x8731`, progress and noise start at zero. Every raw key is uppercased. Space marks leaving, but still completes the iteration and its catch check. Only the keys `1 / = \ H` affect sequence progress. A recognized key matching the current sequence position advances progress; an out-of-order recognized key prints `You drop some gold.`, waits through four 100-ms sound/silence pairs (0.8 seconds), and adds `R(3)` noise. It neither subtracts inventory gold nor resets progress. All other keys are ignored by the sequence logic.
+
+On progress five, print `Got some gold.`, add `R(8)` gold, and reset progress to zero. Then increment noise once for every key, including ignored keys and Space. If noise exceeds ten and progress equals four, sound three 5-ms tone/silence pairs (0.03 seconds total). After this, noise above fifteen ends theft and triggers the King, even when this key was Space. Otherwise Space exits safely. Time spent waiting for keys does not itself advance noise.
+
+### Galley
+
+At `0x873A`–`0x8B76`, ask whether to gaze into the crystal ball. If accepted, draw `R(100)` and print a fixed hint: 1–2 Staff in the Wizard's home; 3–4 Staff in the Gnome's trunk; 5–6 Staff in the grass hut; 7–8 Staff in the King's dungeon; 9–10 Staff in a flowing river; 11–12 Talisman in a flowing river; 13–14 Talisman in the castle galley; 15–100 nothing. These are random hints, independent of possessions and without item-placement state.
+
+Next always draw `R(100)`; below nine acquire the Talisman if absent. Draw `Random(200)` (zero through 199), announce and add that food. Finally draw `R(100)`; below 36, announce servants falling into pits and divide each sex's count by two using integer division. A zero-servant party still receives the message and consumes the roll.
+
+## Mad King combat
+
+The separate routine at `0x5DBE`–`0x6768` is called by the throne room. Start with a 150-ms tone wait and King level 16, HP `(R(5) + 4) * 16`, giving 80/96/112/128/144. Roll HP before asking about any held poison. Accepting poison consumes a dose and sets King HP to zero, bypassing rounds but preserving victory/reward processing.
+
+Each round, while both participants have positive HP:
+
+1. Draw `R(9)` for the player's attack; add two for any ring. If swords plus daggers are positive, or bows and arrows are both positive, add `Random(1)` (always zero, but the RNG state advances). Cap the attack at nine. Equipment does not select a different text table or consume arrows.
+2. Apply the player attack from the table below.
+3. Always draw `R(9)` for retaliation, including after a killing player attack. Retaliation two draws `R(6)` for one of six shouts, with no damage.
+4. Display player/King HP to two decimals and pause.
+
+| Index | Player attack / King damage | Retaliation / player damage |
+| --- | --- | --- |
+| 1 | Miss / 0 | Miss / 0 |
+| 2 | Nick / 0.7 | Shout / 0 |
+| 3 | Slight damage / 1.6 | Cold-cuts / 0.4 |
+| 4 | Hit heartily / 2.1 | Bites arm / 1.1 |
+| 5 | Cut / 2.4 | Sceptre / 1.7 |
+| 6 | Candle stand / 3.2 | Bites leg / 1.8 |
+| 7 | Kick / 3.4 | Cut / 2.4 |
+| 8 | Nearby shield / 3.9 | Dagger / 3.2 |
+| 9 | Slam into wall / 4.5 | Flip and slam / 3.9 |
+
+Shouts in roll order are `You will not be King, Duncan!!`, `Hold the Pickle, Hold the Lettuce!`, `Eat my Shorts!!`, `Beware of brave Sir Robin!!`, `Wouldn't you like to be a Pepper too?`, and `I just want a Condo with a view!`, printed in quotation marks following `The King yells:`.
+
+Print the player's victory/death independently of the King's survival/disappearance. Only if player HP is positive, add `R(3) + 2` experience, announce fleeing before the King re-materializes, and add `R(10)` gold without announcing its amount. No loot, ring-acquisition roll, or extra combat pause follows; the caller supplies the castle's final pause. [Comparison scope](castle-research.md) covers equipment, poison, state/RNG progression, and fatal handling.

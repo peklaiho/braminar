@@ -961,9 +961,232 @@ static bool event_combat(Player* player)
     return true;
 }
 
-static void event_dark_castle(void)
+static bool fight_mad_king(Player* player)
 {
-    puts("\nYou find the Dark Castle of the Mad King.");
+    /* Separate combat at 0x5DBE-0x6768; see doc/mechanics.md#mad-king-combat. */
+    static const char* const attacks[] = {
+        "You miss the King.",
+        "You just nicked the King.",
+        "You did slight damage to the king.",
+        "You hit the king heartily.",
+        "You cut the King.",
+        "You strike him with a convenient candle stand.",
+        "You kick the king hard.",
+        "You grab a nearby shield & hit him with it.",
+        "You slam the king into a nearby wall.",
+    };
+    static const double damage[] = {0, 0, 0.7, 1.6, 2.1, 2.4, 3.2, 3.4, 3.9, 4.5};
+    static const char* const counters[] = {
+        "The King missed you.", "The King yells: ",
+        "The King cold-cuts you.", "The King bites your arm.",
+        "The King smacks you with his sceptre.", "The King Bites your leg.",
+        "The King cuts you.", "The King stabbs you with a dagger.",
+        "The King flips you over & slams you.",
+    };
+    static const double counter_damage[] = {0, 0, 0, 0.4, 1.1, 1.7, 1.8, 2.4, 3.2, 3.9};
+    static const char* const shouts[] = {
+        "\"You will not be King, Duncan!!\"",
+        "\"Hold the Pickle, Hold the Lettuce!\"",
+        "\"Eat my Shorts!!\"",
+        "\"Beware of brave Sir Robin!!\"",
+        "\"Wouldn't you like to be a Pepper too?\"",
+        "\"I just want a Condo with a view!\"",
+    };
+    struct timespec delay = {0, 150000000};
+    nanosleep(&delay, NULL);
+    double king_hp = (random_number(5) + 5) * 16;
+    if (player->poison > 0) {
+        int choice = ask_yes_no("Use your poison? ");
+        if (choice == EOF) {
+            return false;
+        }
+        if (choice == 'Y') {
+            --player->poison;
+            king_hp = 0;
+        }
+    }
+    while (king_hp > 0 && player->hit_points > 0) {
+        int attack = random_number(9) + 1;
+        if (player->ring_power > 0) {
+            attack += 2;
+        }
+        if (player->swords + player->daggers > 0 || (player->bows > 0 && player->arrows > 0)) {
+            attack += random_number(1);
+        }
+        if (attack > 9) {
+            attack = 9;
+        }
+        puts(attacks[attack - 1]);
+        king_hp -= damage[attack];
+        int counter = random_number(9) + 1;
+        if (counter == 2) {
+            printf("%s", counters[counter - 1]);
+            puts(shouts[random_number(6)]);
+        } else {
+            puts(counters[counter - 1]);
+        }
+        player->hit_points -= counter_damage[counter];
+        printf("\n---Player: %5.2f       King: %5.2f\n", player->hit_points, king_hp);
+        if (!wait_for_key()) {
+            return false;
+        }
+    }
+    puts(player->hit_points > 0 ? "You won!" : "You did not survive the battle.");
+    puts(king_hp > 0 ? "The King has won." : "The King disappears.");
+    if (player->hit_points > 0) {
+        player->experience += random_number(3) + 3;
+        puts("You flee before the King re-materializes.");
+        player->gold += random_number(10) + 1;
+    }
+    return true;
+}
+
+static bool castle_dungeon(Player* player)
+{
+    puts("You Enter the Dungeon...");
+    puts("It is dark and creepy down here.  There are rats & chains everywhere.");
+    puts("You find a few gold pieces on the floor.");
+    player->gold += random_number(10) + 1;
+    if (random_number(100) + 1 < 19) {
+        puts("You are overwhelmed by the smell.");
+        player->hit_points -= 0.1;
+    }
+    if (random_number(100) + 1 < 6 && !player->staff_of_aviatar) {
+        puts("You find the STAFF of AVIATAR!!");
+        player->staff_of_aviatar = true;
+    }
+    if (random_number(100) + 1 < 11) {
+        int males = random_number(5) + 1;
+        printf("You find %d male servants.\n", males);
+        player->male_servants += males;
+    }
+    if (random_number(100) + 1 < 4) {
+        puts("You find a vial of Poison!");
+        ++player->poison;
+    }
+    if (random_number(100) + 1 < 13) {
+        puts("The door closes shut on the dungeon!!");
+        if (player->male_servants + player->female_servants > 0 || player->daggers > 0) {
+            puts("You manage to escape with the help of a dagger or your servants.");
+        } else {
+            puts("You cannot escape!!  You Starve.");
+            player->hit_points = 0;
+        }
+    }
+    return true;
+}
+
+static bool castle_throne(Player* player)
+{
+    puts("You spot a large chest of gold at the throne. Press: 1 / = \\ H  keys in that ");
+    puts("sequence to simulate grabbing gold & putting it in a bag.  A miss-typed key =");
+    puts("dropped gold.  Don't make too much noise, or the king will hear you and enter ");
+    puts("the room!!  Space bar = leave the room.");
+    int progress = 0;
+    int noise = 0;
+    bool leave = false;
+    do {
+        int ch = read_key();
+        if (ch == EOF) {
+            return false;
+        }
+        ch = toupper((unsigned char)ch);
+        if (ch == ' ') {
+            puts("You Leave.");
+            leave = true;
+        } else {
+            const char* sequence = "1/=\\H";
+            const char* key = ch == '\0' ? NULL : strchr(sequence, ch);
+            if (key != NULL) {
+                if (progress == key - sequence) {
+                    ++progress;
+                } else {
+                    puts("You drop some gold.");
+                    struct timespec delay = {0, 800000000};
+                    nanosleep(&delay, NULL);
+                    noise += random_number(3) + 1;
+                }
+            }
+        }
+        if (progress == 5) {
+            puts("Got some gold.");
+            player->gold += random_number(8) + 1;
+            progress = 0;
+        }
+        ++noise;
+        if (noise > 10 && progress == 4) {
+            struct timespec delay = {0, 30000000};
+            nanosleep(&delay, NULL);
+        }
+    } while (!leave && noise <= 15);
+    if (noise > 15) {
+        puts("The Mad king rushes at you!!!");
+        return fight_mad_king(player);
+    }
+    return true;
+}
+
+static bool castle_galley(Player* player)
+{
+    static const char* const visions[] = {
+        "You see the Staff of Aviatar in the Wizard's home.",
+        "You see the Staff of Aviatar in the Gnome's trunk.",
+        "You see the Staff of Aviatar in the Grass Hut.",
+        "You see the Staff of Aviatar in the Mad Kings Dungeon.",
+        "You see the Staff of Aviatar in a flowing river.",
+        "You see the Talisman of Braminar in a flowing river.",
+        "You see the Talisman of Braminar in the Dark Castle Galley.",
+    };
+    puts("You enter the galley.  The Kitchen is in bad shape.");
+    int choice = ask_yes_no("You discover a crystal ball on the table. gaze into it?");
+    if (choice == EOF) {
+        return false;
+    }
+    if (choice == 'Y') {
+        int vision = random_number(100) + 1;
+        puts(vision <= 14 ? visions[(vision - 1) / 2] : "You see nothing.");
+    }
+    if (random_number(100) + 1 < 9 && !player->talisman_of_braminar) {
+        puts("You find the Talisman of BRAMINAR!!");
+        player->talisman_of_braminar = true;
+    }
+    int food = random_number(200);
+    printf("You find %d food.\n", food);
+    player->food += food;
+    if (random_number(100) + 1 < 36) {
+        puts("Some of your servants fall down pits in the floor!");
+        player->male_servants /= 2;
+        player->female_servants /= 2;
+    }
+    return true;
+}
+
+static bool event_dark_castle(Player* player)
+{
+    /* Castle at 0x7E15-0x8BA6; see doc/mechanics.md#dark-castle. */
+    int choice = ask_yes_no("\nYou come upon the Dark Castle of the Mad King.  Enter?");
+    if (choice == EOF) {
+        return false;
+    }
+    if (choice == 'N') {
+        puts("You continue on.");
+        return true;
+    }
+    if (random_number(100) + 1 < 26) {
+        puts("As you enter, you see Ghost Minstrals Playing music!");
+        if (random_number(100) + 1 < player->level + 25) {
+            puts("You flee in fear of your life!");
+            return wait_for_key();
+        }
+    }
+    puts("You may enter (D)ungeons, (T)hrone Room or (G)alley");
+    choice = read_choice("DTG");
+    if (choice == EOF) {
+        return false;
+    }
+    bool result = choice == 'D' ? castle_dungeon(player)
+                              : choice == 'T' ? castle_throne(player) : castle_galley(player);
+    return result && wait_for_key();
 }
 
 static bool event_enchanted_forest(Player* player)
@@ -2086,7 +2309,7 @@ static bool run_event(Player* player)
         }
         return event_sick_servants(player);
     case 10: return event_storm(player);
-    case 11: event_dark_castle(); break;
+    case 11: return event_dark_castle(player);
     case 12: return event_enchanted_forest(player);
     case 13: event_empty_tree(); break;
     case 14: return event_flowing_river(player);

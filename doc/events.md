@@ -75,25 +75,17 @@ Separate combat text exists for ordinary monsters, Anthrax the wizard, a dragon,
 
 Session 01 observed Goblins demanding 7 males, 9 females, and 7 gold. Choosing `R` produced `You got away!` with no servant loss. The [band and shared combat rules](mechanics.md#band-encounters) are now recovered and implemented: template selection, all three payment demands, horse/cart losses, escape conditions, equipment destruction, poison, attack and damage tables, pauses, experience, ring awards, and loot. The servant-loss branch requires a horse, no cart, and more than two servants, and reduces each sex's count to at most one.
 
-The ordinary combat research run fought Demons, used all twelve arrows, continued unarmed, and died at -1.73 HP with the enemy at 31.37 HP. Separately labelled controlled probes verify victories, death, payment, fleeing, ring effects, and equipment behavior against the remake. The shared routine is called by bands and the river champion; the dragon and gate-creature routines are now implemented and compared as part of [grass-hut research](hut-research.md). Anthrax combat is now implemented and compared in [thicket research](thicket-research.md); Mad King combat remains a separate unfinished routine.
+The ordinary combat research run fought Demons, used all twelve arrows, continued unarmed, and died at -1.73 HP with the enemy at 31.37 HP. Separately labelled controlled probes verify victories, death, payment, fleeing, ring effects, and equipment behavior against the remake. The shared routine is called by bands and the river champion; the dragon and gate-creature routines are now implemented and compared as part of [grass-hut research](hut-research.md). Anthrax combat is now implemented and compared in [thicket research](thicket-research.md); Mad King combat is now independently recovered and compared in [castle research](castle-research.md).
 
 ## Dark Castle of the Mad King
 
-- Choice of three rooms:
-  - Dungeons
-  - Throne room
-  - Galley
+All three rooms and the separate Mad King fight are recovered and implemented. Entry can produce ghost minstrels and fear; survivors choose Dungeons, Throne Room, or Galley once, then leave.
 
-Chance to steal gold in the throne room by successfully pressing a key combination: `1 / = \ H`. Mistyped key means dropped gold. Space bar to leave the room. If stay too long, Mad King will catch and initiate combat.
+The dungeon gives gold and can inflict smell damage, grant the Staff, rescue male servants, supply poison, or lock its door. A dagger or current servants permit escape; otherwise starvation is fatal. The throne room accepts the sequence `1 / = \ H` to bag gold. Incorrect recognized keys add noise without removing gold or resetting progress. Every key advances noise, including unrelated keys and Space; above fifteen, the King attacks. Waiting does not itself trigger him.
 
-Galley has a crystal ball the player can gaze into. Galley has chance to find food and lose servants that fall down to pits.
+The galley offers random crystal-ball hints, a possible Talisman, zero to 199 food, and pits that halve each sex's servant count. The hints do not reflect item placement or possessions. King combat has independent attack tables, poison, ring effects, six shouts, experience/gold rewards, and retaliation even after a killing blow.
 
-Additional string findings:
-
-- Dungeon: find gold, the Staff, male servants, or poison; the smell may overwhelm the player.
-- The dungeon door can close. A dagger or servants can help the player escape; otherwise the player starves.
-- The galley can contain the Talisman of Braminar.
-- Crystal-ball visions describe possible locations of the Staff and Talisman. Whether visions reflect current item placement needs verification.
+[Research notes and controlled captures](castle-research.md) record the comparison scope, reproducible fixtures, and the original uninitialized fear local. Exact draw order and rules are in [mechanics](mechanics.md#dark-castle).
 
 ## Enchanted forest
 
