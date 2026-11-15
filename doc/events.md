@@ -6,7 +6,7 @@ Recovered rules and their binary evidence belong in [mechanics.md](mechanics.md)
 
 Preserve the player-visible experience when implementing these findings. Minor numeric precision details with no observable effect may be simplified under the guideline in `mechanics.md`; record intentional differences in [CHANGES.md](../CHANGES.md). Keep original observations distinct from those implementation choices.
 
-The main loop selects one of 16 slots, with state-dependent substitutions and two separate hollow-tree routines. The recovered dispatch, healing, food consumption, starvation, and level advancement are described in [mechanics.md](mechanics.md#main-turn-loop). The main-game location bodies are implemented, including both tree routines and their distinct outcomes; the eligible Keep command/transition and separate final battle remain deferred.
+The main loop selects one of 16 slots, with state-dependent substitutions and two separate hollow-tree routines. The recovered dispatch, healing, food consumption, starvation, and level advancement are described in [mechanics.md](mechanics.md#main-turn-loop). The main-game location bodies are implemented, including both tree routines and their distinct outcomes; the Keep now hands off to the exit stub after bookkeeping; the separate final battle remains deferred.
 
 ## Recorded playthroughs
 
@@ -101,7 +101,7 @@ The forest's flow and arithmetic have now been [recovered from the binary](mecha
 
 - Initiate the final battle, if at least level 20 and have Staff of Aviatar
 
-The Keep also asks for the prime command before allowing the attack. Binary inspection confirms that level 20 is sufficient and a failed command removes the Staff; see [mechanics.md](mechanics.md#overlords-keep-prerequisite). Session 03 observed the rejection at level 9 without the Staff. Rejection and its keypress pause are implemented; the eligible command/final-assault branch remains a placeholder.
+The Keep asks whether to use the Staff, then reads a case-sensitive command of at most five characters. A wrong command removes the Staff; a match sets the assault flag. Every completed path pauses before normal bookkeeping, and death during that bookkeeping prevents the handoff. The implemented branch calls `start_final_battle()` to print its deferred-battle message and exit; the assault itself remains unimplemented. [Research and controlled captures](keep-research.md) cover gates, command boundaries, bookkeeping, and Pan-to-Keep persistence. Session 03's ordinary level-nine rejection remains separate evidence. See [mechanics](mechanics.md#overlords-keep-prerequisite) for exact rules.
 
 ## Flowing river
 

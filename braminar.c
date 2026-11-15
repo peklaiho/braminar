@@ -39,6 +39,7 @@ typedef struct {
     bool illness_protection;
     int dragon_charm;
     char prime_command[6];
+    bool final_assault_ready;
 } Player;
 
 typedef struct {
@@ -1251,8 +1252,25 @@ static bool event_overlords_keep(Player* player)
     if (player->level < 20 || !player->staff_of_aviatar) {
         puts("You cannot attack due to lack of Staff or 20th level.");
     } else {
-        /* TODO: Recover command input and final-assault transition; see doc/mechanics.md. */
-        puts("This encounter is not implemented yet.");
+        int choice = ask_yes_no("Use the Staff of Aviatar to attack?");
+        if (choice == EOF) {
+            return false;
+        }
+        if (choice == 'Y') {
+            char command[6];
+            puts("Please type the Prime Command (in caps): ");
+            if (!read_line(command, sizeof(command))) {
+                return false;
+            }
+            if (strcmp(command, player->prime_command) == 0) {
+                puts("Suddenly, the staff glows with great power!");
+                player->final_assault_ready = true;
+            } else {
+                puts("The staff doesn't like rookie users.  ");
+                puts("It disappears from your hands.");
+                player->staff_of_aviatar = false;
+            }
+        }
     }
     return wait_for_key();
 }
@@ -2455,6 +2473,17 @@ static bool finish_turn(Player* player)
     return true;
 }
 
+static bool run_turn(Player* player)
+{
+    if (!run_event(player) || !finish_turn(player)) {
+        return false;
+    }
+    if (player->final_assault_ready) {
+        start_final_battle();
+    }
+    return true;
+}
+
 int main(void)
 {
     initialize_input();
@@ -2480,7 +2509,7 @@ int main(void)
             break;
         }
 
-        if (!run_event(&player) || !finish_turn(&player)) {
+        if (!run_turn(&player)) {
             break;
         }
     }

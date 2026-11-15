@@ -270,3 +270,19 @@ before recording the next input boundary.
 prompt order, key counts, requested delays, and EOF handling without DOSBox.
 See [research notes](watched-home-research.md) for how the watched tree and hut
 differ from the independently implemented slot-6 and slot-7 events.
+
+## Overlord's Keep probes
+
+`./keep_probe.py > doc/captures/2026-11-15-keep-probes.txt` captures twenty
+controlled cases and writes `doc/keep-checkpoints.json`. Each case starts a
+fresh DOSBox runner, resets temporary player state, command, assault flag, prices
+and RNG, then stops at an absolute breakpoint after turn bookkeeping and before
+the final-assault handoff. The original assault module never executes. Named
+arguments select cases; `--output PATH` selects an independent fixture file.
+The Pan-to-Keep case retains state/RNG between its two normally chosen encounters.
+
+`./check_keep.py --sanitize` compares per-input and final state, command, assault
+flag, RNG, normalized text/prompt order, logical key/line counts, requested delays,
+and EOF handling. It invokes the actual `run_turn()` and final-battle exit stub,
+including checking that fatal plague suppresses the stub. See
+[research notes](keep-research.md) for breakpoint details, captures, and limits.

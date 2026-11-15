@@ -33,10 +33,10 @@ The boxes above are a reusable workflow, not claims that every target needs ever
 - [x] Dark Castle/Mad King: all three rooms, ghost minstrels, theft/noise, crystal-ball hints, traps/rewards, and independent King combat implemented; 46 retained controlled comparisons pass. [Evidence and limits](castle-research.md).
 - [x] Slot-13 watched tree/hut: separate tree judgments, old-man/puppy help, all five rewards and held-Talisman substitute implemented; 32 retained controlled comparisons pass, plus a separate ordinary decline pass. [Evidence and limits](watched-home-research.md).
 - [ ] Town follow-up: compare City shared-service purchases plus the bargain marketplace in one visit, and cleric/ring/mugger interactions. Continue ordinary integration play for discovery.
-- [ ] Keep command branch (deferred in priority until endgame work): recover exact input/comparison behavior and connect successful entry to the final-battle stub after turn bookkeeping. Check level/Staff gates, wrong command, and correct command.
-- [ ] When returning to endgame work, run an ordinary integration pass checking Pan's command followed by the Keep.
+- [x] Keep command branch: level/Staff gates, optional attack, case-sensitive five-character comparison, wrong-command Staff loss, and post-bookkeeping handoff to the exit stub implemented; twenty retained controlled comparisons pass. [Evidence and limits](keep-research.md).
+- [ ] Future ordinary integration: earn Pan's command, the Staff, and level twenty through normal play, then reach the Keep. A controlled Pan-to-Keep sequence is retained in [Keep research](keep-research.md); the final assault remains deferred.
 
-City/Village took priority at the user's request; the Keep is for later endgame work. The separate slot-13 tree/hut and its good-deed judgments are now recovered. The remaining event-body gap is the eligible Keep command/transition, still deferred to endgame work; continue ordinary integration play and the listed validation follow-ups. Split specialized combat work into bounded targets when selecting it.
+The Keep branch now reaches the existing final-battle exit stub after bookkeeping. The main-game event bodies are implemented within their documented scope; continue ordinary integration play and the listed validation follow-ups. The final assault is explicitly deferred at the user's request.
 
 ## Core systems
 
@@ -46,8 +46,8 @@ City/Village took priority at the user's request; the Keep is for later endgame 
 | --- | --- | --- |
 | RNG | Recovered / implemented | State progression compared in combat, river, and tree cases. Original startup seed remains unresolved. [Rules](mechanics.md#random-number-generation) |
 | Character generation and servant prices | Recovered / implemented | Ordinary initial statuses and binary arithmetic; no retained dedicated comparison suite. Original title says levels 7–10; executable generates 7–9. [Rules](mechanics.md#character-generation) |
-| Event dispatch and substitutions | Recovered / implemented | All dispatch call sites checked against binary. Missing event bodies still change subsequent RNG sequences. [Rules](mechanics.md#event-selection) |
-| Turn healing, experience, ring/plague progression, food, starvation, death | Recovered / implemented | Temporary boundary harness plus encounter comparisons; no retained standalone boundary suite. Successful Keep transition remains unconnected. [Rules and check limits](mechanics.md#main-turn-loop) |
+| Event dispatch and substitutions | Recovered / implemented | All dispatch call sites checked against binary. Full-run RNG parity and original startup seeding remain unverified. [Rules](mechanics.md#event-selection) |
+| Turn healing, experience, ring/plague progression, food, starvation, death | Recovered / implemented | Temporary boundary harness plus encounter comparisons; no retained standalone boundary suite. Controlled Keep success, promotion/starvation, and fatal-plague cases compare the final bookkeeping pass before the exit stub. [Rules and check limits](mechanics.md#main-turn-loop) |
 | Band choices and shared combat | Recovered / implemented | Twelve retained controlled comparisons via `./check_combat.py --sanitize`. Remaining validation gaps include simultaneous deaths and resource boundaries; specialized fights are separate. [Ledger](combat-research.md) |
 | Question data | Recovered / extractor and gameplay implemented | All 20 populated records are used and checked against the original data. Record 3 replaces `=` with a space as recorded in CHANGES.md. [Format](data-format.md) |
 
@@ -77,8 +77,8 @@ Slot numbers follow the [recovered dispatch](mechanics.md#event-selection). “P
 | 13 | Watched empty tree and old-man/puppy hut | Recovered / implemented | Independent tree and hut selection, bad-deed level loss, all rewards, supply boundaries, held-Talisman substitute, and invalid choice. [Evidence and limits](watched-home-research.md). |
 | 14 | Flowing river | Recovered / implemented | Five saved cases: harmless vision, both items, held items, poisoned champion, decline. Comparison harness was temporary; fixtures retained. [Ledger](session-03.md#controlled-river-checks) |
 | 15 | Statue of Pan | Recovered / implemented | Five retained DOS comparisons cover success, failure, decline, invalid answer keys, command replacement/preservation, and question records 1, 3, 20. All 20 embedded records checked against data. [Evidence and limits](pan-research.md) |
-| 16 | Keep prerequisite rejection | Recovered / implemented | Ordinary rejection; temporary harness checked level 19 with Staff and level 20 without it. [Rules](mechanics.md#overlords-keep-prerequisite) |
-| 16 | Keep command and final-assault transition | Partial / placeholder | Gate, success flag, and wrong-command Staff loss inspected; input/comparison and transition remain unfinished. [Rules](mechanics.md#overlords-keep-prerequisite) |
+| 16 | Keep prerequisite rejection | Recovered / implemented | Ordinary rejection plus controlled level/Staff combinations and rejection before promotion to level twenty. [Evidence](keep-research.md). |
+| 16 | Keep command and final-assault transition | Recovered / implemented to exit stub | Optional attack, input boundaries, wrong-command Staff loss, success, post-turn death suppression, and controlled Pan-to-Keep sequence. Final assault remains unimplemented. [Evidence and limits](keep-research.md). |
 
 ## Cross-event and deferred work
 
@@ -89,6 +89,6 @@ Slot numbers follow the [recovered dispatch](mechanics.md#event-selection). “P
 | Mad King combat | Recovered / implemented independently of shared combat: full fights, ring, weapons/bows/unarmed, poison, death, rewards and RNG compared. Captures do not exhaust every damage/shout combination or simultaneous deaths. [Evidence and limits](castle-research.md). |
 | Hidden state and interactions | Some ring/plague/protection behavior recovered. Track remaining acquisition/removal paths, dragon charm, command changes, quest items, and effects across event boundaries. [Known gaps](events.md#additional-player-state-to-investigate) |
 | Numeric behavior | HP/experience precision choices are recorded in CHANGES.md. Check gold/food calculations for player-visible fractions as new mechanics are recovered; extreme integer overflow is unresolved. [Guideline](mechanics.md) |
-| Final battle | Deferred: reconstruct `FINASSLT.CHN` later. Keep the separate exit stub as the entry point until then; wiring the main game's successful Keep branch is still in scope. [Scope](../AGENTS.md#game-structure-and-initial-scope) |
+| Final battle | Deferred: reconstruct `FINASSLT.CHN` later. Successful Keep entry now calls the separate exit stub after bookkeeping if the player survives; implementing the battle is excluded from this task. [Scope](../AGENTS.md#game-structure-and-initial-scope) |
 
 Raw captures live in the ignored `doc/captures/` directory. Keep compact controlled fixtures and their configurations alongside research notes so useful comparisons remain reproducible without those captures. Available capture/check commands are documented in [dosbox-tool.md](dosbox-tool.md).

@@ -107,7 +107,7 @@ The two guarded slots do not reroll when their conditions fail. At character cre
 
 The [first recorded session](captures/2026-11-14-session-01.md) independently shows HP increasing by 0.10 per completed turn and food decreasing by five for a party with nine servants. An elves' gift adds ten food before the five-unit consumption. These observations corroborate the binary calculations; they do not independently test every boundary above.
 
-The remake implements the dispatch, bookkeeping, band encounters and shared combat, river, forest, both branches of the slot-6 hollow tree, the separate slot-13 watched tree/hut, storms, servant illness, Pan, City/Village, and the Keep's prerequisite rejection, with the eligible Keep command/transition still unfinished. Original startup seeding and full-run parity remain unverified. The remake intentionally uses `double` for HP and experience without Real48 emulation, as recorded in `CHANGES.md`. Food is currently integer; whether inventory calculations require visible fractional quantities remains unresolved and must be checked as those mechanics are recovered. The final-assault transition is still deferred with the eligible Keep branch; `start_final_battle()` remains its intended stub entry point.
+The remake implements dispatch, bookkeeping, and the main-game encounter bodies, including the Keep command/transition up to the final-assault stub. Original startup seeding and full-run parity remain unverified. The remake intentionally uses `double` for HP and experience without Real48 emulation, as recorded in `CHANGES.md`. Food is currently integer; whether inventory calculations require visible fractional quantities remains unresolved and must be checked as those mechanics are recovered. Successful Keep entry now calls `start_final_battle()` after bookkeeping if the player survives; that stub exits without implementing the final assault.
 
 ## Enchanted forest
 
@@ -131,7 +131,7 @@ The [first session](captures/2026-11-14-session-01.md) records one incorrect ans
 - Invalid answer keys retry before the answer roll (`0x9F54`–`0x9F85`); they consume no random draws. Failure and decline leave the current command unchanged. A subsequent success overwrites it.
 - No inventory, HP, or experience changes occur within Pan's routine. Ordinary end-of-turn bookkeeping still follows, including after declining.
 
-Pan is implemented with all 20 question records embedded in C; record 3 changes only `=` to a space as recorded in [CHANGES.md](../CHANGES.md#typo-corrections). Five [controlled DOS cases](pan-research.md) compare command, state, RNG progression, text, and input counts. Success overwrote `PRIOR` with `SKJFJ`, `WINIP`, and `YYDGX`; failure and decline preserved it. All 20 embedded questions are separately checked against the declared data strings. The Keep's command input and transition remain the next target.
+Pan is implemented with all 20 question records embedded in C; record 3 changes only `=` to a space as recorded in [CHANGES.md](../CHANGES.md#typo-corrections). Five [controlled DOS cases](pan-research.md) compare command, state, RNG progression, text, and input counts. Success overwrote `PRIOR` with `SKJFJ`, `WINIP`, and `YYDGX`; failure and decline preserved it. All 20 embedded questions are separately checked against the declared data strings. The command is now consumed by the independently recovered [Keep branch](#overlords-keep-prerequisite).
 
 ## Gnome's announced food gift
 
@@ -156,7 +156,19 @@ The controlled cases start at level 8, 50 HP, five servants of each sex, 8 gold,
 
 ## Overlord's Keep prerequisite
 
-The gate tests `level < 20 OR NOT staff` at `0xA106`–`0xA121`. Level 20 is sufficient when the Staff is held. Rejection prints `You cannot attack due to lack of Staff or 20th level.` and takes the common exit pause (`0xA124`–`0xA166`, `0xA2A8` onward). This branch was observed in [session 03](session-03.md) and is implemented. On a successful prime-command comparison it sets `DS:0x04F8` to true (`0xA23B`–`0xA23E`); a failed comparison removes the Staff (`0xA2A2`–`0xA2A5`). The command input and comparison have not yet been implemented in the remake.
+Slot 16 calls `0xA0CD`–`0xA2B7`. The gate tests `level < 20 OR NOT staff` at `0xA106`–`0xA121`. Rejection prints `You cannot attack due to lack of Staff or 20th level.` and takes the common exit pause. Level twenty with the Staff is sufficient; neither Talisman nor Pan knowledge is separately checked. The gate runs before ordinary promotion bookkeeping, so a level-nineteen character promoted later that turn still receives rejection.
+
+An eligible player is asked `Use the Staff of Aviatar to attack?` (`0xA169`–`0xA1A7`). Declining retains the Staff, command, and assault flag and goes to the common pause without a departure line. Accepting prints `Please type the Prime Command (in caps):` and reads a Pascal string of maximum length five (`0xA1A8`–`0xA1EA`). Runtime `0x26B3`–`0x26DF` preserves the actual string length and at most five characters. The preceding line input reads an edited line; only its first five characters participate in the comparison.
+
+The comparison at `0xA1ED`–`0xA202` is case-sensitive, includes whitespace, and checks length. It neither trims nor uppercases the command. Input beyond five characters does not participate. Therefore a correct five-letter prefix plus a suffix succeeds, a four-letter prefix fails, and lowercase fails against Pan's uppercase command. Startup's command is five spaces: five literal spaces can match without visiting Pan, while an empty string does not.
+
+On equality, print `Suddenly, the staff glows with great power!` and set `DS:04F8` true (`0xA203`–`0xA243`). The Staff and command remain held. On inequality, print `The staff doesn't like rookie users.` and `It disappears from your hands.`, then clear the Staff (`0xA244`–`0xA2A7`). A wrong attempt does not replace the stored command or clear other quest items.
+
+Every completed path ends with the same keypress pause at `0xA2A8`–`0xA2B0`, including success, refusal, and prerequisite rejection. The routine makes no RNG calls beyond the main-loop event-selection draw. There are no direct HP, experience, food, gold, servant, or level changes within the Keep.
+
+After the pause, all ordinary bookkeeping runs before evaluating the assault flag: healing, promotion, ring/plague progression, food use, and starvation. At `0xF350`–`0xF385`, nonpositive HP takes precedence over the flag. A correct command followed by fatal plague never enters the assault. Otherwise, a set flag hands off to the separate final-battle entry rather than displaying another status screen. The remake's `run_turn()` applies this order and calls the existing `start_final_battle()` stub, which prints its deferred-battle message and exits successfully. The final assault itself remains unimplemented.
+
+[Controlled research](keep-research.md) retains prerequisite/input boundaries, post-bookkeeping state, death suppression, and a Pan-to-Keep sequence without inter-event memory/RNG edits. Original probes stop before the chain into `FINASSLT.CHN`; the C checker exercises the actual stub. POSIX EOF ends the turn without bookkeeping or handoff if input is unfinished, including EOF at the successful event's final pause.
 
 ## Flowing river
 
@@ -203,7 +215,7 @@ The shared `read_integer` now accepts only nonnegative decimal digits with optio
 
 ## Implementation checks, 2026-11-14
 
-`make` succeeds, retaining the existing warning about the unused final-battle stub. A temporary C harness built with AddressSanitizer and UndefinedBehaviorSanitizer checked bookkeeping against the documented boundaries: HP at and just below the limit, zero versus negative food, starvation with one or two servants, experience exactly five versus above five, one promotion per turn, dead-player experience reset, ring growth past 100, plague death, and byte wraparound. It also reproduced the captured forest resistance/elves state change with a selected seed. These are remake checks against the recovered rules, not additional observations of original-game boundary behavior.
+`make` succeeds; wiring the Keep now removes the former unused-final-battle-stub warning. A temporary C harness built with AddressSanitizer and UndefinedBehaviorSanitizer checked bookkeeping against the documented boundaries: HP at and just below the limit, zero versus negative food, starvation with one or two servants, experience exactly five versus above five, one promotion per turn, dead-player experience reset, ring growth past 100, plague death, and byte wraparound. It also reproduced the captured forest resistance/elves state change with a selected seed. These are remake checks against the recovered rules, not additional observations of original-game boundary behavior.
 
 A terminal-based check of the full remake passed character creation, an encounter, and the next status with the expected HP and food changes. All 18 dispatch call sites, including guarded alternatives, were checked directly against the executable bytes. `git diff --check` passed. Most event bodies remain outside this validation; exact Real48 emulation is intentionally outside the remake's requirements.
 
