@@ -236,7 +236,7 @@ These rules were checked in [controlled original-game probes](combat-research.md
 
 ## Shared combat
 
-`0x2DB4`–`0x3E6B` implements the shared routine called by band encounters and the river's champion path (`0x9D99`). Wizard, dragon, Mad King, and gate-creature fights use separate routines; these shared rules must not be applied to them. Dragon and gate-creature combat are now recovered and implemented for the grass hut below; wizard and Mad King combat remain unfinished.
+`0x2DB4`–`0x3E6B` implements the shared routine called by band encounters and the river's champion path (`0x9D99`). Wizard, dragon, Mad King, and gate-creature fights use separate routines; these shared rules must not be applied to them. Dragon and gate-creature combat are now recovered and implemented for the grass hut below; Anthrax combat is recovered below; Mad King combat remains unfinished.
 
 ### Setup and round selection
 
@@ -419,7 +419,7 @@ Entering a quiet hut draws `Roll(9)` (`0x7255`–`0x7264`).
 
 The separate routine is `0x56C6`–`0x5DBD`. It does not use shared band combat, weapon bonuses, ring bonuses, or arrows.
 
-- A positive signed charm word at `DS:029A` prints submission, adds `Roll(3)` experience, and returns without other combat draws or a pause. The word is not consumed or cleared (`0x56D0`–`0x5731`). Startup clears it (`0xA467`–`0xA46D`); a laboratory potion increments it (`0xE7B1`–`0xE7B7`). Despite the potion's “Next meeting” text, the recovered dragon routine leaves it persistent. Acquisition through that potion is still unimplemented.
+- A positive signed charm word at `DS:029A` prints submission, adds `Roll(3)` experience, and returns without other combat draws or a pause. The word is not consumed or cleared (`0x56D0`–`0x5731`). Startup clears it (`0xA467`–`0xA46D`); a laboratory potion increments it (`0xE7B1`–`0xE7B7`). Despite the potion's “Next meeting” text, the recovered dragon routine leaves it persistent. Acquisition through that potion is now implemented as part of the thicket below.
 - Without charm, draw dragon level `Roll(14)`, then HP `Roll(50) + 30` (31–80). If poison is positive, offer its use. Y consumes one dose, sets dragon HP to zero without a saving throw, and prints use (`0x5734`–`0x57F2`).
 - While both HP values are positive, draw player attack `Roll(7)`, then dragon attack `Roll(7)`. The dragon retaliates even if the player's attack killed it. Weapons, servants, ring, and level do not alter these draws or damage.
 - Display both HP values to two decimals and pause after each round (`0x5C5E`–`0x5CC5`). At the end print player victory/death and dragon victory/slain independently. A surviving player gains integer `dragon level / 2` experience. No final combat pause, loot, or ring draw; the hut performs the outer pause and any hermit reward.
@@ -474,3 +474,93 @@ At the end print player victory/death and creature survival/disappearance indepe
 | 6 | +20 food, +10 medicine, +2 poison; set horse and cart true |
 
 All three food paths announce `50 Lbs of food.` but add 250 (`0x54EC`–`0x54F5`, `0x5566`–`0x556F`, `0x55A5`–`0x55AE`). The remake preserves both the message and the arithmetic. Experience promotion and normal food consumption follow at turn bookkeeping, after the hut pause.
+
+## Thicket and laboratory
+
+Recovered from `0xDEE7`–`0xEB4E`, dispatched by slot 5. [Research notes](thicket-research.md) separate binary rules, controlled comparisons, the chained charm/dragon check, and ordinary discovery play. All probabilities below describe bounded roll results; the existing RNG remainder mapping is preserved.
+
+### Visit sequence and loot
+
+- Ask entry first, without extra random draws. N prints `You proceed on.` and returns without a pause (`0xDEF1`–`0xDF38`, `0xEB2C`–`0xEB45`).
+- Y describes the laboratory, draws `Roll(8)` for the displayed roast weight, and delays 500 ms. Then draw `Roll(100)`; 1–50 calls Anthrax, 51–100 skips him (`0xDFB1`–`0xE0B2`).
+- Only a player with positive HP proceeds to exploration after the fight. Death skips all loot, Staff, potion, and pentacle draws, but still reaches the common outer keypress pause (`0xE0B5`–`0xE0C7`, `0xEB20`–`0xEB26`).
+- Add `roast weight * 10` food, despite the smaller displayed pound count (`0xE0CA`–`0xE0E4`). Then draw and award males `Roll(60)`, females `Roll(60)`, and gold `Roll(250)`, in that order (`0xE119`–`0xE233`). These are laboratory loot, not a reward inside Anthrax's routine.
+- Always draw `Roll(100)` for the Staff. Award it only when absent and the roll is 1–4; an already-held Staff still consumes the draw (`0xE23F`–`0xE2A7`).
+- Draw `Roll(100)` for potions; 1–25 offers them, 26–100 skips them. An offer draws a count `Roll(5)` before asking whether to try the batch. Declining skips every potion effect draw (`0xE2AA`–`0xE317`).
+- After potions, including refusal or absence, draw `Roll(100)` for a pentacle; 1–10 offers entry, 11–100 skips it (`0xE874`–`0xE8E8`). Every entered thicket path ends with one outer pause, in addition to any combat-round pauses. There is no extra loot/potion pause.
+
+### Potions
+
+Accepting the batch drinks all announced potions, without further choices. For each, print `Drinking Potion #n` and four dots, each followed by a 250 ms delay, then draw `Roll(11)` and apply the effect (`0xE31A`–`0xE871`). Effects run in sequence; an earlier level or servant change affects later effects and bookkeeping. There is no clamp on potion level changes or the ten-HP addition.
+
+| Roll | Effect |
+| --- | --- |
+| 1 | Subtract one player level; HP and experience untouched. |
+| 2 | Add two player levels; HP and experience untouched. |
+| 3 | Draw `Roll(8)` and replace hair color with Black, Brown, Blonde, Red, Blue, White, Orange, or Plaid. |
+| 4 | Set both servant counts to zero; they become fleeing gremlins. |
+| 5 | Zombie urine sample: text only. |
+| 6 | Add ten HP without a cap. |
+| 7 | Set servant-illness protection true. |
+| 8 | Increment the signed dragon-charm word. Dragon submission does not consume it. |
+| 9 | Clear plague. |
+| 10 | Set good looks true. |
+| 11 | Water: text only. |
+
+The hair table also contains Purple, Avocado, Silver, Magenta, Hot Pink, and Green, but neither the potion nor Anthrax's hair spell can select them: both call `Roll(8)`, not 14. The implemented palette follows the reachable control flow (`0xE442`–`0xE451`, `0x45FC`–`0x460B`).
+
+### Pentacle
+
+Declining the pentacle proceeds to the common outer pause. Acceptance draws `Roll(5)` (`0xE8EB`–`0xE8FA`):
+
+| Roll | Outcome |
+| --- | --- |
+| 1 | Set ring power to five, replacing any existing ring power. Normal turn progression subsequently makes it ten. |
+| 2 | Subtract fifteen HP; death is processed after the outer pause. |
+| 3 | Pie in the face: text only, without an appearance change. |
+| 4 | A figure forms; call the already recovered gate-creature routine `0x4B67`, including its poison saving throw, combat, experience, and reward. |
+| 5 | Raise level to twenty only if currently below it, and set Staff true. HP and experience are untouched; levels above twenty are preserved despite the message. |
+
+The pentacle does not supply Pan's command. Its creature caller adds no extra final combat pause beyond the thicket's common pause.
+
+## Anthrax combat
+
+The separate wizard routine is `0x3E6C`–`0x4B66`; it does not use shared band combat. Weapons, arrows, servants, illness protection, and charm provide no combat bonus. Servants can instead be targeted by one retaliation.
+
+Always draw wizard level `Roll(10) + 2` (3–12), then wizard HP `Roll(wizard level) * Roll(10)` (`0x3E8B`–`0x3ECA`).
+
+Any positive ring power then vaporizes Anthrax, adds `Roll(4) + 1` (2–5) experience, and returns without poison questions, combat outcomes, or another pause (`0x3ECD`–`0x3F84`). The initial level/HP draws still happen. The ring is neither consumed nor changed by this routine.
+
+Without a ring, offer poison if positive. Y consumes one dose and sets wizard HP to zero, with no saving throw (`0x3F87`–`0x400F`). Normal outcome messages and integer `wizard level / 2` experience still follow.
+
+### Wizard rounds
+
+While both HP values are positive, draw player attack `Roll(9)` (`0x4012`–`0x4388`), followed by wizard retaliation `Roll(9)` (`0x438B`–`0x4A14`). Any extra attack damage roll occurs before retaliation; any spell saving throw or damage roll occurs during retaliation. The wizard retaliates even if the player just killed him, and even if the player's diving attack killed the player. No HP or level scaling applies to attack damage.
+
+| Player roll | Action | Wizard HP damage | Other effect |
+| --- | --- | --- | --- |
+| 1 | Funny face | 0 | None |
+| 2 | Frog | 0.3 | None |
+| 3 | Tear skin | 1.4 | None |
+| 4 | Raccoon | 1.5 | None |
+| 5 | Test tube | `Roll(10) + 2`, 3–12 | Extra damage draw |
+| 6 | Dive while he teleports | 1.1 | Player also loses 0.3 HP |
+| 7 | Bubbling brew | `Roll(5) + 3`, 4–8 | Extra damage draw |
+| 8 | Nick staff | 5.1 | None |
+| 9 | Hellen Reddy picture | 6.4 | None |
+
+Fractional values simplify the embedded Real48 constants under the existing precision policy.
+
+| Wizard roll | Retaliation and exact rule |
+| --- | --- |
+| 1 | Miss. |
+| 2 | Ugly stick: delay 500 ms, print saving-throw prefix, delay 500 ms, draw/display `Roll(100)`. Save only if strictly greater than `79 - current player level`; otherwise set good looks false. A save preserves current looks rather than restoring them. |
+| 3 | Fry one servant: subtract one male if positive, otherwise one female if positive; no random sex draw. Zero servants still prints the spell text. |
+| 4 | Level drain: draw/display `Roll(100)`; above 40 saves, 40 or below subtracts one level. HP and experience are not adjusted. |
+| 5 | Replace hair with the shared eight-color laboratory palette, using one draw. |
+| 6 | Plague: print saving-throw prefix, delay 500 ms, draw/display `Roll(100)`. Save only if strictly greater than `80 - current player level`; otherwise add five to plague, storing the low byte. Existing plague is not cleared by a save. Illness protection does not prevent it. |
+| 7 | Staff strike: player loses `Roll(3)` HP. |
+| 8 | Shot hits mirror: wizard loses `Roll(2) + 1` (2–3) HP; player takes none. |
+| 9 | Lightning: player loses `Roll(5)` HP. |
+
+After each round display player and wizard HP to two decimals and pause (`0x4A17`–`0x4A76`). At the end print player victory/death and wizard survival/disappearance independently. Add integer `wizard level / 2` experience unconditionally, even after player death (`0x4A7C`–`0x4B5D`); normal death bookkeeping later clears experience. There is no additional pause or inventory reward inside this routine. The laboratory parent awards loot only to survivors.

@@ -75,7 +75,7 @@ Separate combat text exists for ordinary monsters, Anthrax the wizard, a dragon,
 
 Session 01 observed Goblins demanding 7 males, 9 females, and 7 gold. Choosing `R` produced `You got away!` with no servant loss. The [band and shared combat rules](mechanics.md#band-encounters) are now recovered and implemented: template selection, all three payment demands, horse/cart losses, escape conditions, equipment destruction, poison, attack and damage tables, pauses, experience, ring awards, and loot. The servant-loss branch requires a horse, no cart, and more than two servants, and reduces each sex's count to at most one.
 
-The ordinary combat research run fought Demons, used all twelve arrows, continued unarmed, and died at -1.73 HP with the enemy at 31.37 HP. Separately labelled controlled probes verify victories, death, payment, fleeing, ring effects, and equipment behavior against the remake. The shared routine is called by bands and the river champion; the dragon and gate-creature routines are now implemented and compared as part of [grass-hut research](hut-research.md). Wizard and Mad King combat remain separate unfinished routines.
+The ordinary combat research run fought Demons, used all twelve arrows, continued unarmed, and died at -1.73 HP with the enemy at 31.37 HP. Separately labelled controlled probes verify victories, death, payment, fleeing, ring effects, and equipment behavior against the remake. The shared routine is called by bands and the river champion; the dragon and gate-creature routines are now implemented and compared as part of [grass-hut research](hut-research.md). Anthrax combat is now implemented and compared in [thicket research](thicket-research.md); Mad King combat remains a separate unfinished routine.
 
 ## Dark Castle of the Mad King
 
@@ -183,19 +183,16 @@ Session 04 declined shelter from a tornado, lost servants, and then suffered sta
 
 ## Thicket in the woods
 
-- Chance for combat
+The thicket is now implemented with its full laboratory flow, Anthrax fight, potions, and pentacle. [Research notes](thicket-research.md) distinguish controlled comparisons from ordinary discovery and document the remaining validation limits.
 
-Strings from around `0xDEF5` describe a dark dwelling or laboratory, with a roast cooking over a fire. Anthrax the evil wizard may appear.
+- Enter a laboratory with a displayed 1–8 lb roast. Anthrax appears on rolls 1–50 out of 100. Survivors take food equal to ten times the roast weight, then discover male/female servants and gold; they may also find the Staff.
+- A potion offer contains one to five bottles. Accepting drinks the whole batch. Effects include losing one level, gaining two, changing hair, losing all servants as fleeing gremlins, a harmless urine sample, adding ten HP, illness protection, incrementing persistent dragon charm, curing plague, restoring good looks, or water. Only the first eight listed hair colors are reachable.
+- A pentacle can award or replace the ring, deal fifteen HP with a freezing wind, throw a harmless pie, summon the same creature routine used by the hut's gate, or grant the Staff and raise a lower level to twenty. It preserves levels already above twenty and supplies no prime command.
+- Anthrax has a separate nine-outcome combat routine. Any held ring defeats him immediately; poison also kills without a saving throw. Normal spells can change looks, servants, level, hair, or plague, damage the player, or rebound against the wizard. Retaliation still happens after a killing blow.
 
-- Find food and wine, servants, gold, or the Staff.
-- Find potions and choose whether to try them.
-- Potion messages describe losing one level, gaining two levels, changing hair color, losing servants transformed into fleeing gremlins, restoring 10 hit points, preventing servant illnesses, charming a dragon (the text says “Next meeting,” but the dragon routine does not consume the counter), curing plague, curing ugliness, or drinking water or a zombie urine sample.
-- On leaving, discover a pentacle and choose whether to step into it.
-- Pentacle messages describe receiving a golden ring, being thrown out by a freezing wind, being hit by a pie, a figure appearing, or being raised to level 20 and given the Staff.
+Session 04's ordinary laboratory victory after level drain, servant deaths, plague, staff damage, and lightning remains in [its ledger](session-04.md#anthrax-observations). The newer controlled cases reset player memory and RNG and include all potion effects, pentacle outcomes, wizard spells, and a two-event potion-to-dragon path with no edits between the events.
 
-Session 04 entered the laboratory and defeated Anthrax after level drain, three servant deaths, plague, a staff strike, and lightning. Rewards announced 30 males, 47 females, and 100 gold; food also increased. The full fight and evidence limits are recorded in [session 04](session-04.md#anthrax-observations). Wizard combat remains a separate unfinished routine.
-
-Potion and pentacle details above remain string findings; selection, effects without explicit numeric messages, outcomes, and their conditions need code verification.
+A separate five-turn [ordinary discovery pass](captures/2026-11-15-thicket-ordinary.txt) declined the Dark Castle, escaped Rust Golems, received the Keep's prerequisite rejection, then declined Village and forest entry. No thicket appeared; [the research ledger](thicket-research.md#ordinary-discovery-pass) records every encounter and visible result.
 
 ## Wandering Gypsy Camp
 

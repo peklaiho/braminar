@@ -1634,9 +1634,292 @@ static bool event_storm(Player* player)
     return wait_for_key();
 }
 
-static void event_thicket(void)
+static const char* laboratory_hair_color(void)
 {
-    puts("\nYou find a thicket in the woods.");
+    static const char* const colors[] = {"Black", "Brown", "Blonde", "Red", "Blue", "White", "Orange", "Plaid"};
+    return colors[random_number(8)];
+}
+
+static bool fight_anthrax(Player* player)
+{
+    static const char* const attacks[] = {
+        "You make a funny face at the Wizard.",
+        "You throw a convenient frog at him.",
+        "you tear lightly into his skin.",
+        "You grab a racoon & hit him with it.",
+        "You grab a test tube and hit him with it.",
+        "You dive at him but he teleports away.",
+        "You dunk his head in some bubbling brew",
+        "You take a nick out of his staff.",
+        "You grab picture of Hellen Reddy and show it to him.",
+    };
+    static const double damage[] = {0, 0.3, 1.4, 1.5, 0, 1.1, 0, 5.1, 6.4};
+    int level = random_number(10) + 3;
+    int hp_roll = random_number(level) + 1;
+    double hit_points = hp_roll * (random_number(10) + 1);
+    if (player->ring_power > 0) {
+        puts("Ligntning jumps from the ring on your finger & vaporizes");
+        puts("the wizard.  You have beaten the wizard!!!!");
+        player->experience += random_number(4) + 2;
+        return true;
+    }
+    if (player->poison > 0) {
+        int choice = ask_yes_no("Do you want to use your poison?");
+        if (choice == EOF) {
+            return false;
+        }
+        if (choice == 'Y') {
+            hit_points = 0;
+            --player->poison;
+            puts("You use your poison and kill him.");
+        }
+    }
+    while (player->hit_points > 0 && hit_points > 0) {
+        int attack = random_number(9);
+        puts(attacks[attack]);
+        if (attack == 4) {
+            hit_points -= random_number(10) + 3;
+        } else if (attack == 6) {
+            hit_points -= random_number(5) + 4;
+        } else {
+            hit_points -= damage[attack];
+        }
+        if (attack == 5) {
+            player->hit_points -= 0.3;
+        }
+        int counterattack = random_number(9) + 1;
+        struct timespec delay = {0, 500000000};
+        switch (counterattack) {
+        case 1:
+            puts("ZAP!  He missed you.");
+            break;
+        case 2: {
+            puts("ZAP!  He hit you with an ugly stick!!!");
+            nanosleep(&delay, NULL);
+            printf("Saving Throw: ");
+            fflush(stdout);
+            nanosleep(&delay, NULL);
+            int roll = random_number(100) + 1;
+            printf("%d\n", roll);
+            if (roll > 79 - player->level) {
+                puts("You made it!!");
+            } else {
+                puts("Drag.  You're ugly.");
+                player->good_looks = false;
+            }
+            break;
+        }
+        case 3:
+            puts("ZAP!  He fries one of your servants!");
+            if (player->male_servants > 0) {
+                --player->male_servants;
+            } else if (player->female_servants > 0) {
+                --player->female_servants;
+            }
+            break;
+        case 4: {
+            puts("ZAP!  He tries to drop you a level!!");
+            int roll = random_number(100) + 1;
+            printf("Saving throw is: %d\n", roll);
+            if (roll > 40) {
+                puts("Made it!");
+            } else {
+                puts("You lost the level.");
+                --player->level;
+            }
+            break;
+        }
+        case 5:
+            player->hair_color = laboratory_hair_color();
+            printf("ZAP!  He turns your hair %s !!!!!\n", player->hair_color);
+            break;
+        case 6: {
+            puts("ZAP!    He casts the Plague on you!");
+            printf("Saving Throw: ");
+            fflush(stdout);
+            nanosleep(&delay, NULL);
+            int roll = random_number(100) + 1;
+            printf("%d\n", roll);
+            if (roll > 80 - player->level) {
+                puts("You made It!!!");
+            } else {
+                puts("Drag.  You have the plague!");
+                player->plague = (uint8_t)(player->plague + 5);
+            }
+            break;
+        }
+        case 7:
+            puts("ZAP!  He smacks you with his staff!");
+            player->hit_points -= random_number(3) + 1;
+            break;
+        case 8:
+            puts("ZAP!  He shoots a shot at you but you duck and it hits the mirror behind you!!");
+            hit_points -= random_number(2) + 2;
+            break;
+        case 9:
+            puts("ZAP!  He hits you with a lightning bolt!");
+            player->hit_points -= random_number(5) + 1;
+            break;
+        }
+        printf("\n---Player: %5.2f          Wizard: %5.2f\n", player->hit_points, hit_points);
+        if (!wait_for_key()) {
+            return false;
+        }
+    }
+    puts(player->hit_points > 0 ? "You won!!" : "You did not survive the battle.");
+    puts(hit_points > 0 ? "The wizard won!" : "The wizard disappeard from within his cloak");
+    player->experience += level / 2;
+    return true;
+}
+
+static void drink_laboratory_potion(Player* player)
+{
+    switch (random_number(11) + 1) {
+    case 1:
+        puts("You Drop a level.");
+        --player->level;
+        break;
+    case 2:
+        puts("You are raised 2 levels!");
+        player->level += 2;
+        break;
+    case 3:
+        player->hair_color = laboratory_hair_color();
+        printf("Your hair turns %s !!!!!\n", player->hair_color);
+        break;
+    case 4:
+        puts("You burp a purple cloud, that turns all your servants into gremlins that flee.");
+        player->male_servants = 0;
+        player->female_servants = 0;
+        break;
+    case 5:
+        puts("That bottle was marked ZOMBIE URINE SAMPLE.");
+        break;
+    case 6:
+        puts("10 Hit points are restored.");
+        player->hit_points += 10;
+        break;
+    case 7:
+        puts("This potion negates all servant ills until you die!");
+        player->illness_protection = true;
+        break;
+    case 8:
+        puts("Charm a Dragon Next meeting!");
+        ++player->dragon_charm;
+        break;
+    case 9:
+        puts("You are cured of the Plague!");
+        player->plague = 0;
+        break;
+    case 10:
+        puts("This was the Charisma Elixer. Cancels ugliness.");
+        player->good_looks = true;
+        break;
+    case 11:
+        puts("it was water.");
+        break;
+    }
+}
+
+static bool event_thicket(Player* player)
+{
+    int choice = ask_yes_no("\nYou come up to a thicket in the woods.  Enter?");
+    if (choice == EOF) {
+        return false;
+    }
+    if (choice == 'N') {
+        puts("You proceed on.");
+        return true;
+    }
+    puts("You enter, and find that it is a musky, dark home for ");
+    puts("someone.  It seems to be a laboratory.");
+    int roast = random_number(8) + 1;
+    printf("You see a %dlb roast cooking over a fire.\n", roast);
+    struct timespec delay = {0, 500000000};
+    nanosleep(&delay, NULL);
+    if (random_number(100) + 1 < 51) {
+        puts("Suddenly, A Wizard appears in the room!!!");
+        puts("It is Anthrax, the evil wizard!!  He doesn't like");
+        puts("visitors!");
+        if (!fight_anthrax(player)) {
+            return false;
+        }
+    }
+    if (player->hit_points <= 0) {
+        return wait_for_key();
+    }
+    player->food += roast * 10;
+    puts("You snag up on the roast & some wine.");
+    int males = random_number(60) + 1;
+    int females = random_number(60) + 1;
+    int gold = random_number(250) + 1;
+    puts("in compartments in the back, you discover:");
+    printf("     %d Male Servants\n     %d Female Servants\n     %d Gold Pieces\n\n", males, females, gold);
+    player->male_servants += males;
+    player->female_servants += females;
+    player->gold += gold;
+    int staff_roll = random_number(100) + 1;
+    if (staff_roll < 5 && !player->staff_of_aviatar) {
+        puts("You trip over and Find THE STAFF OF AVIATAR!!!");
+        player->staff_of_aviatar = true;
+    }
+    if (random_number(100) + 1 < 26) {
+        int potions = random_number(5) + 1;
+        char question[80];
+        snprintf(question, sizeof(question), "You find %d potions.  Try them?", potions);
+        choice = ask_yes_no(question);
+        if (choice == EOF) {
+            return false;
+        }
+        if (choice == 'Y') {
+            struct timespec quarter_second = {0, 250000000};
+            for (int i = 1; i <= potions; ++i) {
+                printf("Drinking Potion #%d", i);
+                for (int dot = 0; dot < 4; ++dot) {
+                    putchar('.');
+                    fflush(stdout);
+                    nanosleep(&quarter_second, NULL);
+                }
+                drink_laboratory_potion(player);
+            }
+        }
+    }
+    if (random_number(100) + 1 < 11) {
+        choice = ask_yes_no("As you leave, you discover a pentacle on the floor.  Step in it?");
+        if (choice == EOF) {
+            return false;
+        }
+        if (choice == 'Y') {
+            switch (random_number(5) + 1) {
+            case 1:
+                puts("You suddenly see a golden ring materialize on your hand!");
+                player->ring_power = 5;
+                break;
+            case 2:
+                puts("A freezing wind overtakes you & knocks you out of the pentacle.");
+                player->hit_points -= 15;
+                break;
+            case 3:
+                puts("From a cloudy haze, A giant clawed arm reaches & throws a pie in your face.");
+                break;
+            case 4:
+                puts("Suddenly, a figure forms in the pentacle.");
+                if (!fight_gate_creature(player)) {
+                    return false;
+                }
+                break;
+            case 5:
+                puts("A bright light forms in the pentacle and it raises you to 20th level and gives");
+                puts("you the Staff of Aviatar.");
+                if (player->level < 20) {
+                    player->level = 20;
+                }
+                player->staff_of_aviatar = true;
+                break;
+            }
+        }
+    }
+    return wait_for_key();
 }
 
 static bool event_gypsy_camp(Player* player)
@@ -1787,7 +2070,7 @@ static bool run_event(Player* player)
     case 2: return event_town(player, true);
     case 3: return event_gypsy_camp(player);
     case 4: return event_combat(player);
-    case 5: event_thicket(); break;
+    case 5: return event_thicket(player);
     case 6: return event_hollow_tree(player);
     case 7: return event_grass_hut(player);
     case 8:

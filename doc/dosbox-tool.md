@@ -224,3 +224,19 @@ after death if more cases remain. Pass case names to update selected entries;
 text, key counts, and requested delays without DOSBox. Fatal cases compare event
 state before turn bookkeeping, because DOS reclaims DS on exit.
 See [research notes](hut-research.md) for scope and remaining limits.
+
+## Thicket and Anthrax probes
+
+`./thicket_probe.py > doc/captures/2026-11-15-thicket-probes.txt` captures 61
+controlled cases and saves `doc/thicket-checkpoints.json`. Pass case names to
+update selected entries; `--output PATH` selects another checkpoint file.
+The probe waits through potion animation, captures combat pauses, and restarts
+after death when needed. `potion-charm-to-hut` preserves state and RNG between
+the thicket and the next hut, recording a `turn` checkpoint between them.
+
+`./check_thicket.py --sanitize` compares per-input and inter-turn state, RNG,
+quest items/charm, text, key counts, and requested delays without DOSBox. Text
+comparison ignores whitespace, including DOS line wrapping inside words, and
+normalizes servant terminology. Fatal cases compare event state before
+bookkeeping because DOS has reclaimed DS after exit. See the
+[research notes](thicket-research.md) for captures and validation limits.

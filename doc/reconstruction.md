@@ -29,6 +29,7 @@ The boxes above are a reusable workflow, not claims that every target needs ever
 - [x] Mountain trail/guru: climb, refusal, ring removal, optional Staff loss, and pause implemented; five controlled comparisons. [Evidence and limits](mountain-research.md).
 - [x] Gypsy camp: Dagger’s Hand and all 35 fortune-teller hints implemented; controlled comparison scope in [research notes](gypsy-research.md).
 - [x] Grass hut: all occupants/finds, hermit outcomes, dragon combat, and gate-creature combat/rewards implemented. [Evidence and limits](hut-research.md).
+- [x] Thicket/laboratory: exploration, all potion effects, pentacle, and Anthrax implemented; 61 controlled cases include potion-acquired charm followed by the hut dragon. [Evidence and limits](thicket-research.md).
 - [ ] Town follow-up: compare City shared-service purchases plus the bargain marketplace in one visit, and cleric/ring/mugger interactions. Continue ordinary integration play for discovery.
 - [ ] Keep command branch (deferred in priority until endgame work): recover exact input/comparison behavior and connect successful entry to the final-battle stub after turn bookkeeping. Check level/Staff gates, wrong command, and correct command.
 - [ ] When returning to endgame work, run an ordinary integration pass checking Pan's command followed by the Keep.
@@ -62,7 +63,7 @@ Slot numbers follow the [recovered dispatch](mechanics.md#event-selection). “P
 | 1, 2 | Pickpocket, extra marketplace, cleric, muggers | Recovered / implemented | Village-only pickpocket; City-only marketplace/cleric/muggers. Purchases, cures, ring protection, theft/abort checked; cross-service combinations remain. [Ledger](town-research.md) |
 | 3 | Gypsy camp: Dagger's Hand and advice | Recovered / implemented | Betting, injuries, both-hit outcome, repeat rounds, last-coin results, advice affordability, and all 35 hints compared with the original. [Evidence and limits](gypsy-research.md). |
 | 4; guarded 8, 9 | Band encounter | Recovered / implemented | Twelve combat scenarios cover payment, escape, forced fighting, and shared combat. [Ledger and limits](combat-research.md) |
-| 5 | Thicket/laboratory, potions, pentacle | Partial / placeholder | Laboratory entry and wizard victory observed; recover encounter selection, exploration, potion/pentacle effects and conditions. [Evidence](events.md#thicket-in-the-woods) |
+| 5 | Thicket/laboratory, potions, pentacle | Recovered / implemented | Entry, loot/Staff boundaries, all 11 potion effects/eight reachable hair colors, five pentacle outcomes, fatal paths, and charm-to-dragon sequence compared. [Evidence and limits](thicket-research.md). |
 | 6 | Occupied gnome home | Recovered / implemented | Several ordinary food/healing observations. Food addition intentionally fixed; healing threshold/over-cap boundaries lack retained original probes. [Rules](mechanics.md#gnomes-announced-food-gift) |
 | 6 | Empty gnome home and decline | Recovered / implemented | Eight retained comparisons via `./check_tree.py --sanitize`: all trunk results, held-Staff substitute, theft, leave, decline. [Scope](mechanics.md#empty-gnome-home) |
 | 7 | Grass hut | Recovered / implemented | All finds and occupants, care with/without supplies, hermit outcomes, dragon/charm/poison, gate creature types/rewards, and death compared. No good-deed reward for the man or puppy in this routine. [Evidence and limits](hut-research.md). |
@@ -81,7 +82,7 @@ Slot numbers follow the [recovered dispatch](mechanics.md#event-selection). “P
 
 | Area | Current evidence and next gap |
 | --- | --- |
-| Anthrax combat | Full ordinary victory captured, including drain, plague, servant deaths, and rewards; recover its separate arithmetic and saving throws. [Observations](session-04.md#anthrax-observations) |
+| Anthrax combat | Recovered / implemented | Ring/poison bypasses, all nine retaliations, successful/failed saves, servant priority, full fights, killing-blow retaliation, and simultaneous deaths compared. Exact save boundaries and every attack combination are not all retained probes. [Evidence and limits](thicket-research.md). |
 | Dragon and gate-creature fights | Recovered / implemented for hut callers; other callers remain unfinished. Controlled normal fights, charm, poison, rewards and death. Not every damage-table result or simultaneous-death combination has a retained probe. [Evidence](hut-research.md). |
 | Mad King and other specialized fights | Separate routines remain unfinished. Establish callers, prerequisites, damage, rewards, and death behavior independently of shared combat. [Combat overview](events.md#combat) |
 | Hidden state and interactions | Some ring/plague/protection behavior recovered. Track remaining acquisition/removal paths, dragon charm, command changes, quest items, and effects across event boundaries. [Known gaps](events.md#additional-player-state-to-investigate) |
