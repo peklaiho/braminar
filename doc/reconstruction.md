@@ -26,11 +26,12 @@ The boxes above are a reusable workflow, not claims that every target needs ever
 - [x] Servant illness: implemented and compared for medicine allocation, zero/one-sex parties, excessive cures, protection, and numeric input. Original excessive cures are preserved; integer input now follows the intentional shared-reader policy in CHANGES.md. Original bare-token/input-length behavior remains research-only. [Evidence and limits](storm-illness-research.md).
 - [x] Pan: implemented all 20 decoded questions, random answers, and prime-command generation; compared success, failure, decline, invalid answer keys, and command replacement/preservation. [Evidence and limits](pan-research.md).
 - [x] City/Village: shared servant market, tavern, store, inn, and both complete location wrappers; City marketplace/cleric/muggers and Village pickpocket. Forty controlled comparisons. [Evidence and limits](town-research.md).
+- [x] Mountain trail/guru: climb, refusal, ring removal, optional Staff loss, and pause implemented; five controlled comparisons. [Evidence and limits](mountain-research.md).
 - [ ] Town follow-up: compare City shared-service purchases plus the bargain marketplace in one visit, and cleric/ring/mugger interactions. Continue ordinary integration play for discovery.
 - [ ] Keep command branch (deferred in priority until endgame work): recover exact input/comparison behavior and connect successful entry to the final-battle stub after turn bookkeeping. Check level/Staff gates, wrong command, and correct command.
 - [ ] When returning to endgame work, run an ordinary integration pass checking Pan's command followed by the Keep.
 
-City/Village took priority at the user's request; the Keep is for later endgame work. Guru removal is another small candidate once its remaining flow and text are verified. Split specialized combat work into bounded targets when selecting it.
+City/Village took priority at the user's request; the Keep is for later endgame work. Gypsy camp is the next bounded event candidate: recover Dagger’s Hand and paid advice. Split specialized combat work into bounded targets when selecting it.
 
 ## Core systems
 
@@ -63,7 +64,7 @@ Slot numbers follow the [recovered dispatch](mechanics.md#event-selection). “P
 | 6 | Occupied gnome home | Recovered / implemented | Several ordinary food/healing observations. Food addition intentionally fixed; healing threshold/over-cap boundaries lack retained original probes. [Rules](mechanics.md#gnomes-announced-food-gift) |
 | 6 | Empty gnome home and decline | Recovered / implemented | Eight retained comparisons via `./check_tree.py --sanitize`: all trunk results, held-Staff substitute, theft, leave, decline. [Scope](mechanics.md#empty-gnome-home) |
 | 7 | Grass hut | Partial / placeholder | Empty visit observed; other strings' grouping and good-deed/reward rules need control-flow verification. [Evidence](events.md#grass-hut) |
-| 8 | Mountain trail/guru when ring held | Partial / placeholder | Ring gate and Staff/ring removal inspected; capture climb/refusal/acceptance and verify remaining text/flow. [Evidence](events.md#mountain-trail-and-guru) |
+| 8 | Mountain trail/guru when ring held | Recovered / implemented | Five controlled comparisons cover declining, refusing, acceptance with/without Staff, ring power 1/100, invalid keys, and Talisman preservation. [Evidence and limits](mountain-research.md). |
 | 9 | Servant illness | Recovered / implemented | Controlled medicine, excess-cure, zero/one-sex, protection, and input comparisons; no-servant delay restored. Shared nonnegative integer parsing intentionally differs from Pascal input; original bare-token/input-length behavior remains research-only. [Validation](storm-illness-research.md) |
 | 10 | Storms | Recovered / implemented | Controlled checks for all eight types, two shelter durations, zero/small/one-sex parties, and starvation; requested delays checked against dots and binary loop. [Validation](storm-illness-research.md) |
 | 11 | Dark Castle: dungeon, throne room, galley | String findings / placeholder | Recover room flow, traps/escape, theft timing, crystal ball, rewards, and Mad King triggers. [Evidence](events.md#dark-castle-of-the-mad-king) |

@@ -188,3 +188,13 @@ requested delays without DOSBox. `--fixtures PATH` selects another checkpoint
 file. Fatal poisoning compares event state before bookkeeping because DOS has
 reclaimed DS after death; the abort case checks unsuccessful termination.
 See [town research](town-research.md) for captures, reproduction, and limits.
+
+## Mountain trail probes
+
+`./mountain_probe.py > doc/captures/2026-11-15-mountain-probes.txt` captures five
+controlled trail/guru cases and writes `doc/mountain-checkpoints.json`. It resets
+temporary player memory and RNG before each case.
+
+`./check_mountain.py --sanitize` compares state, RNG, normalized text, and input
+counts without DOSBox, and checks EOF at both questions. See the
+[research notes](mountain-research.md) for scope and limits.

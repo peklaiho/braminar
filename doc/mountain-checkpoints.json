@@ -1,0 +1,147 @@
+[
+  {
+    "name": "decline",
+    "config": {
+      "seed": 10473,
+      "keys": "n",
+      "staff": true,
+      "ring": 5
+    },
+    "final": {
+      "level": 8,
+      "male": 5,
+      "female": 5,
+      "poison": 0,
+      "swords": 0,
+      "bows": 0,
+      "arrows": 2,
+      "daggers": 0,
+      "hp": 50.1,
+      "gold": 8.0,
+      "food": 95.0,
+      "experience": 0.0,
+      "ring": 10,
+      "seed": 908984402,
+      "medicine": 3,
+      "staff": 1,
+      "talisman": 1
+    },
+    "screen": "You come upon a mountain trail.  Climb it?\n(Y/N)\nYou move on.\nPress any key..."
+  },
+  {
+    "name": "refuse",
+    "config": {
+      "seed": 10473,
+      "keys": "yn",
+      "staff": true,
+      "ring": 5
+    },
+    "final": {
+      "level": 8,
+      "male": 5,
+      "female": 5,
+      "poison": 0,
+      "swords": 0,
+      "bows": 0,
+      "arrows": 2,
+      "daggers": 0,
+      "hp": 50.1,
+      "gold": 8.0,
+      "food": 95.0,
+      "experience": 0.0,
+      "ring": 10,
+      "seed": 908984402,
+      "medicine": 3,
+      "staff": 1,
+      "talisman": 1
+    },
+    "screen": "You come upon a mountain trail.  Climb it?\n(Y/N)\nAt the top, there is an old guru.  He lookes up from his\nmeditation and says, \"Do you seek the powers of good?\"\n(Y/N)\nPress any key..."
+  },
+  {
+    "name": "accept-staff",
+    "config": {
+      "seed": 10473,
+      "keys": "yy",
+      "staff": true,
+      "ring": 5
+    },
+    "final": {
+      "level": 8,
+      "male": 5,
+      "female": 5,
+      "poison": 0,
+      "swords": 0,
+      "bows": 0,
+      "arrows": 2,
+      "daggers": 0,
+      "hp": 50.1,
+      "gold": 8.0,
+      "food": 95.0,
+      "experience": 0.0,
+      "ring": 0,
+      "seed": 908984402,
+      "medicine": 3,
+      "staff": 0,
+      "talisman": 1
+    },
+    "screen": "You come upon a mountain trail.  Climb it?\n(Y/N)\nAt the top, there is an old guru.  He lookes up from his\nmeditation and says, \"Do you seek the powers of good?\"\n(Y/N)\nYour staff disappears.\nThe ring disappears from around your finger.\nPress any key..."
+  },
+  {
+    "name": "accept-no-staff",
+    "config": {
+      "seed": 10473,
+      "keys": "yy",
+      "staff": false,
+      "ring": 1
+    },
+    "final": {
+      "level": 8,
+      "male": 5,
+      "female": 5,
+      "poison": 0,
+      "swords": 0,
+      "bows": 0,
+      "arrows": 2,
+      "daggers": 0,
+      "hp": 50.1,
+      "gold": 8.0,
+      "food": 95.0,
+      "experience": 0.0,
+      "ring": 0,
+      "seed": 908984402,
+      "medicine": 3,
+      "staff": 0,
+      "talisman": 1
+    },
+    "screen": "You come upon a mountain trail.  Climb it?\n(Y/N)\nAt the top, there is an old guru.  He lookes up from his\nmeditation and says, \"Do you seek the powers of good?\"\n(Y/N)\nThe ring disappears from around your finger.\nPress any key..."
+  },
+  {
+    "name": "accept-strong-ring",
+    "config": {
+      "seed": 10473,
+      "keys": "xYzY",
+      "staff": true,
+      "ring": 100
+    },
+    "final": {
+      "level": 8,
+      "male": 5,
+      "female": 5,
+      "poison": 0,
+      "swords": 0,
+      "bows": 0,
+      "arrows": 2,
+      "daggers": 0,
+      "hp": 50.1,
+      "gold": 8.0,
+      "food": 95.0,
+      "experience": 0.0,
+      "ring": 0,
+      "seed": 908984402,
+      "medicine": 3,
+      "staff": 0,
+      "talisman": 1
+    },
+    "screen": "You come upon a mountain trail.  Climb it?\n(Y/N)\nAt the top, there is an old guru.  He lookes up from his\nmeditation and says, \"Do you seek the powers of good?\"\n(Y/N)\nYour staff disappears.\nThe ring disappears from around your finger.\nPress any key..."
+  }
+]

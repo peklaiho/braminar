@@ -11,6 +11,7 @@ This document records intentional differences between the classic DOS game and t
 | Location | Classic text | Remake text |
 | --- | --- | --- |
 | Pan, question 3 answer 3 | `Do Lake:=1 to 5` | `Do Lake: 1 to 5` |
+| Mountain trail | `He lookes up` | `He looks up` |
 | Character status | `Mecidine:` | `Medicine:` |
 | Enchanted forest | `The nymph it luring you deep into the forest.` | `The nymph is luring you deep into the forest.` |
 | Band encounter | `Things seem strangely quite when out of no where jumps` | `Things seem strangely quiet when out of nowhere jumps` |

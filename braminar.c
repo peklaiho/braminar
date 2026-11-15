@@ -1339,9 +1339,30 @@ static void event_gypsy_camp(void)
     puts("\nYou come upon a wandering Gypsy camp.");
 }
 
-static void event_mountain_trail(void)
+static bool event_mountain_trail(Player* player)
 {
-    puts("\nYou come upon a mountain trail.");
+    int choice = ask_yes_no("\nYou come upon a mountain trail.  Climb it?");
+    if (choice == EOF) {
+        return false;
+    }
+    if (choice == 'N') {
+        puts("You move on.");
+    } else {
+        puts("At the top, there is an old guru.  He looks up from his");
+        choice = ask_yes_no("meditation and says, \"Do you seek the powers of good?\"");
+        if (choice == EOF) {
+            return false;
+        }
+        if (choice == 'Y') {
+            if (player->staff_of_aviatar) {
+                puts("Your staff disappears.");
+                player->staff_of_aviatar = false;
+            }
+            puts("The ring disappears from around your finger.");
+            player->ring_power = 0;
+        }
+    }
+    return wait_for_key();
 }
 
 static void event_empty_tree(void)
@@ -1362,7 +1383,7 @@ static bool run_event(Player* player)
     case 7: event_grass_hut(); break;
     case 8:
         if (player->ring_power > 0) {
-            event_mountain_trail();
+            return event_mountain_trail(player);
         } else {
             return event_combat(player);
         }

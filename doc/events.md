@@ -162,7 +162,7 @@ Strings near `0x7587` describe a mountain trail and ask whether to climb it. At 
 - Nearby messages say the Staff and ring disappear.
 - A fortune-teller rumor says the guru can remove the Ring of Doom.
 
-Binary inspection places the guru in main-loop slot 8 only when the ring byte is positive; otherwise that slot produces the band encounter. After climbing, answering yes to seeking good removes the Staff if held and clears the ring byte (`0x765E`–`0x76CF`). The location remains unimplemented and has not yet been captured live.
+Binary inspection places the guru in main-loop slot 8 only when the ring byte is positive; otherwise that slot produces the band encounter. After climbing, answering yes to seeking good removes the Staff if held and clears the ring byte (`0x765E`–`0x76CF`). The event is now implemented. Five controlled original-game comparisons capture declining the climb, refusing the guru, accepting with and without the Staff, and removing a ring at power 100. All paths pause; refusal adds no response message. The Talisman is preserved. These experiments reset player memory and RNG and are separate from ordinary play. See [research notes](mountain-research.md).
 
 ## Sick servants
 

@@ -339,3 +339,14 @@ Successful lodging adds `Roll(room cost)` HP without a maximum clamp. Only if th
 After the inn, always draw 1–100 for a cleric. Above 88 (12%) offers a cure for all current gold (`0xC832`–`0xC8EA`). Acceptance sets gold to zero, restores good looks and Brown hair, clears plague and ring, and raises HP to `level * 10` only when below it. It does not remove quest items or clear the servant-illness protection flag. Declining prints `He leaves.` Either response delays 500 ms, without a keypress pause (`0xC8ED`–`0xC9A5`).
 
 Then always draw another 1–100, even with servants. Only when the combined servant count is zero and that roll is below 11 (10%) do muggers appear (`0xC9A8`–`0xC9D8`). Ring power strictly greater than 30 drives them away with lightning, with no loss draws or robbery delay. Otherwise draw gold loss 1–100, cap it to current gold, then food loss 1–20, cap it to current food, announce and subtract both, and delay one second. Either mugger outcome ends in a keypress pause (`0xC9DB`–`0xCB62`). Cleric removal of the ring happens before this protection check.
+
+## Mountain trail and guru
+
+Slot 8 selects the mountain trail only when ring power is positive; without a ring it calls the band encounter instead. The event body (`0x757A`–`0x76FD`) makes no random calls and requests no delay.
+
+- Ask `You come upon a mountain trail.  Climb it?` (`0x7587`). N prints `You move on.` and proceeds to the common keypress pause.
+- Y introduces the guru and asks `Do you seek the powers of good?` (`0x75CD`–`0x765B`). N proceeds straight to the pause without another message or state change.
+- Y checks the Staff flag at `DS:0297`; if held, print `Your staff disappears.` and clear it (`0x765E`–`0x7690`). Then print `The ring disappears from around your finger.` and clear ring power (`0x7693`–`0x76CF`). The Talisman and other player fields are untouched.
+- Both questions use the shared case-insensitive Y/N reader. Every completed path pauses once (`0x76EE`–`0x76F4`), followed by ordinary turn bookkeeping. A retained ring therefore gains five power when below 100; a removed ring stays zero.
+
+Five [controlled comparisons](mountain-research.md) check state, RNG, normalized text, and input counts, including invalid keys and ring powers 1 and 100. The remake corrects `lookes` to `looks`, as recorded in CHANGES.md.
