@@ -8,11 +8,11 @@ Control-flow inspection resolves an earlier string-grouping assumption: the sick
 
 ## Controlled captures
 
-[Raw capture](captures/2026-11-15-hut-probes.txt) contains 41 controlled cases, all explicitly labelled as memory/RNG experiments rather than ordinary play. `hut_probe.py` resets the temporary emulator state before every case. No original DOS files are modified. Each encountered event is a hut and its nested encounters; every input, combat-round pause, and intermediate waiting screen is captured. There are no unrelated encounters to skip.
+[Raw capture](captures/2026-11-15-hut-probes.txt) contains 41 controlled cases, all explicitly labelled as memory/RNG experiments rather than ordinary play. `tools/hut_probe.py` resets the temporary emulator state before every case. No original DOS files are modified. Each encountered event is a hut and its nested encounters; every input, combat-round pause, and intermediate waiting screen is captured. There are no unrelated encounters to skip.
 
 The baseline is level 8, 50 HP, Black hair, good looks, five servants of each sex, 20 gold, 100 food, three medicine, two swords, three bows, four arrows, one dagger, horse/cart, and illness protection. Ring, plague, poison, Staff, Talisman, charm, and experience are zero; servant prices are fixed at 8/13. Individual cases vary HP, food, medicine, poison, female count, quest items, charm, transport, and choices. Initial screenshots precede memory changes; the `STATE initial` records establish each experiment's actual state.
 
-[Saved checkpoints](hut-checkpoints.json) retain state and RNG at every input, the answer and visible screen, and final state. `./check_hut.py --sanitize` compares these against the actual remake code, including quest items, charm, key counts, text order, and requested delay totals.
+[Saved checkpoints](hut-checkpoints.json) retain state and RNG at every input, the answer and visible screen, and final state. `./tools/check_hut.py --sanitize` compares these against the actual remake code, including quest items, charm, key counts, text order, and requested delay totals.
 
 ## Captured outcomes
 

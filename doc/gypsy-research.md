@@ -4,7 +4,7 @@
 
 Binary inspection of `dos/BRAMINAR.COM`, file offsets `0xCB86`–`0xD8F9`, recovers the complete slot-3 camp: entry, Dagger's Hand, and the fortune teller's 35 hints. [Detailed rules](mechanics.md#wandering-gypsy-camp) distinguish the accumulating pot, injury damage, random-call order, affordability tests, pauses, and delays. The camp is implemented without unresolved event-body placeholders.
 
-The [raw controlled capture](captures/2026-11-15-gypsy-probes.txt) is separate from [session 04's ordinary visit](session-04.md). `gypsy_probe.py` resets temporary emulator memory and RNG before each case; original files are untouched. The baseline is level 8, 50 HP, 20 gold, 100 food, five servants of each sex, three medicine, Black hair, good looks, and illness protection. Equipment, transport, quest items, ring, plague, and experience are zero. Individual cases vary seed, gold, HP, and choices. Every encountered event in these experiments is a camp; no unrelated branches are skipped.
+The [raw controlled capture](captures/2026-11-15-gypsy-probes.txt) is separate from [session 04's ordinary visit](session-04.md). `tools/gypsy_probe.py` resets temporary emulator memory and RNG before each case; original files are untouched. The baseline is level 8, 50 HP, 20 gold, 100 food, five servants of each sex, three medicine, Black hair, good looks, and illness protection. Equipment, transport, quest items, ring, plague, and experience are zero. Individual cases vary seed, gold, HP, and choices. Every encountered event in these experiments is a camp; no unrelated branches are skipped.
 
 The runner saves [checkpoints](gypsy-checkpoints.json) immediately after each completed case and supports selected reruns. Gambling advances automatically; the runner captures intermediate screens while waiting for the result pause and never injects an extra key during a round.
 
@@ -22,7 +22,7 @@ The 51 cases cover:
 - All 35 rumor indices captured individually, with exact ten-gold affordability on rumor 1 and eleven gold on the others. Purchases leave zero or one gold respectively and each pauses once.
 - Fatal finger injury starting at 0.2 HP, followed by buying advice before death is processed. The comparison retains event state before bookkeeping because DOS reclaims DS on exit; it does not claim a post-death memory comparison.
 
-`./check_gypsy.py --sanitize` compares state and RNG at every input boundary, event text visible in retained screens (with servant terminology normalized), exact key counts, final state, and requested delays. Gambling delay expectations follow the binary's three half-second requests per round. These are delay requests, not measurements of emulated elapsed time. Final HP comparisons allow the documented Real48/double precision difference.
+`./tools/check_gypsy.py --sanitize` compares state and RNG at every input boundary, event text visible in retained screens (with servant terminology normalized), exact key counts, final state, and requested delays. Gambling delay expectations follow the binary's three half-second requests per round. These are delay requests, not measurements of emulated elapsed time. Final HP comparisons allow the documented Real48/double precision difference.
 
 ## Ordinary discovery pass
 

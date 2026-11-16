@@ -4,7 +4,7 @@
 static int combat_getchar(void);
 #define getchar combat_getchar
 #define main braminar_program_main
-#include "braminar.c"
+#include "../braminar.c"
 #undef main
 #undef getchar
 

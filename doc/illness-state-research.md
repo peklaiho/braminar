@@ -24,8 +24,8 @@ The plague chain captures infection before turn progression and cure before the 
 Reproduce just these chains and compare all retained thicket cases:
 
 ```sh
-python3 thicket_probe.py plague-to-faerie protection-to-band > doc/captures/2026-11-16-illness-chains.txt
-python3 check_thicket.py --sanitize
+python3 tools/thicket_probe.py plague-to-faerie protection-to-band > doc/captures/2026-11-16-illness-chains.txt
+python3 tools/check_thicket.py --sanitize
 ```
 
 The existing tool now supports these two follow-up events and writes both cases by name into its fixture file; `--output PATH` supports a separate file. The existing two-turn C harness invokes the actual event dispatch and bookkeeping. Comparisons cover state at inputs and between turns, final supplies/flags/health, normalized narrative, prompt order, input counts, and requested delays. Normalization additionally accepts the already approved band typo corrections. RNG remains recorded research metadata and is no longer asserted by the thicket checker.

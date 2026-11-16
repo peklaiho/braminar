@@ -25,10 +25,10 @@ Each visit asks for entry and ends in one exit pause. Original food stays 100 du
 From the project root:
 
 ```sh
-python3 gnome_probe.py > doc/captures/2026-11-16-gnome-probes.txt
-python3 check_gnome.py --sanitize
+python3 tools/gnome_probe.py > doc/captures/2026-11-16-gnome-probes.txt
+python3 tools/check_gnome.py --sanitize
 ```
 
-Named case arguments select cases; `--output PATH` supports a separate fixture file. The probe reuses the forest tool's baseline state setup/readers. The checker reuses `check_forest.c`'s event-dispatch/bookkeeping harness and the Python state comparison helpers; no new C harness is needed. It compares both event and post-turn state, complete normalized event text, survival, and the two input reads. Only expected food is adjusted by the captured announced gift. Exact RNG equality is not checked.
+Named case arguments select cases; `--output PATH` supports a separate fixture file. The probe reuses the forest tool's baseline state setup/readers. The checker reuses `tools/check_forest.c`'s event-dispatch/bookkeeping harness and the Python state comparison helpers; no new C harness is needed. It compares both event and post-turn state, complete normalized event text, survival, and the two input reads. Only expected food is adjusted by the captured announced gift. Exact RNG equality is not checked.
 
 All three comparisons pass with address and undefined-behavior sanitizers. The cases establish the three requested healing outcomes; extra seeds, every ointment amount, and artificial extreme states are unnecessary. Existing [empty-home comparisons](session-04.md#controlled-empty-home-checks-and-implementation) cover the other slot-6 branch and declining entry. No ordinary integration session was added; that remains G9. G2 is complete; G3 City interactions are next.

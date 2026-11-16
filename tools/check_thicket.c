@@ -3,24 +3,19 @@
 #include <stdio.h>
 #include <time.h>
 
-static int town_getchar(void);
-static char* town_fgets(char* buffer, int size, FILE* stream);
-static int town_nanosleep(const struct timespec* request, struct timespec* remaining);
-#define getchar town_getchar
-#define fgets town_fgets
-#define nanosleep town_nanosleep
+static int thicket_getchar(void);
+static int thicket_nanosleep(const struct timespec* request, struct timespec* remaining);
+#define getchar thicket_getchar
+#define nanosleep thicket_nanosleep
 #define main braminar_program_main
-#include "braminar.c"
+#include "../braminar.c"
 #undef main
 #undef nanosleep
-#undef fgets
 #undef getchar
 
 static Player* observed;
 static const char* keys;
-static const char* lines;
 static int key_count;
-static int line_count;
 static double delay_seconds;
 
 static void checkpoint(const char* kind)
@@ -30,42 +25,22 @@ static void checkpoint(const char* kind)
            "\"level\":%d,\"experience\":%.8f,\"medicine\":%d,\"poison\":%d,\"swords\":%d,"
            "\"bows\":%d,\"arrows\":%d,\"daggers\":%d,\"horse\":%d,\"cart\":%d,\"ring\":%u,"
            "\"plague\":%u,\"looks\":%d,\"hair\":\"%s\",\"protection\":%d,\"seed\":%u,"
-           "\"keys\":%d,\"lines\":%d,\"delay\":%.1f}\n",
+           "\"staff\":%d,\"talisman\":%d,\"charm\":%d,\"keys\":%d,\"delay\":%.1f}\n",
            kind, p->hit_points, p->gold, p->food, p->male_servants, p->female_servants,
            p->level, p->experience, p->medicine, p->poison, p->swords, p->bows, p->arrows,
            p->daggers, p->horse, p->cart, (unsigned)p->ring_power, (unsigned)p->plague,
            p->good_looks, p->hair_color, p->illness_protection, (unsigned)random_state,
-           key_count, line_count, delay_seconds);
+           p->staff_of_aviatar, p->talisman_of_braminar, p->dragon_charm, key_count, delay_seconds);
 }
 
-static int town_getchar(void)
+static int thicket_getchar(void)
 {
     checkpoint("key");
     ++key_count;
     return *keys ? *keys++ : EOF;
 }
 
-static char* town_fgets(char* buffer, int size, FILE* stream)
-{
-    (void)stream;
-    checkpoint("line");
-    ++line_count;
-    if (!*lines) {
-        return NULL;
-    }
-    int length = 0;
-    while (*lines && length < size - 1) {
-        buffer[length++] = *lines++;
-        if (buffer[length - 1] == '\n') {
-            break;
-        }
-    }
-    buffer[length] = '\0';
-    fputs(buffer, stdout);
-    return buffer;
-}
-
-static int town_nanosleep(const struct timespec* request, struct timespec* remaining)
+static int thicket_nanosleep(const struct timespec* request, struct timespec* remaining)
 {
     (void)remaining;
     delay_seconds += request->tv_sec + request->tv_nsec / 1000000000.0;
@@ -74,37 +49,44 @@ static int town_nanosleep(const struct timespec* request, struct timespec* remai
 
 int main(int argc, char** argv)
 {
-    if (argc != 16) {
+    if (argc != 25) {
         return 2;
     }
     Player p = {0};
-    p.level = 8;
+    p.level = atoi(argv[17]);
     p.hit_points = strtod(argv[2], NULL);
     p.gold = atoi(argv[3]);
     p.food = atoi(argv[4]);
     p.male_servants = atoi(argv[5]);
     p.female_servants = atoi(argv[6]);
     p.medicine = atoi(argv[7]);
-    p.ring_power = atoi(argv[8]);
-    p.plague = atoi(argv[9]);
-    p.good_looks = atoi(argv[10]);
+    p.poison = atoi(argv[8]);
+    p.staff_of_aviatar = atoi(argv[9]);
+    p.talisman_of_braminar = atoi(argv[10]);
+    p.dragon_charm = atoi(argv[11]);
+    p.swords = atoi(argv[12]);
+    p.bows = atoi(argv[13]);
+    p.arrows = atoi(argv[14]);
+    p.daggers = atoi(argv[15]);
+    p.horse = atoi(argv[16]);
+    p.cart = p.horse;
+    p.good_looks = atoi(argv[21]);
+    p.ring_power = atoi(argv[19]);
+    p.plague = atoi(argv[20]);
     p.hair_color = "Black";
-    p.horse = atoi(argv[11]);
-    p.cart = atoi(argv[12]);
-    p.illness_protection = true;
-    male_servant_price = 8;
-    female_servant_price = 13;
+    p.illness_protection = atoi(argv[18]);
     random_state = (uint32_t)strtoul(argv[1], NULL, 10);
-    keys = argv[13];
-    lines = argv[14];
+    keys = argv[22];
     observed = &p;
     initialize_input();
-    bool completed = run_event(&p);
-    if (completed) {
-        if (atoi(argv[15])) {
+    for (int turn = 0; turn < atoi(argv[24]); ++turn) {
+        if (!run_event(&p)) {
+            return 3;
+        }
+        if (atoi(argv[23])) {
             finish_turn(&p);
         }
-        checkpoint("final");
+        checkpoint(turn + 1 < atoi(argv[24]) ? "turn" : "final");
     }
-    return completed ? 0 : 3;
+    return 0;
 }

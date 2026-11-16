@@ -37,7 +37,7 @@ def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument('--sanitize', action='store_true')
     args = parser.parse_args()
-    root = Path(__file__).resolve().parent
+    root = Path(__file__).resolve().parent.parent
     cases = json.loads((root / 'doc/pan-checkpoints.json').read_text())
     with tempfile.TemporaryDirectory(prefix='braminar-check-pan-') as directory:
         executable = Path(directory) / 'check-pan'
@@ -45,7 +45,7 @@ def main():
         if args.sanitize:
             flags.append('-fsanitize=address,undefined')
         subprocess.run([*shlex.split(os.environ.get('CC', 'cc')), *flags,
-                        str(root / 'check_pan.c'), '-o', str(executable)], check=True)
+                        str(root / 'tools/check_pan.c'), '-o', str(executable)], check=True)
         for case in cases:
             config = case['config']
             keys = config['choice'] + config['answer']

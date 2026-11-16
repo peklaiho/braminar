@@ -10,7 +10,7 @@ Focus on `dos/BRAMINAR.COM`. Defer `FINASSLT.CHN`; its separate entry function m
 
 - Use simple, readable C99 for POSIX (Linux/BSD), without external dependencies. Defer Windows support.
 - Preserve arithmetic affecting displayed values or gameplay; simplify incidental precision. See [mechanics](doc/mechanics.md). Record intentional differences in [CHANGES.md](CHANGES.md).
-- Keep custom research tools in the project root and free of external dependencies.
+- Keep custom research tools in `tools/` and free of external dependencies.
 
 ## Reconstructing the game
 
@@ -21,4 +21,4 @@ Focus on `dos/BRAMINAR.COM`. Defer `FINASSLT.CHN`; its separate entry function m
 
 ## Tools
 
-Use `./dosbox_game.py` to play and capture the original. See [tool usage](doc/dosbox-tool.md) for setup, commands, controlled probes, and comparison checks.
+Run tools from the project root. Use `./tools/dosbox_game.py` to play and capture the original. See [tool usage](doc/dosbox-tool.md) for setup, commands, controlled probes, and comparison checks.

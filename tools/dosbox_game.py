@@ -57,7 +57,7 @@ class Game:
                 raise RuntimeError(f'Required executable not found: {program}')
         self.directory = tempfile.TemporaryDirectory(prefix='braminar-dosbox-')
         self.path = Path(self.directory.name)
-        shutil.copytree(Path(__file__).resolve().parent / 'dos', self.path / 'game')
+        shutil.copytree(Path(__file__).resolve().parent.parent / 'dos', self.path / 'game')
         config = self.path / 'dosbox.conf'
         config.write_text('[sdl]\noutput=surface\n[dosbox]\nmemsize=16\n'
                           '[cpu]\ncycles=fixed 3000\n[mixer]\nnosound=true\n'

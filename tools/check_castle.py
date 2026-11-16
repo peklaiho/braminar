@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Compare the watched_home with controlled original-game checkpoints."""
+"""Compare the castle with controlled original-game checkpoints."""
 
 import argparse
 import json
@@ -40,17 +40,17 @@ def build(executable, sanitize=False):
 
 
 def normalize(text):
-    return ''.join(text.split()).replace('slaves', 'servants').replace('slave', 'servant').replace('Slaves', 'Servants').replace('diety', 'deity')
+    return ''.join(text.split()).replace('slaves', 'servants').replace('slave', 'servant').replace('Slaves', 'Servants')
 
 
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument('--sanitize', action='store_true')
-    parser.add_argument('--fixtures', type=Path, default=Path(__file__).resolve().parent / 'doc/watched-home-checkpoints.json')
+    parser.add_argument('--fixtures', type=Path, default=Path(__file__).resolve().parent.parent / 'doc/castle-checkpoints.json')
     args = parser.parse_args()
     cases = json.loads(args.fixtures.read_text())
-    with tempfile.TemporaryDirectory(prefix='braminar-check-watched_home-') as directory:
-        executable = Path(directory) / 'check-watched_home'
+    with tempfile.TemporaryDirectory(prefix='braminar-check-castle-') as directory:
+        executable = Path(directory) / 'check-castle'
         build(executable, args.sanitize)
         for case in cases:
             keys = ''.join(step['answer'] for step in case['steps'] if step['kind'] == 'key')
@@ -64,19 +64,38 @@ def main():
             for i, (check, reference) in enumerate(zip(actual, expected)):
                 assert check['kind'] == reference['kind'], (case['name'], i, check, reference)
                 for key, value in reference['state'].items():
+                    if key == 'seed':
+                        continue
                     result = check[key]
                     assert (result == value if isinstance(value, str) else
                             abs(result - value) <= (0.005 if key == 'hp' else 0)), (case['name'], i, key, result, value)
                 if reference['kind'] == 'key':
                     prefix = text[matches[i - 1].end() if i else 0:matches[i].start()]
-                    if i == 0 or reference['prompt'] != expected[i - 1]['prompt']:
-                        assert normalize(reference['prompt']) in normalize(prefix), (case['name'], i, reference['prompt'], prefix)
+                    assert normalize(reference['prompt']) in normalize(prefix), (case['name'], i, reference['prompt'], prefix)
                     narrative = re.sub(r'CHECK \{[^\r\n]*\}', '', text[:matches[i].start()])
                     assert normalize(reference['screen']) in normalize(narrative), (case['name'], i, reference['screen'], narrative)
             assert actual[-1]['keys'] == len(keys), case['name']
-            delay = 1 if case['options'].get('help') else 0
-            assert actual[-1]['delay'] == delay, (case['name'], actual[-1], delay)
-            print(case['name'] + ': state, RNG, prompt order, input counts and requested delays match')
+            delay = 0.15 if any('The Mad king rushes' in step['screen'] for step in case['steps']) else 0
+            progress = 0
+            noise = 0
+            for step in case['steps']:
+                if step['prompt'] != '':
+                    continue
+                answer = step['answer'].upper()
+                if answer in '1/=\\H':
+                    if progress == '1/=\\H'.index(answer):
+                        progress += 1
+                    else:
+                        delay += 0.8
+                        state = (step['state']['seed'] * 129 + 0x361962E9) & 0xFFFFFFFF
+                        noise += (state >> 17) % 3 + 1
+                if progress == 5:
+                    progress = 0
+                noise += 1
+                if noise > 10 and progress == 4:
+                    delay += 0.03
+            assert abs(actual[-1]['delay'] - delay) < 0.000001, (case['name'], actual[-1], delay)
+            print(case['name'] + ': state, prompt order, input counts and requested delays match')
         eof_prompts = set()
         for case in cases:
             keys = ''
@@ -88,7 +107,7 @@ def main():
                     eof_prompts.add(prompt)
                 keys += step['answer']
         print(f'EOF terminates cleanly at {len(eof_prompts)} distinct prompts')
-    print(f'{len(cases)} watched_home scenarios passed')
+    print(f'{len(cases)} castle scenarios passed')
 
 
 if __name__ == '__main__':

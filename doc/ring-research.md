@@ -24,10 +24,10 @@ The acquisition fixture retains ring five at the combat exit pause, ten between 
 From the project root:
 
 ```sh
-python3 ring_probe.py > doc/captures/2026-11-16-ring-chains.txt
-python3 check_ring.py --sanitize
+python3 tools/ring_probe.py > doc/captures/2026-11-16-ring-chains.txt
+python3 tools/check_ring.py --sanitize
 ```
 
-Named case arguments select a chain; `--output PATH` supports a separate fixture file. The probe reuses the forest tool's baseline setup/readers and adds the initial poison setting. The checker reuses `check_thicket.c`'s existing two-turn dispatch/bookkeeping harness; no new C harness is needed. It compares input/intermediate/final state, normalized captured text, prompt order, input counts, and pauses. Normalization accepts whitespace, servant terminology, and the already approved combat/guru typo corrections. Both chains pass with address and undefined-behavior sanitizers. Exact RNG equality is not checked.
+Named case arguments select a chain; `--output PATH` supports a separate fixture file. The probe reuses the forest tool's baseline setup/readers and adds the initial poison setting. The checker reuses `tools/check_thicket.c`'s existing two-turn dispatch/bookkeeping harness; no new C harness is needed. It compares input/intermediate/final state, normalized captured text, prompt order, input counts, and pauses. Normalization accepts whitespace, servant terminology, and the already approved combat/guru typo corrections. Both chains pass with address and undefined-behavior sanitizers. Exact RNG equality is not checked.
 
 Existing component evidence already covers forced fighting, attack bonuses, ring acquisition, guru alternatives, and cleric removal/protection loss within a City visit. G5 does not require every acquisition/removal pairing or waiting for forced-fight strength after earning a ring. These two chains establish persistence in each direction; further ring probes are unnecessary absent a concrete normal-play discrepancy. No ordinary integration session was added; that remains G9. G6 illness-state chains are next.

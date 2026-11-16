@@ -28,12 +28,12 @@ Raw captures:
 Reproduce from the project root:
 
 ```sh
-python3 combat_probe.py --seed 6427 --hp 12.57
-python3 hut_probe.py dragon-simultaneous-death creature-simultaneous-death
-python3 castle_probe.py king-simultaneous-death
-python3 check_combat.py --sanitize
-python3 check_hut.py --sanitize
-python3 check_castle.py --sanitize
+python3 tools/combat_probe.py --seed 6427 --hp 12.57
+python3 tools/hut_probe.py dragon-simultaneous-death creature-simultaneous-death
+python3 tools/castle_probe.py king-simultaneous-death
+python3 tools/check_combat.py --sanitize
+python3 tools/check_hut.py --sanitize
+python3 tools/check_castle.py --sanitize
 ```
 
 The compact [shared](combat-checkpoints.json), [hut](hut-checkpoints.json), and [castle](castle-checkpoints.json) fixtures preserve the captured states and required outcome text. Hut/castle probes regenerate their named fixtures; the shared fixture was extracted from its raw `CONFIG` and `STATE checkpoint` records. All 13 shared, 43 hut, and 47 castle scenarios pass with address and undefined-behavior sanitizers. Hut/castle comparisons also check normalized captured narrative, prompt order, input counts, and requested waits; the shared case checks both outcome messages and absence of reward announcements. These three checkers now ignore exact RNG state equality while retaining seeds for controlled selection.

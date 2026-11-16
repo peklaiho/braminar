@@ -8,7 +8,7 @@ The remake embeds these strings in C, avoiding a runtime dependency on DOS data 
 
 ## Controlled original-game comparisons
 
-The [raw transcript](captures/2026-11-15-pan-probes.txt) records all screens and inputs, including startup. These are controlled experiments, not ordinary play: `pan_probe.py` resets temporary player memory, sets a chosen RNG seed before dispatch, and initializes the prime command to `PRIOR` before each case. No unrelated encounters occurred.
+The [raw transcript](captures/2026-11-15-pan-probes.txt) records all screens and inputs, including startup. These are controlled experiments, not ordinary play: `tools/pan_probe.py` resets temporary player memory, sets a chosen RNG seed before dispatch, and initializes the prime command to `PRIOR` before each case. No unrelated encounters occurred.
 
 Each case starts at level 8, 50 HP, five servants of each sex, eight gold, 100 food, three medicine, two arrows, no ring/plague, and neither quest item. Other equipment and experience are zero. Previously drawn status values can remain on screen after the next memory reset; the recorded initial memory state describes the actual case.
 
@@ -24,6 +24,6 @@ All cases end at 50.10 HP and 95 food after ordinary turn bookkeeping, with othe
 
 ## Reproduction and validation limits
 
-Run `./pan_probe.py > doc/captures/2026-11-15-pan-probes.txt` to repeat the DOS captures and regenerate checkpoints. Run `./check_pan.py --sanitize` without DOSBox to compare final state, stored command, RNG, normalized text order, and input counts. The checker allows only the approved answer correction in its text comparison. It also exercises every question record against `BRAM.DAT` and verifies that character generation initializes the command to five spaces.
+Run `./tools/pan_probe.py > doc/captures/2026-11-15-pan-probes.txt` to repeat the DOS captures and regenerate checkpoints. Run `./tools/check_pan.py --sanitize` without DOSBox to compare final state, stored command, RNG, normalized text order, and input counts. The checker allows only the approved answer correction in its text comparison. It also exercises every question record against `BRAM.DAT` and verifies that character generation initializes the command to five spaces.
 
 The five DOS cases cover question records 1, 3, and 20, not all question/answer combinations or generated commands. Full ranges and random-call order follow from binary inspection. Invalid keys are observed to leave the question pending; final RNG equality verifies that they consume no draws. Screen layout and real-time terminal behavior are not compared byte for byte. No ordinary integration pass was run for this bounded target; Keep command handling and its transition are still unfinished and are next in the checklist.

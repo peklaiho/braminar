@@ -65,7 +65,7 @@ def main():
     parser.add_argument('cases', nargs='*', help='case names from doc/combat-checkpoints.json')
     parser.add_argument('--sanitize', action='store_true')
     args = parser.parse_args()
-    root = Path(__file__).resolve().parent
+    root = Path(__file__).resolve().parent.parent
     cases = json.loads((root / 'doc/combat-checkpoints.json').read_text())
     unknown = set(args.cases) - {case['name'] for case in cases}
     if unknown:
@@ -77,7 +77,7 @@ def main():
         flags = ['-std=c99', '-O0', '-g']
         if args.sanitize:
             flags.append('-fsanitize=address,undefined')
-        subprocess.run([*compiler, *flags, str(root / 'check_combat.c'),
+        subprocess.run([*compiler, *flags, str(root / 'tools/check_combat.c'),
                         '-o', str(executable)], check=True)
         for case in cases:
             if args.cases and case['name'] not in args.cases:

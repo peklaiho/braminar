@@ -11,7 +11,7 @@ static int event_nanosleep(const struct timespec* request, struct timespec* rema
 #define fgets event_fgets
 #define nanosleep event_nanosleep
 #define main braminar_program_main
-#include "braminar.c"
+#include "../braminar.c"
 #undef main
 #undef nanosleep
 #undef fgets

@@ -11,20 +11,21 @@ Recovered rules and their binary evidence are documented in [mechanics.md](mecha
 Build the standalone C99 tool from the project root:
 
 ```sh
-make extract_data
+cc -std=c99 -O2 -Wall -Wextra -Wpedantic \
+    tools/extract_data.c -o tools/extract_data
 ```
 
 Decode the question records:
 
 ```sh
-./extract_data questions dos/BRAM.DAT
+./tools/extract_data questions dos/BRAM.DAT
 ```
 
 Extract printable ASCII runs of at least four bytes from either binary:
 
 ```sh
-./extract_data strings dos/BRAMINAR.COM
-./extract_data strings dos/FINASSLT.CHN
+./tools/extract_data strings dos/BRAMINAR.COM
+./tools/extract_data strings dos/FINASSLT.CHN
 ```
 
 Output goes to standard output and can be redirected to a file. Errors go to standard error and produce a nonzero exit status. The tool requires no external libraries and does not require an interactive terminal.

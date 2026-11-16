@@ -8,7 +8,7 @@ No final-battle work is included. The Keep remains deferred in priority at the u
 
 ## Controlled experiments
 
-`town_probe.py` uses the `dosbox_game.py` Game runner, changing temporary player memory and the RNG before dispatch. These experiments are distinct from ordinary play. Base state: level 8, 50 HP, 500 gold, 100 food, five servants of each sex, three medicine, Black hair, good looks, zero ring/plague/experience/poison/weapons, no horse/cart/quest items, servant-illness protection set. Male/female servant prices are set to 8/13. Each case's configuration records overrides. Displayed status can predate a memory reset; direct memory checkpoints give the actual state.
+`tools/town_probe.py` uses the `tools/dosbox_game.py` Game runner, changing temporary player memory and the RNG before dispatch. These experiments are distinct from ordinary play. Base state: level 8, 50 HP, 500 gold, 100 food, five servants of each sex, three medicine, Black hair, good looks, zero ring/plague/experience/poison/weapons, no horse/cart/quest items, servant-illness protection set. Male/female servant prices are set to 8/13. Each case's configuration records overrides. Displayed status can predate a memory reset; direct memory checkpoints give the actual state.
 
 All encountered screens and commands, including startup, are retained in these raw transcripts:
 
@@ -41,7 +41,7 @@ The initial 40 cases in [the retained fixtures](town-checkpoints.json) contain o
 
 ## Ordinary discovery pass
 
-A separate [five-turn ordinary pass](captures/2026-11-15-town-ordinary.txt) used `dosbox_game.py` without memory or RNG edits. TownWalk began female, level 9, Black hair, good looks, 56 HP, twelve male/one female servants, 23 gold, 100 food, three medicine, and no equipment or quest items; servant prices were 6/5.
+A separate [five-turn ordinary pass](captures/2026-11-15-town-ordinary.txt) used `tools/dosbox_game.py` without memory or RNG edits. TownWalk began female, level 9, Black hair, good looks, 56 HP, twelve male/one female servants, 23 gold, 100 food, three medicine, and no equipment or quest items; servant prices were 6/5.
 
 | Turn | Encounter and normal choices | Next visible state |
 | --- | --- | --- |
@@ -59,7 +59,7 @@ Completed 2026-11-16. Two controlled visits close G3 in [remaining gaps](remaini
 
 Reinspection confirms the service calls at `0xC5CB`/`0xC5D4`/`0xC5DD`, followed by the marketplace offer at `0xC5E0`, inn at `0xC82F`, cleric at `0xC832`–`0xC9A5`, and muggers at `0xC9A8` onward. This establishes that the later interactions use the resources and ring state left by earlier services. Probabilities remain established by binary control flow, not these two examples.
 
-The [raw transcript](captures/2026-11-16-city-interactions.txt) retains every screen, input, and checkpoint in these two visits. `town_probe.py` edits temporary player memory, servant prices 8/13, and the initial RNG seed. These are controlled experiments, not ordinary play; no original DOS files change. Every encountered event is a City. Declined services are retained through normal in-game responses. No state or RNG edits occur between services within either visit. Initial displayed status can predate memory edits; `STATE initial` records the actual setup.
+The [raw transcript](captures/2026-11-16-city-interactions.txt) retains every screen, input, and checkpoint in these two visits. `tools/town_probe.py` edits temporary player memory, servant prices 8/13, and the initial RNG seed. These are controlled experiments, not ordinary play; no original DOS files change. Every encountered event is a City. Declined services are retained through normal in-game responses. No state or RNG edits occur between services within either visit. Initial displayed status can predate memory edits; `STATE initial` records the actual setup.
 
 | Case | Setup and normal choices | Original results, matched by the remake |
 | --- | --- | --- |
@@ -71,16 +71,16 @@ The second visit requests the documented half-second cleric delay followed by on
 Reproduce just these visits and compare all retained town cases:
 
 ```sh
-python3 town_probe.py city-services-then-marketplace city-cleric-then-muggers > doc/captures/2026-11-16-city-interactions.txt
-python3 check_towns.py --sanitize
+python3 tools/town_probe.py city-services-then-marketplace city-cleric-then-muggers > doc/captures/2026-11-16-city-interactions.txt
+python3 tools/check_towns.py --sanitize
 ```
 
 The two cases are added by name to the existing fixture file, which now holds 42 scenarios. Their fixtures additionally retain screens at each input; the checker compares normalized visible narrative as well as state, prompt order, input counts, and requested delays. All 42 pass with address and undefined-behavior sanitizers. RNG values remain in fixtures as research metadata, but the town checker no longer asserts exact RNG equality. No additional town probes or ordinary-play session were needed for this bounded task. G3 is complete; G4 startup/turn evidence consolidation is next.
 
 ## Reproduction and limits
 
-Run `./town_probe.py > doc/captures/2026-11-15-town-probes.txt` to regenerate the full fixture set, or pass case names to update selected entries. `--output PATH` supports independent capture batches; merge completed batches by case name before running the full comparison. The runner restarts the game after aborts/death when further cases remain. It waits through darts' delay without sending buffered extra answers.
+Run `./tools/town_probe.py > doc/captures/2026-11-15-town-probes.txt` to regenerate the full fixture set, or pass case names to update selected entries. `--output PATH` supports independent capture batches; merge completed batches by case name before running the full comparison. The runner restarts the game after aborts/death when further cases remain. It waits through darts' delay without sending buffered extra answers.
 
-`./check_towns.py --sanitize` runs the actual remake event and turn functions against the saved observations without DOSBox. It compares state, prompt order, input counts, and requested delays; G3 also compares captured narrative. Exact RNG equality is not checked. Text comparison normalizes whitespace and servant terminology; it does not establish byte-for-byte screen layout or actual elapsed delays. Numeric parsing policy is exercised by the existing generic integer-reader checks rather than reproducing Pascal's malformed input quirks.
+`./tools/check_towns.py --sanitize` runs the actual remake event and turn functions against the saved observations without DOSBox. It compares state, prompt order, input counts, and requested delays; G3 also compares captured narrative. Exact RNG equality is not checked. Text comparison normalizes whitespace and servant terminology; it does not establish byte-for-byte screen layout or actual elapsed delays. Numeric parsing policy is exercised by the existing generic integer-reader checks rather than reproducing Pascal's malformed input quirks.
 
 These cases do not exhaust all seeds, prices, appearance strings, exact probability cutoffs, or combinations across services. G3 closes the shared-services/marketplace and cleric/mugger interaction gaps. Additional ring-threshold, socializing, and zero-food rat probes are not required for G3; their rules are recovered from the binary and component outcomes already have representative comparisons. Extreme original 16-bit overflow and fractional externally supplied gold/food remain outside scope; these location routines create no fractional inventory values from ordinary integer state.

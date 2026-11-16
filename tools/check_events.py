@@ -74,7 +74,7 @@ def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument('--sanitize', action='store_true')
     args = parser.parse_args()
-    root = Path(__file__).resolve().parent
+    root = Path(__file__).resolve().parent.parent
     cases = json.loads((root / 'doc/storm-illness-checkpoints.json').read_text())
     with tempfile.TemporaryDirectory(prefix='braminar-check-events-') as directory:
         executable = Path(directory) / 'check-events'
@@ -82,7 +82,7 @@ def main():
         if args.sanitize:
             flags.append('-fsanitize=address,undefined')
         subprocess.run([*shlex.split(os.environ.get('CC', 'cc')), *flags,
-                        str(root / 'check_events.c'), '-o', str(executable)], check=True)
+                        str(root / 'tools/check_events.c'), '-o', str(executable)], check=True)
         integer_cases = [
             ('0\n', 0), ('42\n', 42), ('00012\n', 12), (' 7 \n', 7),
             ('-1\n', 0), ('abc\n', 0), ('1.5\n', 0), ('12x\n', 0),

@@ -37,7 +37,7 @@ Promotion/starvation messages appear during bookkeeping after the event's own fi
 
 ## Focused small-party comparisons
 
-The [raw transcript](captures/2026-11-16-turn-starvation.txt) and two added [Keep fixtures](keep-checkpoints.json) capture controlled experiments, not ordinary play. `keep_probe.py` uses the shared `dosbox_game.Game` runner, edits temporary player state/RNG and prices, and stops at the existing breakpoint after bookkeeping (`0xF350`). Original files are untouched; no final-assault code executes. Each encountered event is an ineligible Keep, including its rejection text and normal exit pause. Every screen and input is retained.
+The [raw transcript](captures/2026-11-16-turn-starvation.txt) and two added [Keep fixtures](keep-checkpoints.json) capture controlled experiments, not ordinary play. `tools/keep_probe.py` uses the shared `dosbox_game.Game` runner, edits temporary player state/RNG and prices, and stops at the existing breakpoint after bookkeeping (`0xF350`). Original files are untouched; no final-assault code executes. Each encountered event is an ineligible Keep, including its rejection text and normal exit pause. Every screen and input is retained.
 
 Both cases use level eight, 50 HP, zero food, zero females, no Staff, zero experience/ring/plague, and otherwise the established Keep baseline. The initially displayed status can predate memory edits; `STATE initial` records the setup. No outcome within the Keep changes the party or supplies before bookkeeping.
 
@@ -49,8 +49,8 @@ Both cases use level eight, 50 HP, zero food, zero females, no Staff, zero exper
 Reproduce only those missing outcomes, then compare the retained suite:
 
 ```sh
-python3 keep_probe.py turn-two-servants-starvation turn-last-servant-starvation > doc/captures/2026-11-16-turn-starvation.txt
-python3 check_keep.py --sanitize
+python3 tools/keep_probe.py turn-two-servants-starvation turn-last-servant-starvation > doc/captures/2026-11-16-turn-starvation.txt
+python3 tools/check_keep.py --sanitize
 ```
 
 All 22 Keep/turn scenarios pass with address and undefined-behavior sanitizers, including input/state checkpoints, post-bookkeeping values, normalized text, and the new cases' presence/absence of starvation text. RNG remains fixture metadata; exact equality is no longer asserted by the Keep checker. No separate core-system harness or new startup captures were added. Existing encounter evidence was reused without replaying its original probes.

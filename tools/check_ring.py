@@ -25,7 +25,7 @@ def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument('--sanitize', action='store_true')
     args = parser.parse_args()
-    root = Path(__file__).resolve().parent
+    root = Path(__file__).resolve().parent.parent
     cases = json.loads((root / 'doc/ring-checkpoints.json').read_text())
     with tempfile.TemporaryDirectory(prefix='braminar-check-ring-') as directory:
         executable = Path(directory) / 'check-ring'

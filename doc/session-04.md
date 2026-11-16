@@ -28,7 +28,7 @@ The tornado plus starvation removed six males and three females. Binary inspecti
 
 ## Controlled empty-home checks and implementation
 
-After the ordinary Staff discovery, eight separate experiments reset temporary emulated memory and select deterministic slot-6 seeds. They are explicitly labelled controlled probes in [their raw transcript](captures/2026-11-14-tree-probes.txt). `tree_probe.py` reproduces them and writes [compact checkpoints](tree-checkpoints.json). These runs are separate from Trailblazer's ordinary playthrough.
+After the ordinary Staff discovery, eight separate experiments reset temporary emulated memory and select deterministic slot-6 seeds. They are explicitly labelled controlled probes in [their raw transcript](captures/2026-11-14-tree-probes.txt). `tools/tree_probe.py` reproduces them and writes [compact checkpoints](tree-checkpoints.json). These runs are separate from Trailblazer's ordinary playthrough.
 
 Each starts at level 8, 50 HP, five males, five females, 8 gold, 100 food, 3 medicine, 2 arrows, and no ring/plague. Staff is absent except in `staff-held`. Inventory is reset between cases; displayed status text immediately after those edits can be stale. Final states are read from memory after the next status appears.
 
@@ -45,4 +45,4 @@ Each starts at level 8, 50 HP, five males, five females, 8 gold, 100 food, 3 med
 
 The remake now implements this whole slot-6 branch from binary-verified rules, including random-call order and its exit pause. It leaves the separately dispatched slot-13 tree unfinished. No new intentional difference from the classic was introduced.
 
-`make` succeeds with the existing unused-final-battle-stub warning. `./check_tree.py --sanitize` passes all eight original-game state comparisons (including RNG and expected input counts); `./check_combat.py --sanitize` passes all twelve existing combat scenarios. Both use address and undefined-behavior sanitizers. `git diff --check` passes. This validation does not establish wizard, Gypsy, hut, or storm implementation parity.
+`make` succeeds with the existing unused-final-battle-stub warning. `./tools/check_tree.py --sanitize` passes all eight original-game state comparisons (including RNG and expected input counts); `./tools/check_combat.py --sanitize` passes all twelve existing combat scenarios. Both use address and undefined-behavior sanitizers. `git diff --check` passes. This validation does not establish wizard, Gypsy, hut, or storm implementation parity.

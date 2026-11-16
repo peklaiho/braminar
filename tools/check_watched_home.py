@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Compare the keep with controlled original-game checkpoints."""
+"""Compare the watched_home with controlled original-game checkpoints."""
 
 import argparse
 import json
@@ -18,10 +18,10 @@ def run(executable, config, keys, finish=True, turns=1):
         with tempfile.TemporaryFile() as output:
             names = ('seed', 'hp', 'gold', 'food', 'male', 'female', 'medicine', 'poison',
                      'staff', 'talisman', 'charm', 'swords', 'bows', 'arrows', 'daggers', 'horse',
-                     'level', 'protection', 'ring', 'plague', 'looks', 'command', 'experience')
+                     'level', 'protection', 'ring', 'plague', 'looks')
             arguments = [str(int(config[n])) if isinstance(config[n], bool) else str(config[n])
                          for n in names]
-            process = subprocess.run([str(executable), *arguments, keys, str(turns)],
+            process = subprocess.run([str(executable), *arguments, keys, str(int(finish)), str(turns)],
                                      stdin=slave, stdout=output, stderr=output, timeout=10)
             output.seek(0)
             text = output.read().decode()
@@ -46,16 +46,15 @@ def normalize(text):
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument('--sanitize', action='store_true')
-    parser.add_argument('--fixtures', type=Path, default=Path(__file__).resolve().parent / 'doc/keep-checkpoints.json')
+    parser.add_argument('--fixtures', type=Path, default=Path(__file__).resolve().parent.parent / 'doc/watched-home-checkpoints.json')
     args = parser.parse_args()
     cases = json.loads(args.fixtures.read_text())
-    with tempfile.TemporaryDirectory(prefix='braminar-check-keep-') as directory:
-        executable = Path(directory) / 'check-keep'
+    with tempfile.TemporaryDirectory(prefix='braminar-check-watched_home-') as directory:
+        executable = Path(directory) / 'check-watched_home'
         build(executable, args.sanitize)
         for case in cases:
-            keys = ''.join(step['answer'] + ('\n' if step['kind'] == 'line' else '')
-                           for step in case['steps'] if step['kind'] != 'turn')
-            code, text = run(executable, case['config'], keys, not case.get('fatal', False), case['options'].get('turns', 1))
+            keys = ''.join(step['answer'] for step in case['steps'] if step['kind'] == 'key')
+            code, text = run(executable, case['config'], keys, not case.get('fatal', False), case.get('turns', 1))
             matches = list(re.finditer(r'CHECK (\{[^\r\n]*\})', text))
             actual = [json.loads(m[1]) for m in matches]
             expected = case['steps']
@@ -65,52 +64,31 @@ def main():
             for i, (check, reference) in enumerate(zip(actual, expected)):
                 assert check['kind'] == reference['kind'], (case['name'], i, check, reference)
                 for key, value in reference['state'].items():
-                    if key == 'seed':
-                        continue
                     result = check[key]
                     assert (result == value if isinstance(value, str) else
                             abs(result - value) <= (0.005 if key == 'hp' else 0)), (case['name'], i, key, result, value)
-                if reference['kind'] in ('key', 'line'):
+                if reference['kind'] == 'key':
                     prefix = text[matches[i - 1].end() if i else 0:matches[i].start()]
-                    if i == 0 or reference['prompt'] != expected[i - 1].get('prompt'):
+                    if i == 0 or reference['prompt'] != expected[i - 1]['prompt']:
                         assert normalize(reference['prompt']) in normalize(prefix), (case['name'], i, reference['prompt'], prefix)
                     narrative = re.sub(r'CHECK \{[^\r\n]*\}', '', text[:matches[i].start()])
                     assert normalize(reference['screen']) in normalize(narrative), (case['name'], i, reference['screen'], narrative)
-            assert actual[-1]['keys'] == sum(step['kind'] != 'turn' for step in case['steps']), case['name']
-            delay = 0
+            assert actual[-1]['keys'] == len(keys), case['name']
+            delay = 1 if case['options'].get('help') else 0
             assert actual[-1]['delay'] == delay, (case['name'], actual[-1], delay)
-            narrative = re.sub(r'CHECK \{[^\r\n]*\}', '', text)
-            assert normalize(case['final_screen']) in normalize(narrative), (case['name'], text)
-            handoff = case['final']['ready'] and case['final']['hp'] > 0
-            stub = 'The final battle is not implemented yet.'
-            assert (stub in text) == bool(handoff), (case['name'], text)
-            if handoff:
-                assert text.index(stub) < matches[-1].start(), (case['name'], text)
-            if case['final']['hp'] <= 0:
-                assert 'Game Over.' in text, (case['name'], text)
-            print(case['name'] + ': state, prompt order, input counts and requested delays match')
+            print(case['name'] + ': state, RNG, prompt order, input counts and requested delays match')
         eof_prompts = set()
         for case in cases:
             keys = ''
             for step in case['steps']:
-                if step['kind'] == 'turn':
-                    continue
                 prompt = step['prompt']
-                if prompt not in eof_prompts or step['state']['ready']:
-                    code, text = run(executable, case['config'], keys, False, case['options'].get('turns', 1))
+                if prompt not in eof_prompts:
+                    code, text = run(executable, case['config'], keys, False)
                     assert code == 3, ('EOF', case['name'], prompt, text)
-                    assert 'The final battle is not implemented yet.' not in text, ('EOF handoff', case['name'], text)
-                    final = json.loads(re.findall(r'CHECK (\{[^\r\n]*\})', text)[-1])
-                    for key, value in step['state'].items():
-                        if key == 'seed':
-                            continue
-                        actual = final[key]
-                        assert (actual == value if isinstance(value, str) else
-                                abs(actual - value) <= (0.005 if key == 'hp' else 0)), ('EOF state', case['name'], key, actual, value)
                     eof_prompts.add(prompt)
-                keys += step['answer'] + ('\n' if step['kind'] == 'line' else '')
+                keys += step['answer']
         print(f'EOF terminates cleanly at {len(eof_prompts)} distinct prompts')
-    print(f'{len(cases)} keep scenarios passed')
+    print(f'{len(cases)} watched_home scenarios passed')
 
 
 if __name__ == '__main__':

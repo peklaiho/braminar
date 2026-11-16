@@ -47,7 +47,7 @@ def normalize(text):
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument('--sanitize', action='store_true')
-    parser.add_argument('--fixtures', type=Path, default=Path(__file__).resolve().parent / 'doc/thicket-checkpoints.json')
+    parser.add_argument('--fixtures', type=Path, default=Path(__file__).resolve().parent.parent / 'doc/thicket-checkpoints.json')
     args = parser.parse_args()
     cases = json.loads(args.fixtures.read_text())
     with tempfile.TemporaryDirectory(prefix='braminar-check-thicket-') as directory:

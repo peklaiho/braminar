@@ -41,10 +41,10 @@ The [Keep gate/command rules](mechanics.md#overlords-keep-prerequisite) and [riv
 ## Reproduction and completion limits
 
 ```sh
-python3 thicket_probe.py charm-two-dragons > doc/captures/2026-11-16-repeat-dragon.txt
-python3 keep_probe.py staff-loss-reacquisition > doc/captures/2026-11-16-staff-recovery.txt
-python3 check_thicket.py --sanitize
-python3 check_keep.py --sanitize
+python3 tools/thicket_probe.py charm-two-dragons > doc/captures/2026-11-16-repeat-dragon.txt
+python3 tools/keep_probe.py staff-loss-reacquisition > doc/captures/2026-11-16-staff-recovery.txt
+python3 tools/check_thicket.py --sanitize
+python3 tools/check_keep.py --sanitize
 ```
 
 Named cases update the existing fixture files by name; both runners support `--output PATH`. The thicket runner already handles two-event chains; its harness is reused for the two huts. The Keep runner now retains intermediate states through the river and places its bookkeeping breakpoint only at the last encounter's pause. Its existing C harness already handles three turns and line input, so no C changes were needed.

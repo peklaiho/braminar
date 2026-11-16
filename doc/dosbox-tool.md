@@ -1,6 +1,6 @@
 # Running and capturing the original game
 
-`dosbox_game.py` launches Braminar in `dosbox-debug`, sends keyboard input, and
+`tools/dosbox_game.py` launches Braminar in `dosbox-debug`, sends keyboard input, and
 reads the emulated text screen directly. It uses Python 3's standard library;
 there are no Python packages to install. On Debian, install the system tools with:
 
@@ -17,7 +17,7 @@ its temporary files on exit, including EOF, Ctrl+C, and SIGTERM.
 Run from the project root:
 
 ```sh
-./dosbox_game.py
+./tools/dosbox_game.py
 ```
 
 The tool waits for Braminar's welcome screen and prints it. Enter tool commands
@@ -54,7 +54,7 @@ first separating space. The command line itself is not passed to a shell.
 Repeat `--command` (or `-c`) to run a sequence and exit:
 
 ```sh
-./dosbox_game.py \
+./tools/dosbox_game.py \
     -c 'key space' \
     -c 'text Probe' \
     -c 'key Return' \
@@ -88,19 +88,19 @@ elapsed time, so this tool does not establish timing-sensitive mechanics.
 
 ## Controlled mechanics probes
 
-`combat_probe.py` imports the same `Game` runner to capture a band encounter with
+`tools/combat_probe.py` imports the same `Game` runner to capture a band encounter with
 chosen player state and RNG seed. It labels its output `CONTROLLED PROBE`, records
 the configuration, captures inputs and screens, and prints `STATE` JSON records
 with inventory, HP, experience, ring state, and RNG state at each checkpoint.
 
 ```sh
-./combat_probe.py --seed 6427 > /tmp/goblin-fight.txt
-./combat_probe.py --seed 6427 --bows 1 --arrows 2 > /tmp/arrow-exhaustion.txt
-./combat_probe.py --seed 6450 --choice g > /tmp/band-payment.txt
-./combat_probe.py --seed 6443 --swords 2 --daggers 3 --poison 1 --use-poison
+./tools/combat_probe.py --seed 6427 > /tmp/goblin-fight.txt
+./tools/combat_probe.py --seed 6427 --bows 1 --arrows 2 > /tmp/arrow-exhaustion.txt
+./tools/combat_probe.py --seed 6450 --choice g > /tmp/band-payment.txt
+./tools/combat_probe.py --seed 6443 --swords 2 --daggers 3 --poison 1 --use-poison
 ```
 
-Use `./combat_probe.py --help` for player-state options. Seeds must select slot 4;
+Use `./tools/combat_probe.py --help` for player-state options. Seeds must select slot 4;
 the script rejects other seeds. Starting seeds for the nine band types are:
 Goblin 6427, Gremlin 6435, Rust Golem 6443, Orc 6450, Ogre 6458, Pirate 6466,
 Troglodyte 6409, Drow Elf 6411, Demon 6419. Changing equipment can change all later
@@ -119,67 +119,67 @@ readback. Writes also support `SS`. `game.debugger()` pauses/resumes through a
 context manager; `game.dump()` and `game.debug_command()` operate while paused.
 Do not nest debugger contexts. Capturing a screen reads the current display;
 editing player memory does not itself redraw the status screen. The Real48
-conversion functions in `combat_probe.py` serve binary inspection only; the C
+conversion functions in `tools/combat_probe.py` serve binary inspection only; the C
 remake uses ordinary arithmetic as described in `CHANGES.md`.
 
-Run `./check_combat.py` to compare the remake with the saved controlled captures,
-or `./check_combat.py --sanitize` to enable address and undefined-behavior
+Run `./tools/check_combat.py` to compare the remake with the saved controlled captures,
+or `./tools/check_combat.py --sanitize` to enable address and undefined-behavior
 sanitizers. This requires a C compiler (`CC`, default `cc`); it builds
-`check_combat.c` in a temporary directory and runs the checks without DOSBox.
+`tools/check_combat.c` in a temporary directory and runs the checks without DOSBox.
 The compact fixtures in `doc/combat-checkpoints.json` are sufficient to run the
 checks without the raw transcripts, which the repository ignores. Individual
-case names may be passed as arguments, for example `./check_combat.py arrows poison`.
+case names may be passed as arguments, for example `./tools/check_combat.py arrows poison`.
 See the
 [combat ledger](combat-research.md) for cases and evidence limits.
 
 ## Forest outcome probes
 
-`python3 forest_probe.py > doc/captures/2026-11-16-forest-probes.txt`
+`python3 tools/forest_probe.py > doc/captures/2026-11-16-forest-probes.txt`
 captures G1's six controlled forest outcomes and writes
 `doc/forest-checkpoints.json`. Named case arguments select cases; `--output PATH`
 keeps a separate fixture file. Player memory and RNG are edited only in the
 temporary emulator. Fatal lure runs last; its final retained state is at the
 event pause, followed by the captured death screen.
 
-`python3 check_forest.py --sanitize` compares state, normalized event text,
+`python3 tools/check_forest.py --sanitize` compares state, normalized event text,
 survival, and pause/input counts using the actual remake source. It requires no
 DOSBox or raw captures and does not check exact RNG equality. See
 [forest research](forest-research.md) for outcomes, binary evidence, and limits.
 
 ## Ring-persistence chains
 
-`python3 ring_probe.py > doc/captures/2026-11-16-ring-chains.txt` captures G5's
+`python3 tools/ring_probe.py > doc/captures/2026-11-16-ring-chains.txt` captures G5's
 combat-acquisition → forest and guru-removal → forest chains, saving
 `doc/ring-checkpoints.json`. Named case arguments select a chain; `--output PATH`
 supports a separate fixture file. Only initial temporary player state/RNG is
 edited; neither is changed between encounters.
 
-`python3 check_ring.py --sanitize` reuses the thicket two-turn C harness to
+`python3 tools/check_ring.py --sanitize` reuses the thicket two-turn C harness to
 compare state, captured narrative, prompt order, and pauses without DOSBox or
 exact RNG equality. See [ring research](ring-research.md) for results and limits.
 
 ## Occupied-gnome probes
 
-`python3 gnome_probe.py > doc/captures/2026-11-16-gnome-probes.txt`
+`python3 tools/gnome_probe.py > doc/captures/2026-11-16-gnome-probes.txt`
 captures G2's three occupied-home healing cases and writes
 `doc/gnome-checkpoints.json`. Named case arguments and `--output PATH` work as
 in the forest probe. Only temporary emulator state and RNG are changed.
 
-`python3 check_gnome.py --sanitize` reuses the forest C harness to compare
+`python3 tools/check_gnome.py --sanitize` reuses the forest C harness to compare
 event/post-turn state, normalized text, survival, and pause/input counts. Expected
 food includes the intentional gift fix; exact RNG equality is not checked.
 See [gnome research](gnome-research.md) for evidence and completion limits.
 
 ## Empty-home probes
 
-`./tree_probe.py > doc/captures/2026-11-14-tree-probes.txt` captures eight
+`./tools/tree_probe.py > doc/captures/2026-11-14-tree-probes.txt` captures eight
 controlled slot-6 empty-home branches and writes `doc/tree-checkpoints.json`.
 It uses deterministic seeds and resets temporary player memory between cases;
 the header and each case explicitly label these modifications. Status screens
 before the next turn can contain values from the previous case. The final
 `STATE` records are memory reads after the next status screen.
 
-Run `./check_tree.py --sanitize` to compare the remake with those saved original
+Run `./tools/check_tree.py --sanitize` to compare the remake with those saved original
 checkpoints without DOSBox. The checks include the four trunk results, the
 held-Staff medicine substitute, food theft, leaving, and declining entry, along
 with RNG progression and input counts. See [session 04](session-04.md) and the
@@ -187,41 +187,41 @@ with RNG progression and input counts. See [session 04](session-04.md) and the
 
 ## Storm and illness probes
 
-`./event_probe.py > doc/captures/2026-11-14-storm-illness-probes.txt` captures
+`./tools/event_probe.py > doc/captures/2026-11-14-storm-illness-probes.txt` captures
 controlled storms and illness, resetting temporary player memory and selecting
 seeds before dispatch. Completed cases are saved immediately in
 `doc/storm-illness-checkpoints.json`. To rerun selected cases and update their
-entries, pass names, for example `./event_probe.py storm-tidal illness-excess`.
+entries, pass names, for example `./tools/event_probe.py storm-tidal illness-excess`.
 The invalid/overflow cases deliberately abort the original; the tool restarts
 it if further cases remain. Every encountered screen and input is captured.
 
-`./check_events.py --sanitize` runs comparisons without DOSBox. It checks state,
+`./tools/check_events.py --sanitize` runs comparisons without DOSBox. It checks state,
 RNG, normalized text order, input counts, and requested delays. Input cases explicitly check the documented shared-reader differences, and the
 suite also checks integer parsing directly. See the
 [research ledger](storm-illness-research.md) for evidence and validation limits.
 
 ## Pan probes
 
-`./pan_probe.py > doc/captures/2026-11-15-pan-probes.txt` captures five controlled
+`./tools/pan_probe.py > doc/captures/2026-11-15-pan-probes.txt` captures five controlled
 Pan cases and saves `doc/pan-checkpoints.json`. It resets temporary player state,
 RNG, and an existing prime command before each case. Captures include success,
 failure, decline, invalid answer keys, and question records 1, 3, and 20.
 
-`./check_pan.py --sanitize` compares state, command, RNG, normalized text, and
+`./tools/check_pan.py --sanitize` compares state, command, RNG, normalized text, and
 input counts without DOSBox, and checks all 20 embedded question records against
 `BRAM.DAT` with the approved correction. See the [ledger](pan-research.md) for
 scope and limits.
 
 ## City and Village probes
 
-`./town_probe.py > doc/captures/2026-11-15-town-probes.txt` captures 42 controlled
+`./tools/town_probe.py > doc/captures/2026-11-15-town-probes.txt` captures 42 controlled
 City/Village cases and saves `doc/town-checkpoints.json`. It resets player memory,
 servant prices (8/13), and RNG before each case and records memory at every input
 boundary. Pass case names to update selected cases. `--output PATH` allows
 independent capture batches. The runner restarts after fatal poisoning or the
 original zero-gold pickpocket abort when more cases remain.
 
-`./check_towns.py --sanitize` compares state, prompt order, input counts, and
+`./tools/check_towns.py --sanitize` compares state, prompt order, input counts, and
 requested delays without DOSBox. `--fixtures PATH` selects another checkpoint
 file. Fatal poisoning compares event state before bookkeeping because DOS has
 reclaimed DS after death; the abort case checks unsuccessful termination.
@@ -229,57 +229,57 @@ Exact RNG equality is not checked. The two G3 interaction cases additionally
 compare normalized captured narrative. Reproduce just those visits with:
 
 ```sh
-python3 town_probe.py city-services-then-marketplace city-cleric-then-muggers > doc/captures/2026-11-16-city-interactions.txt
+python3 tools/town_probe.py city-services-then-marketplace city-cleric-then-muggers > doc/captures/2026-11-16-city-interactions.txt
 ```
 
 See [town research](town-research.md) for captures, reproduction, and limits.
 
 ## Mountain trail probes
 
-`./mountain_probe.py > doc/captures/2026-11-15-mountain-probes.txt` captures five
+`./tools/mountain_probe.py > doc/captures/2026-11-15-mountain-probes.txt` captures five
 controlled trail/guru cases and writes `doc/mountain-checkpoints.json`. It resets
 temporary player memory and RNG before each case.
 
-`./check_mountain.py --sanitize` compares state, RNG, normalized text, and input
+`./tools/check_mountain.py --sanitize` compares state, RNG, normalized text, and input
 counts without DOSBox, and checks EOF at both questions. See the
 [research notes](mountain-research.md) for scope and limits.
 
 ## Gypsy camp probes
 
-`./gypsy_probe.py > doc/captures/2026-11-15-gypsy-probes.txt` captures 51 controlled
+`./tools/gypsy_probe.py > doc/captures/2026-11-15-gypsy-probes.txt` captures 51 controlled
 camp cases and saves `doc/gypsy-checkpoints.json`. These include all 35 advice
 results, gambling outcomes, and resource boundaries. Pass case names to update
 selected entries, or use `--output PATH` for a separate fixture file. The probe
 waits for automatic gambling rounds to finish before advancing their pause.
 
-`./check_gypsy.py --sanitize` compares state and RNG at each input, normalized
+`./tools/check_gypsy.py --sanitize` compares state and RNG at each input, normalized
 event text, key counts, and requested delays without DOSBox. Fatal injury
 compares event state before bookkeeping because DOS reclaims DS after death.
 See [research notes](gypsy-research.md) for scope and limits.
 
 ## Grass hut probes
 
-`./hut_probe.py > doc/captures/2026-11-15-hut-probes.txt` captures 41 controlled
+`./tools/hut_probe.py > doc/captures/2026-11-15-hut-probes.txt` captures 41 controlled
 hut cases and saves `doc/hut-checkpoints.json`. The runner resets temporary
 player memory and RNG, records every choice and combat-round pause, and restarts
 after death if more cases remain. Pass case names to update selected entries;
 `--output PATH` selects a separate checkpoint file.
 
-`./check_hut.py --sanitize` compares state, quest items, charm, RNG, normalized
+`./tools/check_hut.py --sanitize` compares state, quest items, charm, RNG, normalized
 text, key counts, and requested delays without DOSBox. Fatal cases compare event
 state before turn bookkeeping, because DOS reclaims DS on exit.
 See [research notes](hut-research.md) for scope and remaining limits.
 
 ## Thicket and Anthrax probes
 
-`./thicket_probe.py > doc/captures/2026-11-15-thicket-probes.txt` captures 64
+`./tools/thicket_probe.py > doc/captures/2026-11-15-thicket-probes.txt` captures 64
 controlled cases and saves `doc/thicket-checkpoints.json`. Pass case names to
 update selected entries; `--output PATH` selects another checkpoint file.
 The probe waits through potion animation, captures combat pauses, and restarts
 after death when needed. `potion-charm-to-hut` preserves state and RNG between
 the thicket and the next hut, recording a `turn` checkpoint between them.
 
-`./check_thicket.py --sanitize` compares per-input and inter-turn state,
+`./tools/check_thicket.py --sanitize` compares per-input and inter-turn state,
 quest items/charm, text, key counts, and requested delays without DOSBox. Text
 comparison ignores whitespace, including DOS line wrapping inside words, and
 normalizes servant terminology and approved band typo corrections. Exact RNG
@@ -291,7 +291,7 @@ G6's plague/protection chains preserve state and RNG from the initial laboratory
 through the next forest or slot-9 band. Reproduce only these two cases with:
 
 ```sh
-python3 thicket_probe.py plague-to-faerie protection-to-band > doc/captures/2026-11-16-illness-chains.txt
+python3 tools/thicket_probe.py plague-to-faerie protection-to-band > doc/captures/2026-11-16-illness-chains.txt
 ```
 
 See [illness-state research](illness-state-research.md) for outcomes and the
@@ -299,12 +299,12 @@ existing cure evidence reused to keep this task bounded.
 
 G7's `charm-two-dragons` case starts with charm one and records two consecutive
 hut challenges without inter-event edits. Reproduce just this repeated-use case
-with `python3 thicket_probe.py charm-two-dragons`; the existing potion-acquisition
+with `python3 tools/thicket_probe.py charm-two-dragons`; the existing potion-acquisition
 case is retained. See [charm/quest research](quest-state-research.md).
 
 ## Dark Castle and Mad King probes
 
-`./castle_probe.py > doc/captures/2026-11-15-castle-probes.txt` captures controlled
+`./tools/castle_probe.py > doc/captures/2026-11-15-castle-probes.txt` captures controlled
 castle visits and writes `doc/castle-checkpoints.json`. Pass case names to select
 visits (in the requested order); `--output PATH` selects an independent fixture
 file. Every case resets temporary player state and RNG; drop probes wait through
@@ -312,7 +312,7 @@ the sound before sampling the next input boundary. Fatal cases restart the
 original when more cases remain. Punctuation in the theft sequence is sent as
 literal text because xdotool does not accept `/` or `=` as key names.
 
-`./check_castle.py --sanitize` compares per-input and final state, RNG, normalized
+`./tools/check_castle.py --sanitize` compares per-input and final state, RNG, normalized
 text/prompt order, key counts, and requested delays without DOSBox. Fatal cases
 compare event state at the final pause, before bookkeeping. See
 [castle research](castle-research.md) for evidence, limits, and the deliberate
@@ -320,21 +320,21 @@ resolution of the original's uninitialized fear local.
 
 ## Watched tree and hut probes
 
-`./watched_home_probe.py > doc/captures/2026-11-15-watched-home-probes.txt`
+`./tools/watched_home_probe.py > doc/captures/2026-11-15-watched-home-probes.txt`
 captures 32 controlled slot-13 cases and writes
 `doc/watched-home-checkpoints.json`. Named arguments select cases in the
 requested order; `--output PATH` selects an independent fixture file. The
 runner resets temporary player state and RNG and waits through the care delay
 before recording the next input boundary.
 
-`./check_watched_home.py --sanitize` compares state, RNG, normalized text and
+`./tools/check_watched_home.py --sanitize` compares state, RNG, normalized text and
 prompt order, key counts, requested delays, and EOF handling without DOSBox.
 See [research notes](watched-home-research.md) for how the watched tree and hut
 differ from the independently implemented slot-6 and slot-7 events.
 
 ## Overlord's Keep probes
 
-`./keep_probe.py > doc/captures/2026-11-15-keep-probes.txt` captures twenty-three
+`./tools/keep_probe.py > doc/captures/2026-11-15-keep-probes.txt` captures twenty-three
 controlled cases and writes `doc/keep-checkpoints.json`. Each case starts a
 fresh DOSBox runner, resets temporary player state, command, assault flag, prices
 and RNG, then stops at an absolute breakpoint after turn bookkeeping and before
@@ -342,7 +342,7 @@ the final-assault handoff. The original assault module never executes. Named
 arguments select cases; `--output PATH` selects an independent fixture file.
 The Pan-to-Keep case retains state/RNG between its two normally chosen encounters.
 
-`./check_keep.py --sanitize` compares per-input and final state, command, assault
+`./tools/check_keep.py --sanitize` compares per-input and final state, command, assault
 flag, normalized text/prompt order, logical key/line counts, requested delays,
 and EOF handling. It invokes the actual `run_turn()` and final-battle exit stub,
 including checking that fatal plague suppresses the stub. See
@@ -351,7 +351,7 @@ Exact RNG equality is not checked. G4's two small-party starvation cases reuse
 this runner and harness; no assault is initiated. Reproduce just those with:
 
 ```sh
-python3 keep_probe.py turn-two-servants-starvation turn-last-servant-starvation > doc/captures/2026-11-16-turn-starvation.txt
+python3 tools/keep_probe.py turn-two-servants-starvation turn-last-servant-starvation > doc/captures/2026-11-16-turn-starvation.txt
 ```
 
 [G4 notes](startup-turn-research.md) link the existing startup/turn evidence and
@@ -360,7 +360,7 @@ distinguish state comparisons from the remaining message-readability review.
 G7's `staff-loss-reacquisition` case records Keep → river → Keep with no edits
 between encounters. The final attack is declined to retain the Staff and avoid
 the assault. The existing breakpoint stops after the last bookkeeping pass.
-Reproduce just this case with `python3 keep_probe.py staff-loss-reacquisition`;
+Reproduce just this case with `python3 tools/keep_probe.py staff-loss-reacquisition`;
 see [charm/quest research](quest-state-research.md) for captures and limits.
 
 ## G8 simultaneous-death comparisons
