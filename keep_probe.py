@@ -43,6 +43,8 @@ def cases():
     add('success-starvation', food=0, text='PRIOR')
     add('success-plague-death', plague=95, text='PRIOR')
     add('success-bookkeeping', ring=95, plague=90, experience=6, text='PRIOR')
+    add('turn-two-servants-starvation', level=8, staff=False, male=2, female=0, food=0)
+    add('turn-last-servant-starvation', level=8, staff=False, male=1, female=0, food=0)
     for value in range(1000000):
         r = rolls(value, (16,20,3,26,26,26,26,26,16))
         if r[0] == 15 and r[-1] == 16:
@@ -51,6 +53,7 @@ def cases():
             break
     else:
         raise RuntimeError('No Pan-to-Keep seed')
+    add('staff-loss-reacquisition', seed=117042, text='WRONG', turns=3, staff_recovery=True)
     return result
 
 
@@ -106,6 +109,8 @@ def prepare(game, config):
 
 def event_text(screen, pan=False):
     marker = 'You find a Statue of Pan.' if pan else "You find the Evil Overlord's Keep."
+    if 'You come upon a flowing river.' in screen:
+        marker = 'You come upon a flowing river.'
     return screen[screen.index(marker):] if marker in screen else screen
 
 
@@ -137,10 +142,14 @@ def main():
             print('STATE initial '+json.dumps(state(game),sort_keys=True),flush=True)
             screen = command('key space')
             case['steps'] = []
-            pan = case['options'].get('turns',1)==2
+            turns = case['options'].get('turns',1)
+            completed = 0
+            pan = turns==2
+            staff_recovery = case['options'].get('staff_recovery',False)
             for step in range(20):
                 if screen.startswith('*** KeepProbe ***') and screen.endswith('Any key.'):
-                    assert pan
+                    assert pan or staff_recovery
+                    completed += 1
                     checkpoint = dict(kind='turn',state=state(game))
                     case['steps'].append(checkpoint)
                     print('STATE turn '+json.dumps(checkpoint,sort_keys=True),flush=True)
@@ -150,6 +159,8 @@ def main():
                 lines = [line.strip() for line in screen.splitlines() if line.strip()]
                 if lines[-1] == '(Y/N)':
                     answer = 'y' if pan or case['options'].get('attack',True) else 'n'
+                    if staff_recovery and completed==2:
+                        answer = 'n'
                     kind,prompt = 'key',lines[-2]+'\n(Y/N)'
                 elif lines[-1].endswith('Prime Command (in caps):'):
                     answer = case['options']['text']
@@ -165,7 +176,7 @@ def main():
                                   screen=event_text(screen,pan),state=state(game))
                 case['steps'].append(checkpoint)
                 print('STATE checkpoint '+json.dumps(checkpoint,sort_keys=True),flush=True)
-                if kind=='key' and answer==' ' and not pan:
+                if kind=='key' and answer==' ' and completed+1==turns:
                     stack_base = int.from_bytes(game.read_memory('DS',0x18C,2),'little')
                     code_segment = stack_base - 0xFA0
                     assert game.read_memory(code_segment,0xF450,3)==bytes.fromhex('bf7902')

@@ -105,6 +105,9 @@ def cases():
     add('wizard-full-fight', full, hp=100)
     add('wizard-decline-poison', full, hp=100, poison=1)
     add('potion-charm-to-hut', 1178019, drink=True, follow_hut=True)
+    add('plague-to-faerie', 1146089, plague=0, follow_event=True)
+    add('protection-to-band', 203267, plague=0, drink=True, follow_event=True, pay_band=True)
+    add('charm-two-dragons', 10217, plague=0, charm=1, follow_event=True)
     add('wizard-death', fight(9), hp=0.5)
     add('pentacle-wind-death', wind, step_in=True, hp=10)
     return result
@@ -134,6 +137,8 @@ def response(screen, options):
         prompt = lines[-2]
         if 'thicket in the woods' in prompt:
             answer = options.get('enter', True)
+        elif 'enchanted forest' in prompt:
+            answer = True
         elif prompt == 'Will you enter?' or 'double your posessions' in prompt:
             answer = True
         elif 'potions.  Try them?' in prompt:
@@ -147,6 +152,8 @@ def response(screen, options):
         return 'y' if answer else 'n', prompt + '\n(Y/N)'
     if lines[-1] == 'Press any key...':
         return ' ', lines[-1]
+    if lines[-1] == 'Do you wish to (F)ight (G)ive, or (R)un?' and options.get('pay_band'):
+        return 'g', lines[-1]
     return None
 
 
@@ -198,7 +205,7 @@ def main():
             case['steps'] = []
             for step in range(120):
                 if screen.startswith('*** ThicketProbe ***') and screen.endswith('Any key.'):
-                    if options.get('follow_hut') and not case.get('turns'):
+                    if (options.get('follow_hut') or options.get('follow_event')) and not case.get('turns'):
                         case['turns'] = 2
                         checkpoint = dict(kind='turn', state=player_state(game))
                         case['steps'].append(checkpoint)
@@ -223,7 +230,8 @@ def main():
                 kind = 'key'
                 checkpoint = dict(kind=kind, answer=answer, prompt=prompt, state=player_state(game))
                 event_text = screen
-                for marker in ('You come up to a thicket in the woods.', 'You come upon a grass hut.'):
+                for marker in ('You come up to a thicket in the woods.', 'You come upon a grass hut.',
+                               'You come upon an enchanted forest.', 'Things seem strangely quite'):
                     if marker in screen:
                         event_text = screen[screen.index(marker):]
                         break

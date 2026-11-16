@@ -45,3 +45,7 @@ Initial character Fighter: male, level seven, red hair, good looks, 31.00 HP, fi
 Village findings: selling the servants raised gold from five to 86, agreeing with the stored prices. Offers were sword 92, bow 31, dagger 86, twelve arrows 16, horse 119, cart 46; all unpurchased except bow/arrows. Ten food cost ten gold. Room 3 cost twenty gold and printed `You lay back and relax for awhile.` followed by female servants bandaging wounds. HP increased by three plus ordinary 0.10 turn healing in this visit; this one outcome does not establish the inn's healing formula.
 
 The store's `You have:` figure followed the gold balance: 86 before the bow, 55 afterward, 39 after the arrows, and 29 after food. This corrects the earlier session's uncertainty about those lines: they do not show current stocks of the offered item. Prices differed from session 01; their generation formula remains to be recovered.
+
+## G8 death-ordering follow-up
+
+The [G8 comparisons](combat-order-research.md) close this ledger's earlier simultaneous-death validation gap. Both participants die, independent outcome messages print, and survivor rewards are withheld; no gameplay correction was needed. All 13 shared-combat scenarios pass with sanitizers. Exact RNG equality is no longer asserted by this checker; seeds remain for controlled selection. Earlier session counts and limits above describe their original scope. Final comparisons stop at the event pause before death bookkeeping.

@@ -95,11 +95,13 @@ At `0xEF97`–`0xEF9E`, the program calls the wrapper at `0x2C9F` with 16. The w
 
 The two guarded slots do not reroll when their conditions fail. At character creation, ring state and protection are zero (`0xA44C`–`0xA467`), so slots 4 and 8 dispatch to the band encounter, while slot 9 dispatches to illness. When the total servant count is zero, the illness routine instead prints `There seems to be a bug going around.` and returns after a delay without a keypress pause (`0x7708`–`0x7714`, `0x7A1C`–`0x7A54`).
 
+The [G6 protection chain](illness-state-research.md) acquires the flag from one laboratory potion and retains it into the next slot-9 dispatch, which produces a band encounter and no treatment prompts. The recorded original intermediate RNG state identifies slot nine under the recovered selector; resulting state/flow comparisons do not require exact RNG equality. A separate G6 chain starts plague at zero, acquires five from Anthrax, progresses to ten after bookkeeping, and is cured by the next forest's faerie before another progression. Both match the existing remake without gameplay changes.
+
 ### End-of-turn bookkeeping
 
 1. If `0 < HP < level * 10`, add approximately 0.10 HP (`0xF112`–`0xF15A`). The classic's six-byte real literal at `0xF151` is `7D CC CC CC CC 4C`, slightly below 0.10; the remake intentionally uses 0.10 without reproducing that representation detail. The comparison happens before addition; there is no clamp afterward. If HP is nonpositive, reset the real accumulator at `DS:0x02BA` to zero (`0xF15D`–`0xF17D`). Combat adds to this accumulator after a victory (`0x3C24`–`0x3C58`), supporting its interpretation as experience.
-2. If experience is strictly greater than 5, announce a level increase, add one level, subtract 5 experience, and add 10 HP (`0xF180`–`0xF205`). This is a single `if`, not a loop; exactly 5 does not qualify. Shared combat awards `enemy level / 4.0`; specialized combat routines still need separate investigation.
-3. If the ring byte is greater than zero and less than 100, add 5 (`0xF208`–`0xF237`). A value such as 99 becomes 104; there is no clamp to 100. It starts at zero. Combat bonuses and forced fights are described below; effects in other encounters remain to be recovered.
+2. If experience is strictly greater than 5, announce a level increase, add one level, subtract 5 experience, and add 10 HP (`0xF180`–`0xF205`). This is a single `if`, not a loop; exactly 5 does not qualify. Shared combat awards `enemy level / 4.0`; specialized combat awards are documented in their respective sections below.
+3. If the ring byte is greater than zero and less than 100, add 5 (`0xF208`–`0xF237`). A value such as 99 becomes 104; there is no clamp to 100. It starts at zero. Combat bonuses, forced fights, and other encounter effects are described in their respective sections below.
 4. If the plague byte is positive, add 5, storing the low byte. If the resulting byte is at least 100, print `You have died from the plague` and set HP to zero (`0xF23A`–`0xF294`). Other routines establish the identification: plague acquisition increments this byte at `0x48B2`–`0x48BA`; the forest cure clears it at `0x8F0B`–`0x8F0E`.
 5. Subtract integer `(male servants + female servants + 1) / 2` from food (`0xF297`–`0xF2B9`). The signed integer division precedes conversion to real: this is not half a unit per person. With zero servants, consumption is zero; with nine servants, it is five. Counts are assumed nonnegative and within the signed 16-bit arithmetic range here; overflow behavior for extreme counts has not been reconstructed in C.
 6. If food is strictly negative, set it to zero. If the combined servant count exceeds one, announce starvation and decrement each positive servant count by one (`0xF2BC`–`0xF34D`). Reaching exactly zero does not cause starvation that turn. A sole remaining servant is not removed by this code. Starvation here does not damage the player.
@@ -107,11 +109,13 @@ The two guarded slots do not reroll when their conditions fail. At character cre
 
 The [first recorded session](captures/2026-11-14-session-01.md) independently shows HP increasing by 0.10 per completed turn and food decreasing by five for a party with nine servants. An elves' gift adds ten food before the five-unit consumption. These observations corroborate the binary calculations; they do not independently test every boundary above.
 
+The [G4 consolidation](startup-turn-research.md) links representative evidence for each normal-play rule, including hut comparisons at exactly five experience and at eleven experience, and Keep promotion/ring/plague/death ordering. Only two new original comparisons were needed: with zero food, two male servants become one with a starvation announcement, while a sole male remains without that announcement. Both finish at 50.10 HP and zero food, matching the remake. G4 also records the original promotion/shortage waits and the remake's immediate status redraw as a G9 message-readability follow-up; state arithmetic is unchanged.
+
 The remake implements dispatch, bookkeeping, and the main-game encounter bodies, including the Keep command/transition up to the final-assault stub. Original startup seeding and full-run parity remain unverified. The remake intentionally uses `double` for HP and experience without Real48 emulation, as recorded in `CHANGES.md`. Food is currently integer; whether inventory calculations require visible fractional quantities remains unresolved and must be checked as those mechanics are recovered. Successful Keep entry now calls `start_final_battle()` after bookkeeping if the player survives; that stub exits without implementing the final assault.
 
 ## Enchanted forest
 
-The routine at `0x8BA7`–`0x8F9A` was checked against the nymph/resistance/elves path in the [recorded session](captures/2026-11-14-session-01.md). Other branches below are verified from the binary, but have not yet been observed live in this session. Here `Roll(n)` means `Random(n) + 1`; preserve the strict comparisons and conditional random-call order.
+The routine at `0x8BA7`–`0x8F9A` was checked against the nymph/resistance/elves path in the [recorded session](captures/2026-11-14-session-01.md). Six later [controlled comparisons](forest-research.md) cover fatal lure, ring exclusion, appearance restoration with plague cure, healing, full-health healing, and decline. Binary reinspection confirms the rules below. Here `Roll(n)` means `Random(n) + 1`.
 
 - Ask whether to enter. Declining prints `You move on.` and returns without a pause (`0x8BEB`–`0x8BF1`, `0x8F7B`–`0x8F94`).
 - Roll 1–100. A nymph appears if the result is less than `level + 5` (`0x8BF4`–`0x8C11`). Male players see a female nymph; female players see a male nymph (`0x8C14`–`0x8C97`).
@@ -119,6 +123,8 @@ The routine at `0x8BA7`–`0x8F9A` was checked against the nymph/resistance/elve
 - After that branch, elves greet the player only if HP is positive and the ring byte is zero (`0x8D76`–`0x8D9C`). They add `male servants + female servants + 1` food and restore good looks (`0x8E0D`–`0x8E75`).
 - Only in the elves' branch, roll another 1–100. A faerie appears for a result less than 21 (`0x8E78`–`0x8E8C`). If plague is positive, clear it without healing HP. Otherwise announce full healing and raise HP to `level * 10` only if currently below that value (`0x8ED5`–`0x8F6C`).
 - All entered paths, including death or exclusion by the ring, end in a keypress pause (`0x8F6F`–`0x8F75`). Normal turn bookkeeping follows, including food use and healing where applicable.
+
+The existing implementation matches all six G1 outcomes without gameplay changes. [Retained checks](forest-research.md#reproduction-and-completion-limits) compare player-visible state, text, survival, and pauses; exact RNG equality is not required. The full-health capture confirms the healing announcement without an HP increase. The cure capture confirms plague removal without faerie healing; only normal 0.10 turn healing follows.
 
 ## Statue of Pan
 
@@ -140,6 +146,8 @@ In the occupied branch of the hollow-tree routine, the original announces a gift
 The remake intentionally fixes this classic bug: add the announced 3–8 food to inventory before normal turn consumption. With the captured example's starting food of 95, a gift of three and consumption of five now leave 93 food, rather than the classic's 90. This difference is recorded in [CHANGES.md](../CHANGES.md#bug-fixes); the original capture remains evidence of classic behavior.
 
 After entering slot 6's tree, `Roll(100) < 56` selects the occupied gnome branch (`0x67C0`–`0x67D4`). If HP is below `level * 10`, the gnome rolls 1–5, announces that many HP restored, and adds it without a subsequent cap (`0x68D8`–`0x696A`). The captured five-HP ointment changed 49.30 HP to 54.40 after turn healing. The remake implements this occupied branch, including its pause, and pauses after declining entry as the original does (`0x6C9C`–`0x6CBB`). The empty-home branch is now implemented as described below. The separate slot-13 watched tree/hut is independently implemented [below](#watched-tree-and-hut).
+
+Three later [G2 controlled comparisons](gnome-research.md) confirm injured healing, healing past the cap, and no ointment at full health. At level eight, four-HP ointment changes 50 to 54 HP (54.10 after turn healing) and 79 to 83 HP (remaining 83 afterward); starting at 80 gives no ointment and stays 80. All three original visits announce six food without adding it, ending at 95 food after consumption; the remake intentionally ends at 101. State, text, and pauses match after accounting for this documented difference. No further gameplay change was needed.
 
 ## Empty gnome home
 
@@ -169,6 +177,8 @@ Every completed path ends with the same keypress pause at `0xA2A8`–`0xA2B0`, i
 After the pause, all ordinary bookkeeping runs before evaluating the assault flag: healing, promotion, ring/plague progression, food use, and starvation. At `0xF350`–`0xF385`, nonpositive HP takes precedence over the flag. A correct command followed by fatal plague never enters the assault. Otherwise, a set flag hands off to the separate final-battle entry rather than displaying another status screen. The remake's `run_turn()` applies this order and calls the existing `start_final_battle()` stub, which prints its deferred-battle message and exits successfully. The final assault itself remains unimplemented.
 
 [Controlled research](keep-research.md) retains prerequisite/input boundaries, post-bookkeeping state, death suppression, and a Pan-to-Keep sequence without inter-event memory/RNG edits. Original probes stop before the chain into `FINASSLT.CHN`; the C checker exercises the actual stub. POSIX EOF ends the turn without bookkeeping or handoff if input is unfinished, including EOF at the successful event's final pause.
+
+The [G7 Staff-recovery sequence](quest-state-research.md#staff-loss-recovery-and-eligibility) compares wrong-command loss, river reacquisition, and the next Keep's restored attack prompt without inter-event edits. Staff goes held → absent → held, command `PRIOR` persists, and level twenty is unchanged. Declining the final attack leaves the assault flag false; no assault code runs.
 
 ## Flowing river
 
@@ -248,6 +258,8 @@ These rules were checked in [controlled original-game probes](combat-research.md
 
 ## Shared combat
 
+G8 confirms simultaneous death: player -0.05 HP, Goblin -1.42 HP; both death messages print, with no experience, ring, or loot. [Controlled evidence](combat-order-research.md).
+
 `0x2DB4`–`0x3E6B` implements the shared routine called by band encounters and the river's champion path (`0x9D99`). Wizard, dragon, Mad King, and gate-creature fights use separate routines; these shared rules must not be applied to them. Dragon and gate-creature combat are now recovered and implemented for the grass hut below; Anthrax combat is recovered below; Mad King combat is independently recovered and implemented [below](#mad-king-combat).
 
 ### Setup and round selection
@@ -290,7 +302,7 @@ The [probe ledger](combat-research.md) records scenarios and validation. Round H
 
 ## City and Village
 
-The Village (`0xC2B9`–`0xC4C0`) and City (`0xC4C1`–`0xCB85`) call the same servant market, tavern, store, and inn routines. The remake uses `event_town(player, city)` and shared service functions. These rules come from binary inspection, with [40 controlled comparisons and an ordinary pass](town-research.md). `Roll(n)` below means `Random(n) + 1`.
+The Village (`0xC2B9`–`0xC4C0`) and City (`0xC4C1`–`0xCB85`) call the same servant market, tavern, store, and inn routines. The remake uses `event_town(player, city)` and shared service functions. These rules come from binary inspection, with [42 controlled comparisons and an ordinary pass](town-research.md). `Roll(n)` below means `Random(n) + 1`.
 
 ### Entry and location differences
 
@@ -352,6 +364,8 @@ After the inn, always draw 1–100 for a cleric. Above 88 (12%) offers a cure fo
 
 Then always draw another 1–100, even with servants. Only when the combined servant count is zero and that roll is below 11 (10%) do muggers appear (`0xC9A8`–`0xC9D8`). Ring power strictly greater than 30 drives them away with lightning, with no loss draws or robbery delay. Otherwise draw gold loss 1–100, cap it to current gold, then food loss 1–20, cap it to current food, announce and subtract both, and delay one second. Either mugger outcome ends in a keypress pause (`0xC9DB`–`0xCB62`). Cleric removal of the ring happens before this protection check.
 
+The [G3 interaction captures](town-research.md#g3-city-interactions) confirm both service-state dependencies without gameplay corrections. Buying servants, a sword, store food/medicine, then bargain-market food/poison carries balances through every transaction and ends at 31 gold and 114 food after the enlarged party's consumption. A separate ring-40 visit accepts the cleric before muggers: donation leaves zero gold, the removed ring provides no protection, and the mugging steals zero gold and eighteen food. Both original and remake finish at 80 HP, two food, zero ring/plague, good looks, and Brown hair.
+
 ## Mountain trail and guru
 
 Slot 8 selects the mountain trail only when ring power is positive; without a ring it calls the band encounter instead. The event body (`0x757A`–`0x76FD`) makes no random calls and requests no delay.
@@ -362,6 +376,8 @@ Slot 8 selects the mountain trail only when ring power is positive; without a ri
 - Both questions use the shared case-insensitive Y/N reader. Every completed path pauses once (`0x76EE`–`0x76F4`), followed by ordinary turn bookkeeping. A retained ring therefore gains five power when below 100; a removed ring stays zero.
 
 Five [controlled comparisons](mountain-research.md) check state, RNG, normalized text, and input counts, including invalid keys and ring powers 1 and 100. The remake corrects `lookes` to `looks`, as recorded in CHANGES.md.
+
+Two [G5 interaction chains](ring-research.md) compare acquisition/removal through the next normally dispatched forest, without state or RNG edits between encounters. Combat awards a ring at five, bookkeeping grows it to ten, and the later forest excludes elves, leaving bad looks unchanged; the next bookkeeping grows it to fifteen. Guru removal instead leaves ring zero through bookkeeping and the forest, where elves supply party food and restore looks. Both chains match the existing remake without gameplay changes; exact RNG equality is not checked.
 
 ## Wandering Gypsy camp
 
@@ -429,7 +445,11 @@ Entering a quiet hut draws `Roll(9)` (`0x7255`–`0x7264`).
 
 ### Dragon combat
 
+G8 confirms simultaneous death: player -0.05 HP, dragon -1.40 HP; both death messages print, experience stays zero, and the hermit skips rewards. [Controlled evidence](combat-order-research.md).
+
 The separate routine is `0x56C6`–`0x5DBD`. It does not use shared band combat, weapon bonuses, ring bonuses, or arrows.
+
+The [G7 repeated-dragon sequence](quest-state-research.md#repeated-dragon-submission) confirms charm one remains one through two consecutive hut challenges, with submission both times and no combat rounds. The earlier potion-to-dragon acquisition comparison is reused; no second acquisition is required. Both the repeated-use and acquisition cases match the existing remake.
 
 - A positive signed charm word at `DS:029A` prints submission, adds `Roll(3)` experience, and returns without other combat draws or a pause. The word is not consumed or cleared (`0x56D0`–`0x5731`). Startup clears it (`0xA467`–`0xA46D`); a laboratory potion increments it (`0xE7B1`–`0xE7B7`). Despite the potion's “Next meeting” text, the recovered dragon routine leaves it persistent. Acquisition through that potion is now implemented as part of the thicket below.
 - Without charm, draw dragon level `Roll(14)`, then HP `Roll(50) + 30` (31–80). If poison is positive, offer its use. Y consumes one dose, sets dragon HP to zero without a saving throw, and prints use (`0x5734`–`0x57F2`).
@@ -449,6 +469,8 @@ The separate routine is `0x56C6`–`0x5DBD`. It does not use shared band combat,
 Fractional values simplify embedded Real48 constants according to the existing precision policy.
 
 ### Gate-creature combat
+
+G8 confirms simultaneous death: player -0.05 HP, Cerberus -0.90 HP; both outcomes print, with no experience or deity reward. [Controlled evidence](combat-order-research.md).
 
 The separate routine is `0x4B67`–`0x56C5`. Draw `Roll(5)` for the type, then its HP die (`0x4B71`–`0x4CD8`). Original spellings are retained.
 
@@ -607,6 +629,8 @@ At `0x873A`–`0x8B76`, ask whether to gaze into the crystal ball. If accepted, 
 Next always draw `R(100)`; below nine acquire the Talisman if absent. Draw `Random(200)` (zero through 199), announce and add that food. Finally draw `R(100)`; below 36, announce servants falling into pits and divide each sex's count by two using integer division. A zero-servant party still receives the message and consumes the roll.
 
 ## Mad King combat
+
+G8 confirms simultaneous death: player -0.05 HP, King -2.60 HP; player death and King disappearance print, with no experience, gold, or fleeing message. [Controlled evidence](combat-order-research.md).
 
 The separate routine at `0x5DBE`–`0x6768` is called by the throne room. Start with a 150-ms tone wait and King level 16, HP `(R(5) + 4) * 16`, giving 80/96/112/128/144. Roll HP before asking about any held poison. Accepting poison consumes a dose and sets King HP to zero, bypassing rounds but preserving victory/reward processing.
 

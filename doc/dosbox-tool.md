@@ -132,6 +132,44 @@ case names may be passed as arguments, for example `./check_combat.py arrows poi
 See the
 [combat ledger](combat-research.md) for cases and evidence limits.
 
+## Forest outcome probes
+
+`python3 forest_probe.py > doc/captures/2026-11-16-forest-probes.txt`
+captures G1's six controlled forest outcomes and writes
+`doc/forest-checkpoints.json`. Named case arguments select cases; `--output PATH`
+keeps a separate fixture file. Player memory and RNG are edited only in the
+temporary emulator. Fatal lure runs last; its final retained state is at the
+event pause, followed by the captured death screen.
+
+`python3 check_forest.py --sanitize` compares state, normalized event text,
+survival, and pause/input counts using the actual remake source. It requires no
+DOSBox or raw captures and does not check exact RNG equality. See
+[forest research](forest-research.md) for outcomes, binary evidence, and limits.
+
+## Ring-persistence chains
+
+`python3 ring_probe.py > doc/captures/2026-11-16-ring-chains.txt` captures G5's
+combat-acquisition → forest and guru-removal → forest chains, saving
+`doc/ring-checkpoints.json`. Named case arguments select a chain; `--output PATH`
+supports a separate fixture file. Only initial temporary player state/RNG is
+edited; neither is changed between encounters.
+
+`python3 check_ring.py --sanitize` reuses the thicket two-turn C harness to
+compare state, captured narrative, prompt order, and pauses without DOSBox or
+exact RNG equality. See [ring research](ring-research.md) for results and limits.
+
+## Occupied-gnome probes
+
+`python3 gnome_probe.py > doc/captures/2026-11-16-gnome-probes.txt`
+captures G2's three occupied-home healing cases and writes
+`doc/gnome-checkpoints.json`. Named case arguments and `--output PATH` work as
+in the forest probe. Only temporary emulator state and RNG are changed.
+
+`python3 check_gnome.py --sanitize` reuses the forest C harness to compare
+event/post-turn state, normalized text, survival, and pause/input counts. Expected
+food includes the intentional gift fix; exact RNG equality is not checked.
+See [gnome research](gnome-research.md) for evidence and completion limits.
+
 ## Empty-home probes
 
 `./tree_probe.py > doc/captures/2026-11-14-tree-probes.txt` captures eight
@@ -176,17 +214,24 @@ scope and limits.
 
 ## City and Village probes
 
-`./town_probe.py > doc/captures/2026-11-15-town-probes.txt` captures 40 controlled
+`./town_probe.py > doc/captures/2026-11-15-town-probes.txt` captures 42 controlled
 City/Village cases and saves `doc/town-checkpoints.json`. It resets player memory,
 servant prices (8/13), and RNG before each case and records memory at every input
 boundary. Pass case names to update selected cases. `--output PATH` allows
 independent capture batches. The runner restarts after fatal poisoning or the
 original zero-gold pickpocket abort when more cases remain.
 
-`./check_towns.py --sanitize` compares state, RNG, prompt order, input counts, and
+`./check_towns.py --sanitize` compares state, prompt order, input counts, and
 requested delays without DOSBox. `--fixtures PATH` selects another checkpoint
 file. Fatal poisoning compares event state before bookkeeping because DOS has
 reclaimed DS after death; the abort case checks unsuccessful termination.
+Exact RNG equality is not checked. The two G3 interaction cases additionally
+compare normalized captured narrative. Reproduce just those visits with:
+
+```sh
+python3 town_probe.py city-services-then-marketplace city-cleric-then-muggers > doc/captures/2026-11-16-city-interactions.txt
+```
+
 See [town research](town-research.md) for captures, reproduction, and limits.
 
 ## Mountain trail probes
@@ -227,19 +272,35 @@ See [research notes](hut-research.md) for scope and remaining limits.
 
 ## Thicket and Anthrax probes
 
-`./thicket_probe.py > doc/captures/2026-11-15-thicket-probes.txt` captures 61
+`./thicket_probe.py > doc/captures/2026-11-15-thicket-probes.txt` captures 64
 controlled cases and saves `doc/thicket-checkpoints.json`. Pass case names to
 update selected entries; `--output PATH` selects another checkpoint file.
 The probe waits through potion animation, captures combat pauses, and restarts
 after death when needed. `potion-charm-to-hut` preserves state and RNG between
 the thicket and the next hut, recording a `turn` checkpoint between them.
 
-`./check_thicket.py --sanitize` compares per-input and inter-turn state, RNG,
+`./check_thicket.py --sanitize` compares per-input and inter-turn state,
 quest items/charm, text, key counts, and requested delays without DOSBox. Text
 comparison ignores whitespace, including DOS line wrapping inside words, and
-normalizes servant terminology. Fatal cases compare event state before
+normalizes servant terminology and approved band typo corrections. Exact RNG
+equality is not checked. Fatal cases compare event state before
 bookkeeping because DOS has reclaimed DS after exit. See the
 [research notes](thicket-research.md) for captures and validation limits.
+
+G6's plague/protection chains preserve state and RNG from the initial laboratory
+through the next forest or slot-9 band. Reproduce only these two cases with:
+
+```sh
+python3 thicket_probe.py plague-to-faerie protection-to-band > doc/captures/2026-11-16-illness-chains.txt
+```
+
+See [illness-state research](illness-state-research.md) for outcomes and the
+existing cure evidence reused to keep this task bounded.
+
+G7's `charm-two-dragons` case starts with charm one and records two consecutive
+hut challenges without inter-event edits. Reproduce just this repeated-use case
+with `python3 thicket_probe.py charm-two-dragons`; the existing potion-acquisition
+case is retained. See [charm/quest research](quest-state-research.md).
 
 ## Dark Castle and Mad King probes
 
@@ -273,7 +334,7 @@ differ from the independently implemented slot-6 and slot-7 events.
 
 ## Overlord's Keep probes
 
-`./keep_probe.py > doc/captures/2026-11-15-keep-probes.txt` captures twenty
+`./keep_probe.py > doc/captures/2026-11-15-keep-probes.txt` captures twenty-three
 controlled cases and writes `doc/keep-checkpoints.json`. Each case starts a
 fresh DOSBox runner, resets temporary player state, command, assault flag, prices
 and RNG, then stops at an absolute breakpoint after turn bookkeeping and before
@@ -282,7 +343,26 @@ arguments select cases; `--output PATH` selects an independent fixture file.
 The Pan-to-Keep case retains state/RNG between its two normally chosen encounters.
 
 `./check_keep.py --sanitize` compares per-input and final state, command, assault
-flag, RNG, normalized text/prompt order, logical key/line counts, requested delays,
+flag, normalized text/prompt order, logical key/line counts, requested delays,
 and EOF handling. It invokes the actual `run_turn()` and final-battle exit stub,
 including checking that fatal plague suppresses the stub. See
 [research notes](keep-research.md) for breakpoint details, captures, and limits.
+Exact RNG equality is not checked. G4's two small-party starvation cases reuse
+this runner and harness; no assault is initiated. Reproduce just those with:
+
+```sh
+python3 keep_probe.py turn-two-servants-starvation turn-last-servant-starvation > doc/captures/2026-11-16-turn-starvation.txt
+```
+
+[G4 notes](startup-turn-research.md) link the existing startup/turn evidence and
+distinguish state comparisons from the remaining message-readability review.
+
+G7's `staff-loss-reacquisition` case records Keep → river → Keep with no edits
+between encounters. The final attack is declined to retain the Staff and avoid
+the assault. The existing breakpoint stops after the last bookkeeping pass.
+Reproduce just this case with `python3 keep_probe.py staff-loss-reacquisition`;
+see [charm/quest research](quest-state-research.md) for captures and limits.
+
+## G8 simultaneous-death comparisons
+
+[Combat ordering research](combat-order-research.md) records four controlled setups, raw captures, and reproduction commands. The retained checkers now cover 13 shared-combat, 43 hut, and 47 castle scenarios. These checkers compare gameplay state and outcome text without requiring exact RNG equality. Hut and castle named probes regenerate their new fixtures; the shared fixture is extracted from its raw configuration/checkpoint records, as with the earlier shared cases.

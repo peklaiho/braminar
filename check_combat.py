@@ -51,12 +51,13 @@ def run_check(executable, config):
             process.kill()
             process.wait()
         os.close(master)
-    return [json.loads(match) for match in re.findall(rb'CHECK (\{[^\r\n]*\})', output)]
+    return ([json.loads(match) for match in re.findall(rb'CHECK (\{[^\r\n]*\})', output)],
+            output.decode(errors='replace'))
 
 
 def matches(actual, expected):
     return all(abs(actual[key] - value) < 0.005 if key == 'hp'
-               else actual[key] == value for key, value in expected.items())
+               else actual[key] == value for key, value in expected.items() if key != 'seed')
 
 
 def main():
@@ -84,7 +85,12 @@ def main():
             name = case['name']
             expected = case['checkpoints']
             died = case['died']
-            actual = run_check(executable, case['config'])
+            actual, text = run_check(executable, case['config'])
+            narrative = ' '.join(text.split())
+            for message in case.get('outcome', []):
+                assert message in narrative, (name, message, text)
+            for message in case.get('absent', []):
+                assert message not in narrative, (name, message, text)
             if died:
                 # DOS has regained DS at exit, so there is no original exit-state dump.
                 if actual[-1]['hp'] > 0:

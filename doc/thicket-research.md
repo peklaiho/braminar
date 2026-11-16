@@ -8,7 +8,7 @@ The old ordinary laboratory victory remains in [session 04](session-04.md#anthra
 
 ## Controlled captures and reproduction
 
-The 61 retained named cases in [checkpoints](thicket-checkpoints.json) combine these captures:
+The initial 61 named cases in [checkpoints](thicket-checkpoints.json) combine these captures; G6 adds two illness-state chains and G7 adds repeated dragon meetings, bringing the current total to 64:
 
 - [Primary probes](captures/2026-11-15-thicket-probes.txt): 60 cases covering exploration, potion effects, pentacle outcomes, Anthrax, and death.
 - [Fresh good-looks probes](captures/2026-11-15-thicket-ugly-probes.txt): repeat `wizard-ugly-saved` and `wizard-ugly-failed` with good looks initially true, superseding their primary fixtures so both preservation and loss can be observed directly. The initial primary runs are retained in the raw transcript.
@@ -16,7 +16,7 @@ The 61 retained named cases in [checkpoints](thicket-checkpoints.json) combine t
 
 All these are explicitly labelled controlled experiments. `thicket_probe.py` resets temporary player memory, servant prices 8/13, and RNG before each independent case. Original DOS files remain untouched. The baseline is level 8, 50 HP, Black hair, bad looks, five servants of each sex, 20 gold, 100 food, three medicine, two swords, three bows, four arrows, one dagger, horse/cart, and plague 10. Ring, Staff, Talisman, charm, experience, poison, and illness protection are zero. Configurations record the exceptions, including fresh looks, higher HP/level, preexisting charm, held quest items, and zero male or total servants.
 
-Every input boundary and waiting/combat screen is captured. The initial displayed status precedes memory changes; `STATE initial` records the actual probe state. All selected encounters are thickets or their nested fights, except the explicitly recorded hut in the chained case; no unrelated encounters are skipped. Current `./thicket_probe.py` reproduces all 61 cases in one run; named arguments rerun subsets, and `--output PATH` selects a separate checkpoint file.
+Every input boundary and waiting/combat screen is captured. The initial displayed status precedes memory changes; `STATE initial` records the actual probe state. The initial encounters are thickets or their nested fights, plus the explicitly recorded hut in the charm chain. G6 additionally records forest and band follow-ups; G7 records two consecutive huts starting with retained charm. No unrelated encounters are skipped. Current `./thicket_probe.py` reproduces all 64 cases in one run; named arguments rerun subsets, and `--output PATH` selects a separate checkpoint file.
 
 ## Compared behavior
 
@@ -33,7 +33,7 @@ Every input boundary and waiting/combat screen is captured. The initial displaye
 | Normal wizard rounds | A complete fight and the same fight with poison offered and declined compare player/wizard HP text, extra damage draws, state-changing spells, RNG, and pauses. |
 | Death | A killing player attack followed by fatal lightning makes both participants dead. The original still awards wizard experience before the parent skips loot and reaches the outer pause. Wind death retains loot acquired before the pentacle. |
 
-`./check_thicket.py --sanitize` compares player state and RNG at every encounter input, quest items/charm, normalized text and prompt order, exact input counts, and requested delays. Text comparison removes whitespace to accommodate DOS 80-column wrapping inside words and normalizes slave terminology to servants. Delay expectations count the entry's half second, each accepted potion's one second, spell-specific waits, and the creature's half second. These are requested delays, not measurements of emulated elapsed time.
+`./check_thicket.py --sanitize` compares player state at every encounter input, quest items/charm, normalized text and prompt order, exact input counts, and requested delays. Since G6, RNG remains recorded metadata and exact equality is not asserted. Text comparison removes whitespace to accommodate DOS 80-column wrapping inside words, normalizes slave terminology to servants, and accepts the approved band typo corrections. Delay expectations count the entry's half second, each accepted potion's one second, spell-specific waits, the creature's half second, and G6's band-payment delay. These are requested delays, not measurements of emulated elapsed time.
 
 Fatal cases compare the final event state at the outer pause, before turn bookkeeping, because DOS reclaims DS on exit. The remake checker suppresses bookkeeping for those cases; it does not claim a post-death memory comparison. Normal cases include bookkeeping, promotions, ring/plague progression, healing, and food use.
 
@@ -42,6 +42,14 @@ Fatal cases compare the final event state at the outer pause, before turn bookke
 Seed 1178019 produces a five-pound roast, no wizard, one charm potion, and no pentacle. After the laboratory, the next event is the noisy hut with the hermit and dragon. The player accepts the challenge; the dragon submits and the hermit doubles possessions.
 
 Only the initial case setup edits memory/RNG. A retained `turn` checkpoint records the first event's state after normal bookkeeping. From there the script advances through normal choices, and the C comparison runs the same second dispatch with the existing player and RNG state. The counter stays at one, poison is unused, and no dragon combat rounds occur. Final state includes 50.20 HP, 36 male/48 female servants, 510 gold, 216 food, two experience, and charm one. This establishes the potion-to-dragon interaction under controlled initial conditions, not an unmodified ordinary acquisition run.
+
+G7 reuses that acquisition evidence and adds `charm-two-dragons`, seed 10217: start with charm one and plague zero, enter two consecutive noisy huts, and accept both hermit challenges. Both dragons submit and charm stays one through both turns. Final state includes 50.20 HP, twenty servants of each sex, eighty gold, 360 food, twelve medicine, and three experience. [Raw capture](captures/2026-11-16-repeat-dragon.txt) retains all inputs and states without inter-event edits; [G7 notes](quest-state-research.md) record scope and results. No gameplay correction was needed.
+
+## Illness-state integration (G6)
+
+Two [G6 chains](illness-state-research.md), captured on 2026-11-16, use the same runner and two-turn C harness without editing state or RNG between encounters. `plague-to-faerie` starts plague at zero: Anthrax's killing-blow retaliation infects the player, plague grows from five to ten at turn end, then the next forest's faerie cures it. `protection-to-band` acquires protection from a single potion, then the next slot-9 dispatch becomes a band encounter. Paying through normal choices preserves protection and leaves medicine untouched.
+
+The [raw transcript](captures/2026-11-16-illness-chains.txt) retains every screen, input, and state across these four encounters; the two compact cases are in the existing fixture file. Both use the established baseline with plague zero, rather than the earlier baseline's ten. These are controlled experiments, not ordinary play. No gameplay correction was needed. Reproduce just these cases with `python3 thicket_probe.py plague-to-faerie protection-to-band`; G6's 63 then-retained comparisons passed `python3 check_thicket.py --sanitize`.
 
 ## Ordinary discovery pass
 
@@ -59,6 +67,6 @@ Party, gold, medicine, and equipment remain unchanged. The pass stops at the nex
 
 ## Verification and remaining limits
 
-All 61 retained thicket cases pass with address and undefined-behavior sanitizers. `make`, Python syntax, and whitespace checks pass. Existing combat, tree, storm/illness, Pan, City/Village, mountain, Gypsy, and hut sanitizer suites also pass. The existing unused-final-battle-stub warning remains.
+All 64 current thicket cases pass with address and undefined-behavior sanitizers, including G6 illness-state chains and G7 repeated dragons. G7 also reran all 23 Keep cases, including Pan-to-Keep and Staff recovery. `make`, Python syntax, and whitespace checks pass. Other suites were not rerun for G7 because game code and the reused C harnesses did not change; earlier sessions' verification remains historical evidence.
 
 Binary evidence establishes the full attack tables, precise saving thresholds, and unconditional post-fight experience award. Captures do not exhaust every player attack/damage value, exact equality at every spell-save boundary, every multi-potion ordering, illness-protection/plague combinations, or extreme integer overflow. The unreachable six hair-table entries are recorded as data, not selectable outcomes. Fractional arithmetic follows the documented double-precision policy. The prime command and final assault remain separate work; receiving the Staff/level twenty here does not implement those deferred branches.

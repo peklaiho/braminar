@@ -21,6 +21,10 @@ Capture every encountered event, including encounters outside the current resear
 
 Additional targeted research: [City and Village](town-research.md), [Pan](pan-research.md), and [storms and servant illness](storm-illness-research.md), with controlled comparisons and explicit blank-input behavior differences.
 
+## Startup and turn effects
+
+[G4 evidence](startup-turn-research.md) consolidates existing ordinary startup observations and controlled healing, promotion, food, ring, plague, and death comparisons. Two new controlled cases use an ineligible Keep solely to reach bookkeeping: with zero food and two males/no females, starvation announces a loss and leaves one male; with one male/no females, no loss or starvation announcement occurs. Both cases finish at 50.10 HP, zero food, and no assault flag. [Raw captures](captures/2026-11-16-turn-starvation.txt) retain every Keep rejection, pause, input, and state; compact cases are in [Keep fixtures](keep-checkpoints.json). These experiments edit temporary player state/RNG and stop before any final-assault code; they are not ordinary play. No arithmetic correction was needed. Promotion/starvation message readability is recorded for G9.
+
 ## City and Village
 
 City and Village now have shared service implementations and complete location wrappers. [Forty controlled comparisons](town-research.md) establish the implemented scope; [mechanics](mechanics.md#city-and-village) records binary-verified rules. Historical observations and provisional string findings below are retained as the discovery record.
@@ -60,6 +64,8 @@ Additional string findings:
 
 Subsequent binary inspection places the extra marketplace after the City store, then the inn, cleric, and muggers. The Village instead checks for a pickpocket before shared services; it has none of those City-only extras. Muggers require no servants; the cleric can remove the ring before their protection check. [Recovered flow](mechanics.md#entry-and-location-differences).
 
+Two [G3 controlled City visits](town-research.md#g3-city-interactions) now compare those interactions directly. Shared servant/store purchases followed by bargain-market food and poison leave 31 gold and, after consumption for twelve servants plus the player, 114 food. In a separate visit with no servants, the cleric takes all fifty gold and removes the ring before muggers steal zero gold and eighteen food; the final two food are unchanged by bookkeeping. Both visits match the remake without gameplay changes. These are temporary-memory/RNG experiments, not ordinary play; [raw captures](captures/2026-11-16-city-interactions.txt) retain all encounters, declined services, inputs, and states, with compact records in [town fixtures](town-checkpoints.json).
+
 Session 03 entered a city and declined market, tavern, store, and inn in that order. It returned directly to status with only normal healing and food use. No extra marketplace, cleric, or mugger scene appeared on this visit; their triggers have since been recovered in the [town rules](mechanics.md#city-and-village).
 
 ## Combat
@@ -76,6 +82,8 @@ Separate combat text exists for ordinary monsters, Anthrax the wizard, a dragon,
 Session 01 observed Goblins demanding 7 males, 9 females, and 7 gold. Choosing `R` produced `You got away!` with no servant loss. The [band and shared combat rules](mechanics.md#band-encounters) are now recovered and implemented: template selection, all three payment demands, horse/cart losses, escape conditions, equipment destruction, poison, attack and damage tables, pauses, experience, ring awards, and loot. The servant-loss branch requires a horse, no cart, and more than two servants, and reduces each sex's count to at most one.
 
 The ordinary combat research run fought Demons, used all twelve arrows, continued unarmed, and died at -1.73 HP with the enemy at 31.37 HP. Separately labelled controlled probes verify victories, death, payment, fleeing, ring effects, and equipment behavior against the remake. The shared routine is called by bands and the river champion; the dragon and gate-creature routines are now implemented and compared as part of [grass-hut research](hut-research.md). Anthrax combat is now implemented and compared in [thicket research](thicket-research.md); Mad King combat is now independently recovered and compared in [castle research](castle-research.md).
+
+G8 controlled probes now capture simultaneous deaths in shared Goblin, dragon, Cerberus, and Mad King combat. Each reports player death independently of the opponent's death/disappearance, grants no survivor rewards, and reaches Game Over after the result/caller pause. The dragon's hermit also skips doubling/betrayal. No gameplay correction was needed. [Setups, raw captures, and limits](combat-order-research.md). Anthrax's already captured experience award on mutual death remains a separate rule.
 
 ## Dark Castle of the Mad King
 
@@ -95,7 +103,11 @@ The galley offers random crystal-ball hints, a possible Talisman, zero to 199 fo
 
 Additional strings describe elves curing ugliness, a faerie curing plague or restoring all hit points, and a nymph luring the player into being lost in La La Land.
 
-The forest's flow and arithmetic have now been [recovered from the binary](mechanics.md#enchanted-forest) and implemented. Session 01 observed a female nymph, successful resistance, and elves' food gift: with nine servants, food went from 90 to 95 after the ten-unit gift and five-unit turn consumption. Other forest branches are verified from code but still await live captures. The faerie cures plague or restores HP; she does not do both on the same visit.
+The forest's flow and arithmetic have been [recovered from the binary](mechanics.md#enchanted-forest) and implemented. Session 01 observed a female nymph, successful resistance, and elves' food gift: with nine servants, food went from 90 to 95 after the ten-unit gift and five-unit turn consumption.
+
+[G5 controlled chains](ring-research.md) now compare ring persistence across event boundaries: a poisoned Rust Golem victory awards a ring, then the next forest excludes elves and leaves bad looks unchanged; accepting the guru's removal instead lets the next forest give eleven food and restore looks. Ring power goes zero → five at acquisition → ten after that turn → fifteen after the excluded forest; removal goes twenty → zero and stays zero. All four encounters and inputs are retained in [raw captures](captures/2026-11-16-ring-chains.txt) and [fixtures](ring-checkpoints.json). Only initial temporary state/RNG is edited per chain; these are not ordinary-play observations. Both match the remake without gameplay corrections.
+
+The [G1 follow-up](forest-research.md) separately captures six controlled outcomes: decline, ring exclusion, elves restoring looks followed by faerie plague cure, faerie healing, faerie at full health, and fatal lure by a male nymph. All match the existing remake. The faerie cures plague or restores HP; she does not do both on the same visit. With ten servants, the elves add eleven food before five-unit turn consumption. A ring prevents both that gift and appearance restoration. Fatal lure skips elves/faerie, pauses, then prints `Game Over.`. Declining goes directly to the next status without an exit pause. These experiments edit temporary player state and RNG; they are distinct from ordinary play. The [raw transcript](captures/2026-11-16-forest-probes.txt) and [fixtures](forest-checkpoints.json) retain every encountered forest and input.
 
 ## Evil Overlord's Keep
 
@@ -104,6 +116,8 @@ The forest's flow and arithmetic have now been [recovered from the binary](mecha
 The Keep asks whether to use the Staff, then reads a case-sensitive command of at most five characters. A wrong command removes the Staff; a match sets the assault flag. Every completed path pauses before normal bookkeeping, and death during that bookkeeping prevents the handoff. The implemented branch calls `start_final_battle()` to print its deferred-battle message and exit; the assault itself remains unimplemented. [Research and controlled captures](keep-research.md) cover gates, command boundaries, bookkeeping, and Pan-to-Keep persistence. Session 03's ordinary level-nine rejection remains separate evidence. See [mechanics](mechanics.md#overlords-keep-prerequisite) for exact rules.
 
 ## Flowing river
+
+The [G7 Staff-recovery sequence](quest-state-research.md) captures a level-twenty player losing the Staff to a wrong Keep command, recovering it from the next river, and receiving the attack offer at the next Keep. The final offer is declined; Staff and stored command `PRIOR` remain, HP is 50.30 and food eighty-five after three turns, and the assault flag stays false. [Raw capture](captures/2026-11-16-staff-recovery.txt) and [Keep fixtures](keep-checkpoints.json) retain all three encounters and inputs. Only initial temporary state/RNG is edited; this is controlled evidence, not ordinary play, and no final-assault code executes.
 
 - Gaze into the river
   - Chance for combat
@@ -130,7 +144,11 @@ The remake implements the occupied gnome branch and intentionally fixes its miss
 
 The ordinary combat research playthrough observed two more gnome visits: announced food/healing of five/one and three/two respectively. Both visits again showed healing applied but no food gift in the classic. See the [combat ledger](combat-research.md) for before/after stats.
 
+The [G2 follow-up](gnome-research.md) separately captures three controlled occupied-home visits at level eight: 50 HP heals to 54 (54.10 after bookkeeping), 79 heals past the cap to 83, and 80 receives no ointment and stays 80. Every visit announces six food without adding it in the original, leaving 95 food after consumption. The remake's intentional gift addition instead leaves 101; all other captured state, event text, and pauses match. These experiments edit temporary player state and RNG and do not add ordinary-play observations. [Raw captures](captures/2026-11-16-gnome-probes.txt) and [fixtures](gnome-checkpoints.json) retain every encounter and input.
+
 ## Grass hut
+
+The [G7 repeated-dragon comparison](quest-state-research.md) captures two consecutive hermit challenges starting with charm one. Both dragons submit, charm remains one throughout, and both hermits double possessions. Final state is 50.20 HP, twenty servants of each sex, eighty gold, 360 food, twelve medicine, and three experience. The earlier potion-acquisition chain is reused. [Raw capture](captures/2026-11-16-repeat-dragon.txt) and [thicket fixtures](thicket-checkpoints.json) retain both huts, all inputs, and intermediate/final states without inter-event edits. This is controlled evidence and matches the remake without gameplay corrections.
 
 The hut is now implemented, including all occupied/quiet outcomes and the separate dragon and gate-creature fights. [Research notes](hut-research.md) distinguish binary rules, controlled comparisons, and remaining validation limits.
 
@@ -157,6 +175,8 @@ Binary inspection places the guru in main-loop slot 8 only when the ring byte is
 - Any uncured servants die
 
 Session 03 observed 9 males and 1 female with Old-Timer's disease. Treating 2 males and 1 female consumed three medicine, removed seven males, and left all females alive. Independent sick-count rolls, disease selection, medicine allocation, losses, and an excessive-treatment bug are now [recovered from the binary](mechanics.md#servant-illness). Treatment is now implemented, including medicine priority, uncured losses, the original excessive-cure behavior, and input handling. Controlled checks cover these branches, zero/one-sex parties, and protection substitution; see the [storm/illness ledger](storm-illness-research.md). The disease label alone does not infect the player with plague.
+
+Two [G6 controlled chains](illness-state-research.md) now cover state carried between encounters. Anthrax infects a previously unplagued player, bookkeeping grows plague from five to ten, and the next forest's faerie cures it without full healing. In the other chain, one laboratory potion grants servant-illness protection; the next slot-9 event substitutes a band, with no disease/treatment prompts. Paying the band's seven males, ten females, and five gold leaves forty males/twenty-three females, eighty-one gold, forty-eight food, three medicine, and protection intact. All four encounters, inputs, and states are retained in [raw captures](captures/2026-11-16-illness-chains.txt) and [thicket fixtures](thicket-checkpoints.json). These experiments edit temporary memory/RNG only before each chain and match the remake without gameplay corrections.
 
 ## Statue of Pan
 

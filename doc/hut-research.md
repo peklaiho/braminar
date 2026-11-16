@@ -38,3 +38,7 @@ Fatal fixtures retain final event state before bookkeeping, using the last outer
 The 41 hut comparisons pass with address and undefined-behavior sanitizers. `make` and the existing combat, tree, storm/illness, Pan, City/Village, mountain, and Gypsy sanitizer suites pass. Python syntax and whitespace checks pass. The existing unused-final-battle-stub compiler warning remains.
 
 Binary evidence establishes the full damage tables and ranges; the retained fights do not exhaust every attack/counterattack combination, poison-save equality boundary for every creature, simultaneous deaths, or extreme integer overflow. Fractional combat constants follow the documented double-precision policy. Charm is tested through controlled state, not through ordinary acquisition. Other callers were not validated in this session; the pentacle caller is now implemented and compared in [thicket research](thicket-research.md). This session contains targeted controlled reconstruction, with no new ordinary-play pass.
+
+## G8 death-ordering follow-up
+
+The [G8 comparisons](combat-order-research.md) close this ledger's earlier simultaneous-death validation gap. Both participants die, independent outcome messages print, and survivor rewards are withheld; no gameplay correction was needed. All 43 hut scenarios pass with sanitizers. Exact RNG equality is no longer asserted by this checker; seeds remain for controlled selection. Earlier session counts and limits above describe their original scope. Final comparisons stop at the event pause before death bookkeeping.

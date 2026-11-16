@@ -27,3 +27,7 @@ All 46 cases pass `./check_castle.py --sanitize`, which compares state, RNG, tex
 The DOS castle's fear local at `[BP-5]` is assigned only when minstrels appear, then read even when none appeared. The remake enters the menu when there are no ghosts instead of reading an uninitialized local. This deterministic choice is recorded in [CHANGES.md](../CHANGES.md). It does not add a new roll.
 
 Binary evidence establishes all damage-table entries, six shouts, and precise thresholds. The captures sample combat and do not independently exercise every attack/counter pairing, the sixth shout (five were observed), simultaneous deaths, or extreme signed-integer overflow. Delays are requested durations recovered from the binary; debugger pauses prevent measurements of original wall-clock timing. Speaker sounds are outside the remake's existing terminal interface; their waits remain represented. The final battle remains deferred.
+
+## G8 death-ordering follow-up
+
+The [G8 comparisons](combat-order-research.md) close this ledger's earlier simultaneous-death validation gap. Both participants die, independent outcome messages print, and survivor rewards are withheld; no gameplay correction was needed. All 47 castle scenarios pass with sanitizers. Exact RNG equality is no longer asserted by this checker; seeds remain for controlled selection. Earlier session counts and limits above describe their original scope. Final comparisons stop at the event pause before death bookkeeping.

@@ -93,6 +93,8 @@ def cases():
     add('creature-fight', gate_fight, hp=100)
     saved = seed((100, 9, 100, 5, 5, 100), lambda r: r[0] <= 50 and r[1] == 8 and r[2] <= 12 and r[3:5] == [1, 1] and r[5] <= 16)
     add('creature-saves-poison', saved, hp=100, poison=1, use_poison=True)
+    add('dragon-simultaneous-death', full_dragon, duel=True, hp=28.95)
+    add('creature-simultaneous-death', gate_fight, hp=16.95)
     add('dragon-death', full_dragon, duel=True, hp=0.05)
     add('creature-death', gate_fight, hp=0.5)
     return result

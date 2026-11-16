@@ -44,6 +44,7 @@ def cases():
     add('king-bow', quiet, room='t', theft='x'*16, hp=200, swords=0, daggers=0)
     add('king-unarmed', quiet, room='t', theft='x'*16, hp=200, swords=0, daggers=0, bows=0)
     add('king-decline-poison', quiet, room='t', theft='x'*16, hp=200, poison=1)
+    add('king-simultaneous-death', quiet, room='t', theft='x'*16, hp=79.65, ring=1, plague=0)
     add('king-death', quiet, room='t', theft='x'*16, hp=0.5)
     add('throne-space-at-16', quiet, room='t', theft='x'*15+' ', poison=1, use_poison=True)
     add('throne-safe-15', quiet, room='t', theft='x'*14+' ')

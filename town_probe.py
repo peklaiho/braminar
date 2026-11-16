@@ -100,6 +100,15 @@ def cases():
         add('darts-' + name, seed, tavern=True, darts=True, gold=5)
         if name == 'loss':
             add('darts-ring', seed, tavern=True, darts=True, ring=61, gold=5)
+    shopping = find_seed((16, 100, 100, 100, 20, 100, 100, 100),
+                         lambda r: r[0] == 2 and r[1] <= 50 and r[5] < 18 and r[6] <= 88)
+    add('city-services-then-marketplace', shopping, gold=200, horse=True, cart=True,
+        market=True, buy=True, store=True, sword=True, marketplace=True,
+        quantities=['1', '1', '10', '2', '2', '1'])
+    cleric_muggers = find_seed((16, 100, 100, 100, 100),
+                              lambda r: r[0] == 2 and r[2] >= 18 and r[3] > 88 and r[4] < 11)
+    add('city-cleric-then-muggers', cleric_muggers, male=0, female=0, gold=50,
+        food=20, ring=40, plague=10, looks=False, cleric=True)
     return [c for c in result if c['name'] not in ('drink-fatal', 'pickpocket-empty')] + [c for c in result if c['name'] in ('drink-fatal', 'pickpocket-empty')]
 
 
@@ -222,6 +231,8 @@ def main():
                     continue
                 kind, answer, prompt = reply
                 checkpoint = dict(kind=kind, answer=answer, prompt=prompt, state=player_state(game))
+                if case['name'] in ('city-services-then-marketplace', 'city-cleric-then-muggers'):
+                    checkpoint['screen'] = screen
                 case['steps'].append(checkpoint)
                 print('STATE checkpoint ' + json.dumps(checkpoint, sort_keys=True), flush=True)
                 if kind == 'line':
