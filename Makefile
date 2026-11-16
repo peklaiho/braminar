@@ -2,12 +2,12 @@ CXX = gcc
 CXXFLAGS = -O2 -Wall -Wextra -Wpedantic -std=c99
 LDFLAGS = -O2 -Wall -Wextra -Wpedantic -std=c99
 
-braminar: braminar.o
-	$(CXX) $(LDFLAGS) braminar.o -o braminar
+braminar: braminar.o combat.o events.o town.o
+	$(CXX) $(LDFLAGS) $^ -o $@
 
-braminar.o: braminar.c
-	$(CXX) $(CXXFLAGS) -c braminar.c -o braminar.o
+%.o: %.c braminar.h
+	$(CXX) $(CXXFLAGS) -c $< -o $@
 
 .PHONY: clean
 clean:
-	rm -f braminar braminar.o
+	rm -f braminar *.o

@@ -1,5 +1,4 @@
 braminar
-braminar.o
-extract_data
+*.o
 doc/captures/
 __pycache__/
