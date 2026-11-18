@@ -75,6 +75,6 @@ Validation does not establish full-run RNG parity, DOS startup seeding, fraction
 
 1. Completed in the [army follow-up](army-research.md): casualty order, all event effects, negative counts and zero-army behavior, with state/RNG retained between rounds.
 2. Recover and compare the Overlord duel, starting with the Talisman shortcut and fatal outcomes.
-3. Recover reward/ending priority, ring corruption, looks, status certificate and printer behavior. Keep terminal/platform presentation decisions explicit.
+3. Recover reward/ending priority, ring corruption, looks, status certificate and printer behavior. The remake will write the same certificate message and final player stats to stdout instead of using a printer, without a printer-connection prompt. This is the agreed output policy; exact certificate content still needs reconstruction.
 
 `final.c` now runs the verified army battle after conversion and exits on capture or at the remaining duel placeholder after victory.

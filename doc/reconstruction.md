@@ -105,6 +105,6 @@ Raw captures live in the ignored `doc/captures/` directory. Keep compact control
 - [x] Recover and implement asset conversion, army generation, opening text and delays in `final.c`; retain original checkpoints and sanitizer comparisons. [Scope and evidence](final-assault-research.md).
 - [x] Recover and compare automatic army combat, all ten special events under both labels, casualty boundaries and zero-army behavior. Twenty-five event and six battle cases pass with sanitizers; large signed-16-bit overflow remains unresolved. [Evidence and limits](army-research.md).
 - [ ] Recover and compare the Overlord duel, including Talisman, death and attack order.
-- [ ] Recover and compare victory rewards, corruption/looks endings, certificate and printer flow.
+- [ ] Recover and compare victory rewards, corruption/looks endings and certificate content. Write the original printer message and final stats to stdout, without a printer-connection prompt; see [output policy](../CHANGES.md#final-assault-presentation).
 
 All assault runs so far are controlled research. Ordinary main-game integration remains G9 and is not completed by these forced-entry experiments. The remake now runs the army battle and exits on capture or at the explicit duel placeholder after victory.

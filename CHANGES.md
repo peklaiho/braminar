@@ -57,6 +57,7 @@ This document records intentional differences between the classic DOS game and t
 
 - Render the original army percentage-bar glyphs with UTF-8 instead of DOS CP437 bytes, using ANSI cursor movement for the counts and transient messages. Retain the original text, positions, refresh order, and delays within the documented comparison scope.
 - Omit DOS speaker tones during army events and victory/defeat notification, preserving their 100 ms timing intervals.
+- When the ending is implemented, write the original printer certificate's final message and player stats to standard output instead of using a printer. Do not ask the player to connect a printer.
 
 ## Temporary debugging
 
