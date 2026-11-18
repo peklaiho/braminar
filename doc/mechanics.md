@@ -701,6 +701,41 @@ Let `R(n)` be `Random(n) + 1` for positive `n`; the assault helper at `0x0085` r
 
 Food, HP, experience, hair, gender, looks, Staff, Talisman, ring, plague, illness protection and dragon charm contribute nothing to this calculation. None of the player's assets or flags is consumed or cleared. The four category draws happen even for an otherwise empty inventory.
 
-Player soldiers are `Round(net_worth / 7)`, using the Pascal runtime's nearest-integer conversion (positive halves upward). The rounding call at module `0x2BB1` resolves to original runtime file `0x19F6`, not the truncation entry at `0x19FA`. The enemy army is `R(player_soldiers) + player_soldiers div 2`. For a positive army this is the fifth RNG draw. At zero soldiers the helper adds zero and consumes no fifth draw. Army counts are signed 16-bit values in the original; extreme overflow and subsequent zero-army combat remain unresolved.
+Player soldiers are `Round(net_worth / 7)`, using the Pascal runtime's nearest-integer conversion (positive halves upward). The rounding call at module `0x2BB1` resolves to original runtime file `0x19F6`, not the truncation entry at `0x19FA`. The enemy army is `R(player_soldiers) + player_soldiers div 2`. For a positive army this is the fifth RNG draw. At zero soldiers the helper adds zero and consumes no fifth draw. Army counts are signed 16-bit values in the original; extreme overflow remains unresolved; zero-army termination is established in the army section below.
 
-The opening prints `Now converting assets into an army.`, waits one second, computes and prints `Your net worth is ` with width seven and zero decimals, ` gold pieces.`, then `You have N soldiers.` and `The Overlord has N soldiers.`, then waits two seconds. It has no keypress pause before army combat. The remake implements this report and exits at an explicit placeholder for the remaining battle.
+The opening prints `Now converting assets into an army.`, waits one second, computes and prints `Your net worth is ` with width seven and zero decimals, ` gold pieces.`, then `You have N soldiers.` and `The Overlord has N soldiers.`, then waits two seconds. It has no keypress pause before army combat. The remake implements this report and proceeds into the automatic army battle below; the duel remains an explicit placeholder.
+
+## Final assault army battle
+
+Recovered from `FINASSLT.CHN` file `0x025F`–`0x09DA` and caller `0x2C55` onward. [Research and controlled captures](army-research.md) cover all ten events for both sides, complete army fights and zero-denominator aborts. `R(n)` is the assault's inclusive random helper: positive limits consume a draw and return 1–n; nonpositive limits return zero without a draw.
+
+### Casualties, display and termination
+
+Save initial player/enemy counts `P0`, `E0`. Each batch prints current counts `P`, `E`, then runs exactly five trials. For each, draw `R(P + E)` using updated counts; if the result is strictly less than `P`, decrement `E`, otherwise decrement `P`. Equality costs a player soldier. Do not stop these trials at zero and do not clamp yet.
+
+Draw 75-cell bars using `Round(75 * P / P0)` and `Round(75 * E / E0)` filled cells, with the remainder light cells. A negative fill draws no filled cells. Initial denominators remain fixed. Zero denominators abort at this point: 0/0 starts produce player -5 without RNG draws before the first bar fails; 5/0 fails on the enemy bar. The remake preserves unsuccessful termination with the shared POSIX diagnostic, not a fallback bar.
+
+After the bars, draw `R(100)`; results 1–4 invoke a special event even if the batch eliminated an army. Then, if `P0 < 10000`, wait `100 - (P0 div 100)` milliseconds; otherwise skip this delay. Test termination only now: continue batches while both counts exceed zero. Clamp negatives to zero at termination, refresh both counts/bars, wait 100 ms plus three seconds, clear screen, and return. There is no keypress pause. The caller enters the duel when player survivors are positive; otherwise it prints `Your army perished.  You are captured by the Overlord.` and exits. The remake retains a duel placeholder after victory.
+
+Counts are printed before casualties, bars after casualties, and both precede the event. Thus displayed counts can lag bars and event effects. This order, fixed bar denominators, and delayed negative clamping are preserved. Player inventory and HP are unchanged by army combat.
+
+### Special events
+
+Wait 100 ms, then draw the side `R(2)` (one prints `Player`, two `Overlord`), followed by event `R(10)`. Compute the signed change in the table using the current player/enemy counts, regardless of the selected side. Integer division truncates toward zero; a nonpositive magnitude limit consumes no random draw.
+
+| Roll | Original text | Signed change |
+| --- | --- | --- |
+| 1 | `Your soldiers are low on moral.` | `-R(10)` |
+| 2 | `Your soldiers are high on moral!` | `R(10)` |
+| 3 | `You capture an emeny magic user!` | `R(E div 4)` |
+| 4 | `One of your Magic users is Captured.` | `-R(P div 4)` |
+| 5 | `One of your assassins was successful!` | `R(E div 2)` |
+| 6 | `One of your captains was assassinated.` | `-R(P div 2)` |
+| 7 | `A surprize attack executes successfully!` | `R(P)` |
+| 8 | `The enemy surprised your troops.` | `-R(E)` |
+| 9 | `Your army utilized a magical weapon!` | `R(P)` |
+| 10 | `The enemy uses a magical weapon against you.` | `-R(E)` |
+
+A positive change subtracts that many soldiers from the side opposing the label. A negative (or zero) change is added to the labelled side's count. Do not swap `P` and `E` in the table for `Overlord`, rewrite its “your” text, recruit soldiers for positive morale, or clamp an overkill immediately. The event remains visible for three seconds, then both message rows are blanked over 54 columns. Army counts and bars are not refreshed inside the event.
+
+Exact RNG order per normal batch is five casualty-helper calls, one event check, then optional side, event, amount. Calls with nonpositive limits consume no draw. Large signed-16-bit overflow remains outside the verified scope; normal casualty/overkill negatives and zero limits are recovered and compared.

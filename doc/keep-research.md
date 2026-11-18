@@ -51,3 +51,8 @@ The final assault remains deferred by explicit scope; the exit stub replaces the
 ## Final-assault opening follow-up (2026-11-18)
 
 The user has now opened `FINASSLT.CHN` for reconstruction. The earlier exit stub is replaced by verified asset conversion and army generation in `final.c`, then an explicit army-combat/duel placeholder exit. [Assault research](final-assault-research.md) documents the real chain loader and repeatable entry with requested state restored after Keep bookkeeping. The historical Keep probes above still stop before the chain; their fixtures remain valid for the pre-handoff state. The Keep comparison harness now includes the split game sources and expects the new opening's three seconds of delays on surviving successful handoffs. Fatal plague and EOF still suppress entry.
+
+
+## Automatic army battle follow-up (2026-11-18)
+
+[Army combat](army-research.md) now follows conversion. The Keep checker continues through the actual army battle, accepting the original capture message on defeat or the explicit duel placeholder on victory. Its pre-handoff player fixtures, EOF checks and fatal-plague gate are unchanged. Handoffs must request the conversion and battle delays; exact army-state/RNG/frame/delay comparisons are in the dedicated army checker. All twenty-three Keep cases and six distinct EOF prompts still pass with sanitizers.

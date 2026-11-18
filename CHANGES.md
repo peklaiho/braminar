@@ -50,3 +50,10 @@ This document records intentional differences between the classic DOS game and t
 ## Runtime diagnostics
 
 - An undetected Village pickpocket with zero gold still terminates the game, as the original does when it calls `Random(0)`. The remake prints `Division by zero.` to standard error and exits unsuccessfully instead of showing the Pascal runtime error number and code address.
+
+- An initial zero army in the final assault still terminates unsuccessfully when the original percentage-bar division would fail. Print `Division by zero.` instead of Pascal `Run-time error 02` and its code address. The first five casualty trials still run before this diagnostic.
+
+## Final-assault presentation
+
+- Render the original army percentage-bar glyphs with UTF-8 instead of DOS CP437 bytes, using ANSI cursor movement for the counts and transient messages. Retain the original text, positions, refresh order, and delays within the documented comparison scope.
+- Omit DOS speaker tones during army events and victory/defeat notification, preserving their 100 ms timing intervals.

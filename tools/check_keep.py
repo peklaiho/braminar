@@ -77,15 +77,17 @@ def main():
                     narrative = re.sub(r'CHECK \{[^\r\n]*\}', '', text[:matches[i].start()])
                     assert normalize(reference['screen']) in normalize(narrative), (case['name'], i, reference['screen'], narrative)
             assert actual[-1]['keys'] == sum(step['kind'] != 'turn' for step in case['steps']), case['name']
-            delay = 3 if case['final']['ready'] and case['final']['hp'] > 0 else 0
-            assert actual[-1]['delay'] == delay, (case['name'], actual[-1], delay)
+            handoff = case['final']['ready'] and case['final']['hp'] > 0
+            delay = actual[-1]['delay']
+            assert (delay > 6 if handoff else delay == 0), (case['name'], actual[-1])
             narrative = re.sub(r'CHECK \{[^\r\n]*\}', '', text)
             assert normalize(case['final_screen']) in normalize(narrative), (case['name'], text)
             handoff = case['final']['ready'] and case['final']['hp'] > 0
-            stub = 'Army combat and the final duel are not implemented yet.'
-            assert (stub in text) == bool(handoff), (case['name'], text)
+            endings = ('The final duel is not implemented yet.',
+                       'Your army perished.  You are captured by the Overlord.')
+            assert any(ending in text for ending in endings) == bool(handoff), (case['name'], text)
             if handoff:
-                assert text.index(stub) < matches[-1].start(), (case['name'], text)
+                assert text.index('Now converting assets into an army.') < matches[-1].start(), (case['name'], text)
             if case['final']['hp'] <= 0:
                 assert 'Game Over.' in text, (case['name'], text)
             print(case['name'] + ': state, prompt order, input counts and requested delays match')

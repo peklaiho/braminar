@@ -51,7 +51,8 @@ int main(int argc, char** argv)
     female_servant_price = atoi(argv[15]);
     if (atoi(argv[16])) {
         atexit(final_checkpoint);
-        start_final_battle(&player);
+        prepare_final_army(&player);
+        return 0;
     }
     Player before;
     memcpy(&before, &player, sizeof(player));

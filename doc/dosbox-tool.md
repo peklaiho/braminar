@@ -344,8 +344,8 @@ The Pan-to-Keep case retains state/RNG between its two normally chosen encounter
 
 `./tools/check_keep.py --sanitize` compares per-input and final state, command, assault
 flag, normalized text/prompt order, logical key/line counts, requested delays,
-and EOF handling. It invokes the actual `run_turn()` and final-battle exit stub,
-including checking that fatal plague suppresses the stub. See
+and EOF handling. It invokes the actual `run_turn()` and final-assault entry,
+including checking that fatal plague suppresses the assault. See
 [research notes](keep-research.md) for breakpoint details, captures, and limits.
 Exact RNG equality is not checked. G4's two small-party starvation cases reuse
 this runner and harness; no assault is initiated. Reproduce just those with:
@@ -385,4 +385,15 @@ python3 tools/final_probe.py baseline -c 'wait 8' -c 'wait 8' --output /tmp/fina
 
 For custom experiments, import `start_final_assault(game, config)` from `final_probe` with a fresh `Game` and a modified named-case configuration. It returns the program code segment with the debugger paused at the initialized module entry, with requested state restored. Use `dump()` and `write_memory(..., paused=True)` there; do not nest debugger contexts. `resume(game)` resumes execution. The runner's conversion breakpoint is code segment:`59C5`; module file offsets map to runtime IP by adding `0x2D7C`. The [research ledger](final-assault-research.md) records byte checks, DS offsets, RNG restoration and validation limits.
 
-`python3 tools/check_final.py --sanitize` compares saved original conversion state, exact RNG progression, unchanged player inventory, normalized text and requested delays using the actual remake sources, without requiring DOSBox. `python3 tools/check_keep.py --sanitize` validates main-turn handoff ordering through the new opening and its remaining-combat exit placeholder.
+`python3 tools/check_final.py --sanitize` compares saved original conversion state, exact RNG progression, unchanged player inventory, normalized text and requested delays using the actual remake sources, without requiring DOSBox. `python3 tools/check_keep.py --sanitize` validates main-turn handoff ordering through the opening and army combat, ending on capture or at the duel placeholder.
+
+
+## Army battle and event probes
+
+Run `python3 tools/army_probe.py events > doc/captures/army-events.txt` for all ten events under both labels plus small limits and overkill. It saves `doc/army-events-checkpoints.json`. Cases reuse an initialized army frame, resetting only temporary army/RNG state at the event-check boundary; inter-case setup batches are captured too.
+
+Run `python3 tools/army_probe.py battles > doc/captures/army-battles.txt` for full retained battles and zero-denominator aborts. It saves `doc/army-battles-checkpoints.json`. Named cases select a subset, for example `python3 tools/army_probe.py battles equal-one small-win`. Both modes accept `--output PATH`. Full battle runs edit state only once after conversion, retain every casualty batch and applied/cleared event, and stop before the duel on victory. Losing battles capture the original caller's message and DOS exit.
+
+All breakpoint offsets passed to `stop_at()` are assault file offsets. Useful stops: `0x08C4` after five casualties/before bars, `0x08DD` before the event check, `0x06DA` after applying an event/before its three-second display delay, `0x08FD` after message clearing/before pacing and termination, and `0x09D4` after final refresh/clear and before returning to the caller. Use paused memory methods at these stops.
+
+`python3 tools/check_army.py --sanitize` compares all event/battle checkpoints without DOSBox, including exact RNG, casualty order, signed effects, original terminal frames, event clearing, delays, unchanged player state and zero-denominator termination. See [army research](army-research.md) for evidence, controlled reset boundaries and remaining numeric limits. The earlier conversion checker stays bounded to the conversion report; the Keep checker follows the actual army battle.

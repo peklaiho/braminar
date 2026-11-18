@@ -1,5 +1,7 @@
 # Final assault: first reconstruction session
 
+Follow-up: [automatic army combat](army-research.md) is now implemented and compared, including all ten special events and zero-army aborts. The sections below retain the initial opening session's evidence and scope; current outstanding work is the duel and endings.
+
 ## Scope and evidence
 
 2026-11-18: the user opened `FINASSLT.CHN` for reconstruction. The bounded implemented target is its opening asset conversion and army generation, reached through the real Keep handoff. Army combat, the Overlord duel, and endings remain explicit placeholders. Original files in `dos/` are unchanged.
@@ -48,7 +50,7 @@ The runtime call preceded by `MOV CX,10` near the weapon valuations is a stack-s
 
 The initial exploratory continuation showed an automatic army battle with two army counts and percentage bars. No battle choice was encountered. Its winning army display is observed; no claim about victory probability follows from it.
 
-Binary inspection identifies these next bounded areas; they are not yet fully reconstructed or implemented:
+At the end of the opening session, binary inspection identified these next bounded areas. The army follow-up linked above now completes the battle/event rows within its stated limits:
 
 | Assault file offset | Evidence / next work |
 | --- | --- |
@@ -71,8 +73,8 @@ Validation does not establish full-run RNG parity, DOS startup seeding, fraction
 
 ## Next targets
 
-1. Stop at army-round boundaries; capture casualty order, event effects, negative counts and zero-army behavior. Retain state and RNG between rounds.
+1. Completed in the [army follow-up](army-research.md): casualty order, all event effects, negative counts and zero-army behavior, with state/RNG retained between rounds.
 2. Recover and compare the Overlord duel, starting with the Talisman shortcut and fatal outcomes.
 3. Recover reward/ending priority, ring corruption, looks, status certificate and printer behavior. Keep terminal/platform presentation decisions explicit.
 
-`final.c` deliberately exits after the verified opening report with an implementation-status message until these targets are completed.
+`final.c` now runs the verified army battle after conversion and exits on capture or at the remaining duel placeholder after victory.
