@@ -703,7 +703,7 @@ Food, HP, experience, hair, gender, looks, Staff, Talisman, ring, plague, illnes
 
 Player soldiers are `Round(net_worth / 7)`, using the Pascal runtime's nearest-integer conversion (positive halves upward). The rounding call at module `0x2BB1` resolves to original runtime file `0x19F6`, not the truncation entry at `0x19FA`. The enemy army is `R(player_soldiers) + player_soldiers div 2`. For a positive army this is the fifth RNG draw. At zero soldiers the helper adds zero and consumes no fifth draw. Army counts are signed 16-bit values in the original; extreme overflow remains unresolved; zero-army termination is established in the army section below.
 
-The opening prints `Now converting assets into an army.`, waits one second, computes and prints `Your net worth is ` with width seven and zero decimals, ` gold pieces.`, then `You have N soldiers.` and `The Overlord has N soldiers.`, then waits two seconds. It has no keypress pause before army combat. The remake implements this report and proceeds into the automatic army battle below; the duel remains an explicit placeholder.
+The opening prints `Now converting assets into an army.`, waits one second, computes and prints `Your net worth is ` with width seven and zero decimals, ` gold pieces.`, then `You have N soldiers.` and `The Overlord has N soldiers.`, then waits two seconds. It has no keypress pause before army combat. The remake implements this report and proceeds into the automatic army battle below; the army battle, duel and victory endings follow.
 
 ## Final assault army battle
 
@@ -715,7 +715,7 @@ Save initial player/enemy counts `P0`, `E0`. Each batch prints current counts `P
 
 Draw 75-cell bars using `Round(75 * P / P0)` and `Round(75 * E / E0)` filled cells, with the remainder light cells. A negative fill draws no filled cells. Initial denominators remain fixed. Zero denominators abort at this point: 0/0 starts produce player -5 without RNG draws before the first bar fails; 5/0 fails on the enemy bar. The remake preserves unsuccessful termination with the shared POSIX diagnostic, not a fallback bar.
 
-After the bars, draw `R(100)`; results 1–4 invoke a special event even if the batch eliminated an army. Then, if `P0 < 10000`, wait `100 - (P0 div 100)` milliseconds; otherwise skip this delay. Test termination only now: continue batches while both counts exceed zero. Clamp negatives to zero at termination, refresh both counts/bars, wait 100 ms plus three seconds, clear screen, and return. There is no keypress pause. The caller enters the duel when player survivors are positive; otherwise it prints `Your army perished.  You are captured by the Overlord.` and exits. The remake retains a duel placeholder after victory.
+After the bars, draw `R(100)`; results 1–4 invoke a special event even if the batch eliminated an army. Then, if `P0 < 10000`, wait `100 - (P0 div 100)` milliseconds; otherwise skip this delay. Test termination only now: continue batches while both counts exceed zero. Clamp negatives to zero at termination, refresh both counts/bars, wait 100 ms plus three seconds, clear screen, and return. There is no keypress pause. The caller enters the duel when player survivors are positive; otherwise it prints `Your army perished.  You are captured by the Overlord.` and exits. The remake proceeds into the duel after victory.
 
 Counts are printed before casualties, bars after casualties, and both precede the event. Thus displayed counts can lag bars and event effects. This order, fixed bar denominators, and delayed negative clamping are preserved. Player inventory and HP are unchanged by army combat.
 
@@ -763,7 +763,7 @@ After opening animation, a held Talisman sets `E` to zero and prints `You use th
 
 Subtract damage from the appropriate local HP. Always retaliate after the player's attack, even if enemy HP is now zero or negative. After both attacks, display both local HP values without clamping, wait two seconds, clear both attack-message rows, then continue only while both HP values are positive.
 
-After combat or Talisman use, draw an enemy grave if `E <= 0`, otherwise a player grave, then wait one second. If `P <= 0`, print `The Overlord has slain you in hand - hand combat.` and return to the caller's game exit. If both died, this defeat still takes precedence, despite the enemy grave. If `P > 0`, call the ending routine. The remake currently reaches an explicit rewards/ending placeholder on that victory branch.
+After combat or Talisman use, draw an enemy grave if `E <= 0`, otherwise a player grave, then wait one second. If `P <= 0`, print `The Overlord has slain you in hand - hand combat.` and return to the caller's game exit. If both died, this defeat still takes precedence, despite the enemy grave. If `P > 0`, call the ending routine. The ending branches below follow that victory branch.
 
 ### Presentation and delays
 
@@ -774,3 +774,31 @@ Ordinary attack descriptions appear on rows 3/5, column 10. Rolls 1–2 have no 
 HP is printed on row 17 at columns 30/50 with minimum width five and two decimals. The fields are not cleared first: shortening `100.00` to `99.70` leaves a visible trailing zero, `99.700`. After the two-second hold, exactly fifty spaces clear each description row. Grave placement tests enemy HP first: enemy `⌂ r.i.p.` starts at column 41; player `r.i.p. ⌂` at column 32, both on row 14. Final death text starts at row 23, column 1. No keypress pause occurs anywhere in the duel.
 
 At ordinary positive levels, RNG order is one initial enemy-HP draw, then two draws per combat round; Talisman consumes only the initial draw. Damage constants and local HP use the existing C-double precision policy; exact Real48 rounding and large signed-16-bit level overflow are outside the retained scope.
+
+
+## Final assault victory endings
+
+Recovered from `FINASSLT.CHN` file `0x1D8C`–`0x2058`, certificate `0x135E`–`0x17CA`, and reward `0x0E19`–`0x135D`. [Controlled evidence and comparisons](ending-research.md) retain all reward rolls for both genders and the consequential ending branches.
+
+After a victorious duel, clear the screen and test `ring_power > 0`. If true, print the corruption paragraph: defeating the Overlord while carrying the Ring of Doom makes the player the new Overlord, followed by `Ha ha ha ha ha!!!!`. Return immediately to game exit. No appearance check, printer question, certificate, reward draw, final status or keypress occurs. This tests possession, not power 100; powers 1, 100 and 255 are compared. No saved player field changes.
+
+Without the ring, `good_looks == false` prints the unattractive new King's three-line message; good looks skips it. Both paths then reach the original printer question accepting Y/N case-insensitively. Original Y calls the certificate; N skips it. Both display final player status and wait for one key before returning to game exit. The remake unconditionally prints the certificate to stdout, omitting the printer question, then displays the shared final status and waits for a key (or exits on EOF). See [intentional presentation changes](../CHANGES.md#final-assault-presentation).
+
+The certificate names the player, announces defeat of the Overlord's forces and the Overlord himself, and calls the winner the new King of Braminar for both genders. Its fields, in order, are level and saved HP; good looks and Talisman; servant illness protection; dragon charm credits; male and female servants; gold and food; medicine and poison; swords and daggers; bows and arrows; horse and cart. HP uses width 18, scientific notation and ten decimals; gold/food use width seven, no decimals. It reads saved HP at `DS:0279`, not the duel's local HP. Assets, flags, level and HP are not consumed, replaced or healed. A final random reward line follows the stats, then `Congratulations!!!`.
+
+The reward at `0x0E19` draws `R(10)` once. Original gender word `DS:0260` zero means male, one female. It only prints; it neither grants inventory nor changes any saved player field.
+
+| Roll | Male text | Female text |
+| --- | --- | --- |
+| 1 | `You are wed to the fair princess Vanna White` | `You are wed to the valiant prince Tom Cruise` |
+| 2 | `You are wed to the fair princess Heather Locklear` | `You are wed to the valiant prince Robert Redford` |
+| 3 | `You are given a werewolf-killing sword` | Same |
+| 4 | `You are given a shield of invincibility` | Same |
+| 5 | `You are given a talisman of charming` | Same |
+| 6 | `You are given a magic flying carpet` | Same |
+| 7 | `You are given the Ring of Power` | Same |
+| 8 | `You are given the Wand of Wonder` | Same |
+| 9 | `You are given a flying vacuum cleaner` | Same |
+| 10 | `You are given a Castle & and army` | Same |
+
+There are no new delays or sound intervals in these ending routines. Original printer-only page controls are replaced by ordinary stdout line breaks; the original final status screen clear is omitted to retain visible certificate output. At normal values, RNG order for the complete assault is conversion, army draws, duel initialization/attacks, then exactly one reward draw for a noncorrupted winner. Defeat and corruption consume no reward draw.

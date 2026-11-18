@@ -49,6 +49,10 @@ static void final_checkpoint(void)
 
 static int keep_getchar(void)
 {
+    /* The ending's status pause is compared separately from Keep input. */
+    if (observed->final_assault_ready && delay_seconds > 0) {
+        return EOF;
+    }
     if (!discarding_line) {
         checkpoint("key");
         ++key_count;

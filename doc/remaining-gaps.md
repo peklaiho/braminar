@@ -8,7 +8,7 @@ Scope: remaining work concerns mechanics and text a player encounters in normal 
 
 All sixteen `BRAMINAR.COM` event slots have implementations, including state-dependent band substitutions, both independent tree routines, nested encounters, and the separate shared-monster, Anthrax, dragon, gate-creature, and Mad King fights. No known reachable main-game event body is still a placeholder. Implementation coverage is substantially ahead of live comparison coverage in a few older branches.
 
-The Keep's gates, command handling, Staff loss, and successful transition after bookkeeping are implemented and compared. `start_final_battle()` prints the deferred-battle message and exits. Reconstructing or implementing `FINASSLT.CHN` is excluded from this backlog.
+The Keep's gates, command handling, Staff loss, and successful transition after bookkeeping are implemented and compared. Final assault was excluded from this main-game backlog when reviewed. Follow-up on 2026-11-18: the user opened `FINASSLT.CHN`; conversion, army combat, duel, victory endings and the stdout certificate are now implemented and compared. See the [current assault checklist](reconstruction.md#final-assault-targets-opened-2026-11-18) and [ending evidence](ending-research.md).
 
 Verification at the initial overview:
 

@@ -407,3 +407,16 @@ All breakpoint offsets passed to `stop_at()` are assault file offsets. Useful st
 The original frame's local HP is at `SS:EBP-E` (player) and `SS:EBP-8` (Overlord). The runner reads it using `MEMDUMPBIN SS:EBP-10 10` and edits locals with verified debugger `SM` commands. Useful assault-file breakpoints: `0x221F` before Talisman check, `0x2299` before an attack round, `0x27F0` after HP display/before the two-second hold, `0x2882` after message clearing, `0x291F` after the grave delay, `0x2975` before victory ending and `0x297E` after death text/before return. Add the established `0x2D7C` overlay base for runtime IP.
 
 `python3 tools/check_duel.py --sanitize` compares the saved fixtures using actual remake sources without DOSBox. It checks local HP, RNG, all attack messages, frame refresh/clearing, animation timing, Talisman, grave/death routing, complete fights and unchanged saved player state. See [duel research](duel-research.md) for evidence and numeric limits.
+
+
+## Final victory endings and rewards
+
+Run controlled probes and compare retained evidence from the project root:
+
+```sh
+python3 tools/ending_probe.py endings > doc/captures/ending-run.txt
+python3 tools/ending_probe.py rewards > doc/captures/reward-run.txt
+python3 tools/check_ending.py --sanitize
+```
+
+These use the real loader, small army victory and Talisman duel, then restore controlled saved state at the ending boundary. The probe reuses allocated ending/reward frames with `SR EIP`, captures all ten rewards for each gender, and temporarily routes the Pascal printer descriptor to the console to observe the original formatting without a printer. The six ending cases include ring precedence, appearance, both original printer answers and a zero-saved-HP/empty-inventory certificate. [Research notes](ending-research.md) document the exact controls and breakpoints. The checker follows the agreed remake policy: always print the noncorrupted winner's certificate to stdout and omit the printer question, then retain final status and its key/EOF exit.

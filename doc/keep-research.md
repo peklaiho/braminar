@@ -61,3 +61,6 @@ The user has now opened `FINASSLT.CHN` for reconstruction. The earlier exit stub
 ## Overlord duel follow-up
 
 The Keep checker now continues through the [implemented duel](duel-research.md) after army victory. It accepts army capture, the original duel death message, or the victory-reward/ending placeholder, retaining the same post-bookkeeping player checkpoints, fatal-plague gate and EOF checks. Exact duel HP/RNG/frame/delay comparisons are handled by the dedicated duel suite.
+
+
+Follow-up: [victory endings and the stdout certificate](ending-research.md) are now implemented and compared. Final-assault victory no longer reaches a placeholder.

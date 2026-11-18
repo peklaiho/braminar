@@ -271,7 +271,7 @@ static bool create_player(Player* player)
     return wait_for_key();
 }
 
-static bool display_stats(const Player* player)
+bool display_stats(const Player* player)
 {
     printf("*** %s ***\n\n", player->name);
     printf("     %-27s%s\n", "Gender:", player->gender == 'M' ? "Male" : "Female");

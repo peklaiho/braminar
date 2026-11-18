@@ -47,6 +47,7 @@ typedef struct {
 } FinalArmy;
 
 FinalArmy convert_final_assets(const Player* player);
+bool display_stats(const Player* player);
 void start_final_battle(const Player* player);
 
 #endif

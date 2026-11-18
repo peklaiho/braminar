@@ -56,3 +56,6 @@ The twelve isolated rounds establish all eight damage values per side. A 20-HP p
 The earlier thirteen conversion, twenty-five army-event, six army-battle and twenty-three Keep scenarios remain separate regression suites. Keep handoff checks now follow the real duel after army victory and accept capture, duel death, or the victory-ending placeholder. No extra input pauses were added.
 
 This is not an ordinary full adventure playthrough. Large signed-16-bit level multiplication/HP-roll overflow and exhaustive floating-point boundary parity remain unresolved. Endings and rewards are intentionally not invoked by these probes; their priority and effects remain the next bounded target. The agreed certificate destination is stdout, without a printer-connection prompt.
+
+
+Follow-up: [victory endings and the stdout certificate](ending-research.md) are now implemented and compared. Final-assault victory no longer reaches a placeholder.

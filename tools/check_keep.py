@@ -83,7 +83,7 @@ def main():
             narrative = re.sub(r'CHECK \{[^\r\n]*\}', '', text)
             assert normalize(case['final_screen']) in normalize(narrative), (case['name'], text)
             handoff = case['final']['ready'] and case['final']['hp'] > 0
-            endings = ('Victory rewards and endings are not implemented yet.',
+            endings = ('Congratulations!!!', 'You are now the new Overlord!!',
                        'The Overlord has slain you in hand - hand combat.',
                        'Your army perished.  You are captured by the Overlord.')
             assert any(ending in text for ending in endings) == bool(handoff), (case['name'], text)

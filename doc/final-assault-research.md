@@ -1,6 +1,6 @@
 # Final assault: first reconstruction session
 
-Follow-up: [automatic army combat](army-research.md) is now implemented and compared, including all ten special events and zero-army aborts. The sections below retain the initial opening session's evidence and scope; the [Overlord duel](duel-research.md) is also implemented and compared. Current outstanding work is victory rewards and endings.
+Follow-up: [automatic army combat](army-research.md) is now implemented and compared, including all ten special events and zero-army aborts. The sections below retain the initial opening session's evidence and scope; the [Overlord duel](duel-research.md) is also implemented and compared. The [victory endings and stdout certificate](ending-research.md) are now implemented and compared as well.
 
 ## Scope and evidence
 
@@ -75,6 +75,6 @@ Validation does not establish full-run RNG parity, DOS startup seeding, fraction
 
 1. Completed in the [army follow-up](army-research.md): casualty order, all event effects, negative counts and zero-army behavior, with state/RNG retained between rounds.
 2. Completed in [duel research](duel-research.md): HP generation, Talisman, all attacks, retaliation/death order, complete fights and saved-state preservation.
-3. Recover reward/ending priority, ring corruption, looks, status certificate and printer behavior. The remake will write the same certificate message and final player stats to stdout instead of using a printer, without a printer-connection prompt. This is the agreed output policy; exact certificate content still needs reconstruction.
+3. Completed in [ending research](ending-research.md): reward/ending priority, ring corruption, looks, certificate and final status. The remake writes the original certificate message, saved stats and reward to stdout without a printer question.
 
-`final.c` now runs the army battle and duel after conversion, then exits on defeat or at the remaining victory-reward/ending placeholder.
+`final.c` now runs conversion, army battle, duel and the appropriate ending through game exit. Ordinary full-adventure integration and the documented numeric boundaries remain open.

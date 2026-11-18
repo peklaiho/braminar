@@ -325,14 +325,82 @@ static bool fight_overlord(const Player* player)
     return true;
 }
 
+static void final_reward(const Player* player)
+{
+    static const char* rewards[] = {
+        "You are given a werewolf-killing sword",
+        "You are given a shield of invincibility",
+        "You are given a talisman of charming",
+        "You are given a magic flying carpet",
+        "You are given the Ring of Power",
+        "You are given the Wand of Wonder",
+        "You are given a flying vacuum cleaner",
+        "You are given a Castle & and army"
+    };
+    int reward = final_roll(10);
+    if (reward <= 2) {
+        const char* spouse;
+        if (player->gender == 'M') {
+            spouse = reward == 1 ? "fair princess Vanna White" : "fair princess Heather Locklear";
+        } else {
+            spouse = reward == 1 ? "valiant prince Tom Cruise" : "valiant prince Robert Redford";
+        }
+        printf("You are wed to the %s\n", spouse);
+    } else {
+        puts(rewards[reward - 3]);
+    }
+}
+
+static void print_final_certificate(const Player* player)
+{
+    /* Original printer output, FINASSLT.CHN 0x135E; stdout by design. */
+    printf("\n                            %s\n\n", player->name);
+    puts("   Has defeated the Overlord's forces, and beaten the Overlord");
+    printf("   himself in combat.  %s is now the new King of\n", player->name);
+    puts("   BRAMINAR!  The King finished with the following stats.\n");
+    printf("    Level: %d          Hit Points: %18.10E\n", player->level, player->hit_points);
+    printf("    Good Looks:%s          Talisman: %s\n",
+           player->good_looks ? "TRUE" : "FALSE", player->talisman_of_braminar ? "TRUE" : "FALSE");
+    printf("    Servant Ills gone: %s\n", player->illness_protection ? "TRUE" : "FALSE");
+    printf("    Dragon Charm credits: %d\n", player->dragon_charm);
+    printf("    Male Servants: %d      Female Servants: %d\n", player->male_servants, player->female_servants);
+    printf("    Gold: %7d       Food: %7d\n", player->gold, player->food);
+    printf("    Medicine: %d     Poison: %d\n", player->medicine, player->poison);
+    printf("    Swords: %d   Daggers: %d\n", player->swords, player->daggers);
+    printf("    Bows: %d    Arrows: %d\n", player->bows, player->arrows);
+    printf("    Horse: %s     Cart: %s\n", player->horse ? "TRUE" : "FALSE", player->cart ? "TRUE" : "FALSE");
+    final_reward(player);
+    puts("                    Congratulations!!!\n");
+}
+
+static void finish_final_victory(const Player* player)
+{
+    /* FINASSLT.CHN 0x1D8C; doc/ending-research.md. */
+    printf("\033[2J\033[H");
+    if (player->ring_power > 0) {
+        puts("You have defeated the Overlord, but somewhere through your");
+        puts("travels, you aquired the Ring of Doom.  Being the mightiest");
+        puts("being on Braminar, the Ring takes over your mind, and ");
+        puts("causes you to become cruel & unjust.  You are now the new Overlord!!");
+        puts("Ha ha ha ha ha!!!!");
+        return;
+    }
+    if (!player->good_looks) {
+        puts("You now become the new King of Braminar.  Unfortunately,");
+        puts("You were hit by an ugly stick at one time, and since");
+        puts("you are so ugly, your people tend to avoid you!");
+    }
+    print_final_certificate(player);
+    display_stats(player);
+}
+
 void start_final_battle(const Player* player)
 {
     FinalArmy army = prepare_final_army(player);
     if (!fight_final_armies(player, &army)) {
         puts("Your army perished.  You are captured by the Overlord.");
     } else if (fight_overlord(player)) {
-        /* Victory rewards and endings: doc/final-assault-research.md#next-targets. */
-        puts("Victory rewards and endings are not implemented yet.");
+        finish_final_victory(player);
     }
     exit(EXIT_SUCCESS);
 }
