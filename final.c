@@ -186,14 +186,153 @@ static bool fight_final_armies(const Player* player, FinalArmy* army)
     return army->soldiers > 0;
 }
 
+typedef struct {
+    double player_hp;
+    double overlord_hp;
+} FinalDuel;
+
+static FinalDuel prepare_final_duel(const Player* player)
+{
+    FinalDuel duel;
+    duel.player_hp = player->level * 10;
+    duel.overlord_hp = final_roll((int)duel.player_hp) + duel.player_hp / 3;
+    return duel;
+}
+
+static void final_duel_figure(int row, int col, const char* text)
+{
+    printf("\033[%d;%dH%s", row, col, text);
+}
+
+static void final_duel_animation(bool player, int kind)
+{
+    int home = player ? 39 : 41;
+    const char* figure = player ? "☺" : "☻";
+    if (kind == 1) {
+        for (int i = 0; i < 3; ++i) {
+            final_duel_figure(14, player ? 39 : 40, player ? " ☺" : "☻ ");
+            final_delay(100);
+            final_delay(100);
+            final_duel_figure(14, player ? 39 : 40, player ? "☺ " : " ☻");
+            final_delay(100);
+        }
+    } else if (kind == 2) {
+        final_duel_figure(14, home, " ");
+        for (int i = 0; i < 4; ++i) {
+            int target = player ? 41 : 39;
+            final_duel_figure(12, target, figure);
+            final_delay(100);
+            final_duel_figure(12, target, " ");
+            final_duel_figure(13, target, figure);
+            final_delay(100);
+            final_duel_figure(13, target, " ");
+            final_delay(100);
+        }
+        final_duel_figure(14, home, figure);
+    } else {
+        for (int i = 0; i < 5; ++i) {
+            final_duel_figure(14, 40, "-");
+            final_delay(100);
+            final_duel_figure(14, 40, player ? "/" : "\\");
+            final_delay(100);
+        }
+        final_duel_figure(14, 40, " ");
+    }
+}
+
+static void draw_final_duel(const Player* player)
+{
+    printf("\033[2J\033[H\033[15;15H--------------------------------------------------");
+    for (int col = 15; col <= 39; ++col) {
+        final_duel_figure(14, col, "☺");
+        final_delay(10);
+        final_duel_figure(14, col, " ");
+    }
+    final_duel_figure(14, 39, "☺");
+    final_duel_figure(16, 30, player->name);
+    for (int col = 65; col >= 41; --col) {
+        final_duel_figure(14, col, "☻");
+        final_delay(10);
+        final_duel_figure(14, col, " ");
+    }
+    final_duel_figure(14, 41, "☻");
+    final_duel_figure(16, 50, "Overlord");
+    final_delay(1000);
+}
+
+static void final_duel_attack(FinalDuel* duel, bool player)
+{
+    static const char* player_messages[] = {
+        "You miss him.", "You slightly nicked him.", "You smack him in the face.",
+        "You slug him in the gut.", "You beat him with a tree branch.", "You stomp on him.",
+        "You slice into him with a dagger.", "Your sword cuts deep into the Overlord."
+    };
+    static const char* overlord_messages[] = {
+        "He misses you", "He slightly nicks you.", "He hits you in the face.",
+        "He kicks you in the shins.", "He tackles you.", "He stomps on you.",
+        "He cuts your skin with a knife.", "He chops you up some."
+    };
+    static const double player_damage[] = {0, 0.3, 1.2, 2.4, 4.8, 7.5, 9.6, 12.7};
+    static const double overlord_damage[] = {0, 0.3, 1.2, 2.2, 4.6, 6.8, 9.4, 11.2};
+    int attack = final_roll(8) - 1;
+    final_duel_figure(player ? 3 : 5, 10,
+                      player ? player_messages[attack] : overlord_messages[attack]);
+    if (player) {
+        duel->overlord_hp -= player_damage[attack];
+    } else {
+        duel->player_hp -= overlord_damage[attack];
+    }
+    if (attack >= 2) {
+        final_duel_animation(player, attack / 2);
+    }
+}
+
+static void final_duel_round(FinalDuel* duel)
+{
+    final_duel_attack(duel, true);
+    /* Retaliation still occurs after a killing blow; inventory is not consulted. */
+    final_duel_attack(duel, false);
+    printf("\033[17;30H%5.2f\033[17;50H%5.2f\033[20;1H", duel->player_hp, duel->overlord_hp);
+    final_delay(2000);
+    printf("\033[3;10H%50s\033[5;10H%50s", "", "");
+}
+
+static bool fight_overlord(const Player* player)
+{
+    /* FINASSLT.CHN 0x2059-0x2984; doc/duel-research.md. */
+    FinalDuel duel = prepare_final_duel(player);
+    draw_final_duel(player);
+    if (player->talisman_of_braminar) {
+        final_duel_figure(13, 40, "Φ");
+        duel.overlord_hp = 0;
+        final_duel_figure(3, 10, "You use the Talisman to defeat the Overlord!\n");
+    } else {
+        do {
+            final_duel_round(&duel);
+        } while (duel.player_hp > 0 && duel.overlord_hp > 0);
+    }
+    if (duel.overlord_hp <= 0) {
+        final_duel_figure(14, 41, "⌂ r.i.p.");
+    } else {
+        final_duel_figure(14, 32, "r.i.p. ⌂");
+    }
+    printf("\033[23;1H");
+    final_delay(1000);
+    if (duel.player_hp <= 0) {
+        puts("The Overlord has slain you in hand - hand combat.");
+        return false;
+    }
+    return true;
+}
+
 void start_final_battle(const Player* player)
 {
     FinalArmy army = prepare_final_army(player);
     if (!fight_final_armies(player, &army)) {
         puts("Your army perished.  You are captured by the Overlord.");
-    } else {
-        /* Overlord duel and endings: doc/final-assault-research.md#next-targets. */
-        puts("The final duel is not implemented yet.");
+    } else if (fight_overlord(player)) {
+        /* Victory rewards and endings: doc/final-assault-research.md#next-targets. */
+        puts("Victory rewards and endings are not implemented yet.");
     }
     exit(EXIT_SUCCESS);
 }

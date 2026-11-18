@@ -1,0 +1,1503 @@
+[
+  {
+    "name": "talisman",
+    "config": {
+      "seed": 1,
+      "hp": 0.1,
+      "gold": 20,
+      "food": 100,
+      "male": 5,
+      "female": 5,
+      "medicine": 3,
+      "poison": 0,
+      "ring": 0,
+      "plague": 0,
+      "looks": false,
+      "horse": true,
+      "cart": true,
+      "staff": true,
+      "talisman": true,
+      "charm": 0,
+      "protection": false,
+      "level": 20,
+      "swords": 2,
+      "bows": 3,
+      "arrows": 4,
+      "daggers": 1,
+      "command": "PRIOR",
+      "experience": 0
+    },
+    "initial": {
+      "state": {
+        "player_hp": 200.0,
+        "overlord_hp": 191.66666666651145,
+        "seed": 907633514
+      },
+      "screen": "                                      \u0001 \u0002\n              --------------------------------------------------\n                             AssaultProbe        Overlord"
+    },
+    "before": {
+      "seed": 907633514,
+      "level": 20,
+      "charm": 0,
+      "male": 5,
+      "female": 5,
+      "medicine": 3,
+      "poison": 0,
+      "swords": 2,
+      "bows": 3,
+      "arrows": 4,
+      "daggers": 1,
+      "hp": 0.1,
+      "gold": 20.0,
+      "food": 100.0,
+      "experience": 0.0,
+      "staff": 1,
+      "talisman": 1,
+      "looks": 0,
+      "ring": 0,
+      "plague": 0,
+      "protection": 0,
+      "horse": 1,
+      "cart": 1,
+      "hair": "Black",
+      "ready": 1,
+      "command": "PRIOR"
+    },
+    "rounds": [],
+    "talisman": {
+      "state": {
+        "player_hp": 200.0,
+        "overlord_hp": 0.0,
+        "seed": 907633514
+      },
+      "screen": "         You use the Talisman to defeat the Overlord!\n\n\n\n\n\n\n\n\n\n                                       \u03a6\n                                      \u0001 \u0002\n              --------------------------------------------------\n                             AssaultProbe        Overlord"
+    },
+    "grave": {
+      "state": {
+        "player_hp": 200.0,
+        "overlord_hp": 0.0,
+        "seed": 907633514
+      },
+      "screen": "         You use the Talisman to defeat the Overlord!\n\n\n\n\n\n\n\n\n\n                                       \u03a6\n                                      \u0001 \u007f r.i.p.\n              --------------------------------------------------\n                             AssaultProbe        Overlord"
+    },
+    "finished": {
+      "state": {
+        "player_hp": 200.0,
+        "overlord_hp": 0.0,
+        "seed": 907633514
+      },
+      "screen": "         You use the Talisman to defeat the Overlord!\n\n\n\n\n\n\n\n\n\n                                       \u03a6\n                                      \u0001 \u007f r.i.p.\n              --------------------------------------------------\n                             AssaultProbe        Overlord"
+    },
+    "after": {
+      "seed": 907633514,
+      "level": 20,
+      "charm": 0,
+      "male": 5,
+      "female": 5,
+      "medicine": 3,
+      "poison": 0,
+      "swords": 2,
+      "bows": 3,
+      "arrows": 4,
+      "daggers": 1,
+      "hp": 0.1,
+      "gold": 20.0,
+      "food": 100.0,
+      "experience": 0.0,
+      "staff": 1,
+      "talisman": 1,
+      "looks": 0,
+      "ring": 0,
+      "plague": 0,
+      "protection": 0,
+      "horse": 1,
+      "cart": 1,
+      "hair": "Black",
+      "ready": 1,
+      "command": "PRIOR"
+    }
+  },
+  {
+    "name": "normal-victory",
+    "config": {
+      "seed": 0,
+      "hp": 1,
+      "gold": 20,
+      "food": 100,
+      "male": 5,
+      "female": 5,
+      "medicine": 3,
+      "poison": 0,
+      "ring": 0,
+      "plague": 0,
+      "looks": false,
+      "horse": true,
+      "cart": true,
+      "staff": true,
+      "talisman": false,
+      "charm": 0,
+      "protection": false,
+      "level": 1,
+      "swords": 2,
+      "bows": 3,
+      "arrows": 4,
+      "daggers": 1,
+      "command": "PRIOR",
+      "experience": 0
+    },
+    "initial": {
+      "state": {
+        "player_hp": 10.0,
+        "overlord_hp": 8.333333333328483,
+        "seed": 907633385
+      },
+      "screen": "                                      \u0001 \u0002\n              --------------------------------------------------\n                             AssaultProbe        Overlord"
+    },
+    "before": {
+      "seed": 907633385,
+      "level": 1,
+      "charm": 0,
+      "male": 5,
+      "female": 5,
+      "medicine": 3,
+      "poison": 0,
+      "swords": 2,
+      "bows": 3,
+      "arrows": 4,
+      "daggers": 1,
+      "hp": 1.0,
+      "gold": 20.0,
+      "food": 100.0,
+      "experience": 0.0,
+      "staff": 1,
+      "talisman": 0,
+      "looks": 0,
+      "ring": 0,
+      "plague": 0,
+      "protection": 0,
+      "horse": 1,
+      "cart": 1,
+      "hair": "Black",
+      "ready": 1,
+      "command": "PRIOR"
+    },
+    "rounds": [
+      {
+        "applied": {
+          "state": {
+            "player_hp": 3.2000000000116415,
+            "overlord_hp": 7.133333333331393,
+            "seed": 555402811
+          },
+          "screen": "         You smack him in the face.\n\n         He stomps on you.\n\n\n\n\n\n\n\n\n                                      \u0001 \u0002\n              --------------------------------------------------\n                             AssaultProbe        Overlord\n                              3.20                7.13"
+        },
+        "cleared": {
+          "state": {
+            "player_hp": 3.2000000000116415,
+            "overlord_hp": 7.133333333331393,
+            "seed": 555402811
+          },
+          "screen": "                                      \u0001 \u0002\n              --------------------------------------------------\n                             AssaultProbe        Overlord\n                              3.20                7.13"
+        }
+      },
+      {
+        "applied": {
+          "state": {
+            "player_hp": 2.900000000012369,
+            "overlord_hp": 4.733333333337214,
+            "seed": 1716779917
+          },
+          "screen": "         You slug him in the gut.\n\n         He slightly nicks you.\n\n\n\n\n\n\n\n\n                                      \u0001 \u0002\n              --------------------------------------------------\n                             AssaultProbe        Overlord\n                              2.90                4.73"
+        },
+        "cleared": {
+          "state": {
+            "player_hp": 2.900000000012369,
+            "overlord_hp": 4.733333333337214,
+            "seed": 1716779917
+          },
+          "screen": "                                      \u0001 \u0002\n              --------------------------------------------------\n                             AssaultProbe        Overlord\n                              2.90                4.73"
+        }
+      },
+      {
+        "applied": {
+          "state": {
+            "player_hp": 0.7000000000152795,
+            "overlord_hp": -2.766666666662786,
+            "seed": 840368863
+          },
+          "screen": "         You stomp on him.\n\n         He kicks you in the shins.\n\n\n\n\n\n\n\n\n                                      \u0001 \u0002\n              --------------------------------------------------\n                             AssaultProbe        Overlord\n                              0.70               -2.77"
+        },
+        "cleared": {
+          "state": {
+            "player_hp": 0.7000000000152795,
+            "overlord_hp": -2.766666666662786,
+            "seed": 840368863
+          },
+          "screen": "                                      \u0001 \u0002\n              --------------------------------------------------\n                             AssaultProbe        Overlord\n                              0.70               -2.77"
+        }
+      }
+    ],
+    "grave": {
+      "state": {
+        "player_hp": 0.7000000000152795,
+        "overlord_hp": -2.766666666662786,
+        "seed": 840368863
+      },
+      "screen": "                                      \u0001 \u007f r.i.p.\n              --------------------------------------------------\n                             AssaultProbe        Overlord\n                              0.70               -2.77"
+    },
+    "finished": {
+      "state": {
+        "player_hp": 0.7000000000152795,
+        "overlord_hp": -2.766666666662786,
+        "seed": 840368863
+      },
+      "screen": "                                      \u0001 \u007f r.i.p.\n              --------------------------------------------------\n                             AssaultProbe        Overlord\n                              0.70               -2.77"
+    },
+    "after": {
+      "seed": 840368863,
+      "level": 1,
+      "charm": 0,
+      "male": 5,
+      "female": 5,
+      "medicine": 3,
+      "poison": 0,
+      "swords": 2,
+      "bows": 3,
+      "arrows": 4,
+      "daggers": 1,
+      "hp": 1.0,
+      "gold": 20.0,
+      "food": 100.0,
+      "experience": 0.0,
+      "staff": 1,
+      "talisman": 0,
+      "looks": 0,
+      "ring": 0,
+      "plague": 0,
+      "protection": 0,
+      "horse": 1,
+      "cart": 1,
+      "hair": "Black",
+      "ready": 1,
+      "command": "PRIOR"
+    }
+  },
+  {
+    "name": "normal-defeat",
+    "config": {
+      "seed": 5,
+      "hp": 500,
+      "gold": 20,
+      "food": 100,
+      "male": 5,
+      "female": 5,
+      "medicine": 3,
+      "poison": 0,
+      "ring": 0,
+      "plague": 0,
+      "looks": false,
+      "horse": true,
+      "cart": true,
+      "staff": true,
+      "talisman": false,
+      "charm": 0,
+      "protection": false,
+      "level": 1,
+      "swords": 2,
+      "bows": 3,
+      "arrows": 4,
+      "daggers": 1,
+      "command": "PRIOR",
+      "experience": 0
+    },
+    "initial": {
+      "state": {
+        "player_hp": 10.0,
+        "overlord_hp": 8.333333333328483,
+        "seed": 907634030
+      },
+      "screen": "                                      \u0001 \u0002\n              --------------------------------------------------\n                             AssaultProbe        Overlord"
+    },
+    "before": {
+      "seed": 907634030,
+      "level": 1,
+      "charm": 0,
+      "male": 5,
+      "female": 5,
+      "medicine": 3,
+      "poison": 0,
+      "swords": 2,
+      "bows": 3,
+      "arrows": 4,
+      "daggers": 1,
+      "hp": 500.0,
+      "gold": 20.0,
+      "food": 100.0,
+      "experience": 0.0,
+      "staff": 1,
+      "talisman": 0,
+      "looks": 0,
+      "ring": 0,
+      "plague": 0,
+      "protection": 0,
+      "horse": 1,
+      "cart": 1,
+      "hair": "Black",
+      "ready": 1,
+      "command": "PRIOR"
+    },
+    "rounds": [
+      {
+        "applied": {
+          "state": {
+            "player_hp": -1.1999999999970896,
+            "overlord_hp": 7.133333333331393,
+            "seed": 566136256
+          },
+          "screen": "         You smack him in the face.\n\n         He chops you up some.\n\n\n\n\n\n\n\n\n                                      \u0001 \u0002\n              --------------------------------------------------\n                             AssaultProbe        Overlord\n                             -1.20                7.13"
+        },
+        "cleared": {
+          "state": {
+            "player_hp": -1.1999999999970896,
+            "overlord_hp": 7.133333333331393,
+            "seed": 566136256
+          },
+          "screen": "                                      \u0001 \u0002\n              --------------------------------------------------\n                             AssaultProbe        Overlord\n                             -1.20                7.13"
+        }
+      }
+    ],
+    "grave": {
+      "state": {
+        "player_hp": -1.1999999999970896,
+        "overlord_hp": 7.133333333331393,
+        "seed": 566136256
+      },
+      "screen": "                               r.i.p. \u007f \u0002\n              --------------------------------------------------\n                             AssaultProbe        Overlord\n                             -1.20                7.13"
+    },
+    "finished": {
+      "state": {
+        "player_hp": -1.1999999999970896,
+        "overlord_hp": 7.133333333331393,
+        "seed": 566136256
+      },
+      "screen": "                               r.i.p. \u007f \u0002\n              --------------------------------------------------\n                             AssaultProbe        Overlord\n                             -1.20                7.13\n\n\n\n\n\nThe Overlord has slain you in hand - hand combat."
+    },
+    "after": {
+      "seed": 566136256,
+      "level": 1,
+      "charm": 0,
+      "male": 5,
+      "female": 5,
+      "medicine": 3,
+      "poison": 0,
+      "swords": 2,
+      "bows": 3,
+      "arrows": 4,
+      "daggers": 1,
+      "hp": 500.0,
+      "gold": 20.0,
+      "food": 100.0,
+      "experience": 0.0,
+      "staff": 1,
+      "talisman": 0,
+      "looks": 0,
+      "ring": 0,
+      "plague": 0,
+      "protection": 0,
+      "horse": 1,
+      "cart": 1,
+      "hair": "Black",
+      "ready": 1,
+      "command": "PRIOR"
+    }
+  },
+  {
+    "name": "simultaneous-defeat",
+    "config": {
+      "seed": 1,
+      "hp": 500,
+      "gold": 20,
+      "food": 100,
+      "male": 5,
+      "female": 5,
+      "medicine": 3,
+      "poison": 0,
+      "ring": 0,
+      "plague": 0,
+      "looks": false,
+      "horse": true,
+      "cart": true,
+      "staff": true,
+      "talisman": false,
+      "charm": 0,
+      "protection": false,
+      "level": 1,
+      "swords": 2,
+      "bows": 3,
+      "arrows": 4,
+      "daggers": 1,
+      "command": "PRIOR",
+      "experience": 0
+    },
+    "initial": {
+      "state": {
+        "player_hp": 10.0,
+        "overlord_hp": 8.333333333328483,
+        "seed": 907633514
+      },
+      "screen": "                                      \u0001 \u0002\n              --------------------------------------------------\n                             AssaultProbe        Overlord"
+    },
+    "before": {
+      "seed": 907633514,
+      "level": 1,
+      "charm": 0,
+      "male": 5,
+      "female": 5,
+      "medicine": 3,
+      "poison": 0,
+      "swords": 2,
+      "bows": 3,
+      "arrows": 4,
+      "daggers": 1,
+      "hp": 500.0,
+      "gold": 20.0,
+      "food": 100.0,
+      "experience": 0.0,
+      "staff": 1,
+      "talisman": 0,
+      "looks": 0,
+      "ring": 0,
+      "plague": 0,
+      "protection": 0,
+      "horse": 1,
+      "cart": 1,
+      "hair": "Black",
+      "ready": 1,
+      "command": "PRIOR"
+    },
+    "rounds": [
+      {
+        "applied": {
+          "state": {
+            "player_hp": 3.2000000000116415,
+            "overlord_hp": 7.133333333331393,
+            "seed": 557549500
+          },
+          "screen": "         You smack him in the face.\n\n         He stomps on you.\n\n\n\n\n\n\n\n\n                                      \u0001 \u0002\n              --------------------------------------------------\n                             AssaultProbe        Overlord\n                              3.20                7.13"
+        },
+        "cleared": {
+          "state": {
+            "player_hp": 3.2000000000116415,
+            "overlord_hp": 7.133333333331393,
+            "seed": 557549500
+          },
+          "screen": "                                      \u0001 \u0002\n              --------------------------------------------------\n                             AssaultProbe        Overlord\n                              3.20                7.13"
+        }
+      },
+      {
+        "applied": {
+          "state": {
+            "player_hp": 1.000000000014552,
+            "overlord_hp": 2.3333333333357587,
+            "seed": 3080093198
+          },
+          "screen": "         You beat him with a tree branch.\n\n         He kicks you in the shins.\n\n\n\n\n\n\n\n\n                                      \u0001 \u0002\n              --------------------------------------------------\n                             AssaultProbe        Overlord\n                              1.00                2.33"
+        },
+        "cleared": {
+          "state": {
+            "player_hp": 1.000000000014552,
+            "overlord_hp": 2.3333333333357587,
+            "seed": 3080093198
+          },
+          "screen": "                                      \u0001 \u0002\n              --------------------------------------------------\n                             AssaultProbe        Overlord\n                              1.00                2.33"
+        }
+      },
+      {
+        "applied": {
+          "state": {
+            "player_hp": -8.399999999979627,
+            "overlord_hp": -10.366666666668607,
+            "seed": 1719420512
+          },
+          "screen": "         Your sword cuts deep into the Overlord.\n\n         He cuts your skin with a knife.\n\n\n\n\n\n\n\n\n                                      \u0001 \u0002\n              --------------------------------------------------\n                             AssaultProbe        Overlord\n                             -8.40               -10.37"
+        },
+        "cleared": {
+          "state": {
+            "player_hp": -8.399999999979627,
+            "overlord_hp": -10.366666666668607,
+            "seed": 1719420512
+          },
+          "screen": "                                      \u0001 \u0002\n              --------------------------------------------------\n                             AssaultProbe        Overlord\n                             -8.40               -10.37"
+        }
+      }
+    ],
+    "grave": {
+      "state": {
+        "player_hp": -8.399999999979627,
+        "overlord_hp": -10.366666666668607,
+        "seed": 1719420512
+      },
+      "screen": "                                      \u0001 \u007f r.i.p.\n              --------------------------------------------------\n                             AssaultProbe        Overlord\n                             -8.40               -10.37"
+    },
+    "finished": {
+      "state": {
+        "player_hp": -8.399999999979627,
+        "overlord_hp": -10.366666666668607,
+        "seed": 1719420512
+      },
+      "screen": "                                      \u0001 \u007f r.i.p.\n              --------------------------------------------------\n                             AssaultProbe        Overlord\n                             -8.40               -10.37\n\n\n\n\n\nThe Overlord has slain you in hand - hand combat."
+    },
+    "after": {
+      "seed": 1719420512,
+      "level": 1,
+      "charm": 0,
+      "male": 5,
+      "female": 5,
+      "medicine": 3,
+      "poison": 0,
+      "swords": 2,
+      "bows": 3,
+      "arrows": 4,
+      "daggers": 1,
+      "hp": 500.0,
+      "gold": 20.0,
+      "food": 100.0,
+      "experience": 0.0,
+      "staff": 1,
+      "talisman": 0,
+      "looks": 0,
+      "ring": 0,
+      "plague": 0,
+      "protection": 0,
+      "horse": 1,
+      "cart": 1,
+      "hair": "Black",
+      "ready": 1,
+      "command": "PRIOR"
+    }
+  },
+  {
+    "name": "ignored-inventory",
+    "config": {
+      "seed": 0,
+      "hp": 999,
+      "gold": 20,
+      "food": 100,
+      "male": 5,
+      "female": 5,
+      "medicine": 3,
+      "poison": 99,
+      "ring": 100,
+      "plague": 0,
+      "looks": false,
+      "horse": true,
+      "cart": true,
+      "staff": true,
+      "talisman": false,
+      "charm": 0,
+      "protection": false,
+      "level": 1,
+      "swords": 99,
+      "bows": 99,
+      "arrows": 99,
+      "daggers": 99,
+      "command": "PRIOR",
+      "experience": 0
+    },
+    "initial": {
+      "state": {
+        "player_hp": 10.0,
+        "overlord_hp": 8.333333333328483,
+        "seed": 907633385
+      },
+      "screen": "                                      \u0001 \u0002\n              --------------------------------------------------\n                             AssaultProbe        Overlord"
+    },
+    "before": {
+      "seed": 907633385,
+      "level": 1,
+      "charm": 0,
+      "male": 5,
+      "female": 5,
+      "medicine": 3,
+      "poison": 99,
+      "swords": 99,
+      "bows": 99,
+      "arrows": 99,
+      "daggers": 99,
+      "hp": 999.0,
+      "gold": 20.0,
+      "food": 100.0,
+      "experience": 0.0,
+      "staff": 1,
+      "talisman": 0,
+      "looks": 0,
+      "ring": 100,
+      "plague": 0,
+      "protection": 0,
+      "horse": 1,
+      "cart": 1,
+      "hair": "Black",
+      "ready": 1,
+      "command": "PRIOR"
+    },
+    "rounds": [
+      {
+        "applied": {
+          "state": {
+            "player_hp": 3.2000000000116415,
+            "overlord_hp": 7.133333333331393,
+            "seed": 555402811
+          },
+          "screen": "         You smack him in the face.\n\n         He stomps on you.\n\n\n\n\n\n\n\n\n                                      \u0001 \u0002\n              --------------------------------------------------\n                             AssaultProbe        Overlord\n                              3.20                7.13"
+        },
+        "cleared": {
+          "state": {
+            "player_hp": 3.2000000000116415,
+            "overlord_hp": 7.133333333331393,
+            "seed": 555402811
+          },
+          "screen": "                                      \u0001 \u0002\n              --------------------------------------------------\n                             AssaultProbe        Overlord\n                              3.20                7.13"
+        }
+      },
+      {
+        "applied": {
+          "state": {
+            "player_hp": 2.900000000012369,
+            "overlord_hp": 4.733333333337214,
+            "seed": 1716779917
+          },
+          "screen": "         You slug him in the gut.\n\n         He slightly nicks you.\n\n\n\n\n\n\n\n\n                                      \u0001 \u0002\n              --------------------------------------------------\n                             AssaultProbe        Overlord\n                              2.90                4.73"
+        },
+        "cleared": {
+          "state": {
+            "player_hp": 2.900000000012369,
+            "overlord_hp": 4.733333333337214,
+            "seed": 1716779917
+          },
+          "screen": "                                      \u0001 \u0002\n              --------------------------------------------------\n                             AssaultProbe        Overlord\n                              2.90                4.73"
+        }
+      },
+      {
+        "applied": {
+          "state": {
+            "player_hp": 0.7000000000152795,
+            "overlord_hp": -2.766666666662786,
+            "seed": 840368863
+          },
+          "screen": "         You stomp on him.\n\n         He kicks you in the shins.\n\n\n\n\n\n\n\n\n                                      \u0001 \u0002\n              --------------------------------------------------\n                             AssaultProbe        Overlord\n                              0.70               -2.77"
+        },
+        "cleared": {
+          "state": {
+            "player_hp": 0.7000000000152795,
+            "overlord_hp": -2.766666666662786,
+            "seed": 840368863
+          },
+          "screen": "                                      \u0001 \u0002\n              --------------------------------------------------\n                             AssaultProbe        Overlord\n                              0.70               -2.77"
+        }
+      }
+    ],
+    "grave": {
+      "state": {
+        "player_hp": 0.7000000000152795,
+        "overlord_hp": -2.766666666662786,
+        "seed": 840368863
+      },
+      "screen": "                                      \u0001 \u007f r.i.p.\n              --------------------------------------------------\n                             AssaultProbe        Overlord\n                              0.70               -2.77"
+    },
+    "finished": {
+      "state": {
+        "player_hp": 0.7000000000152795,
+        "overlord_hp": -2.766666666662786,
+        "seed": 840368863
+      },
+      "screen": "                                      \u0001 \u007f r.i.p.\n              --------------------------------------------------\n                             AssaultProbe        Overlord\n                              0.70               -2.77"
+    },
+    "after": {
+      "seed": 840368863,
+      "level": 1,
+      "charm": 0,
+      "male": 5,
+      "female": 5,
+      "medicine": 3,
+      "poison": 99,
+      "swords": 99,
+      "bows": 99,
+      "arrows": 99,
+      "daggers": 99,
+      "hp": 999.0,
+      "gold": 20.0,
+      "food": 100.0,
+      "experience": 0.0,
+      "staff": 1,
+      "talisman": 0,
+      "looks": 0,
+      "ring": 100,
+      "plague": 0,
+      "protection": 0,
+      "horse": 1,
+      "cart": 1,
+      "hair": "Black",
+      "ready": 1,
+      "command": "PRIOR"
+    }
+  },
+  {
+    "name": "endgame-duel",
+    "config": {
+      "seed": 0,
+      "hp": 1,
+      "gold": 20,
+      "food": 100,
+      "male": 5,
+      "female": 5,
+      "medicine": 3,
+      "poison": 0,
+      "ring": 0,
+      "plague": 0,
+      "looks": false,
+      "horse": true,
+      "cart": true,
+      "staff": true,
+      "talisman": false,
+      "charm": 0,
+      "protection": false,
+      "level": 20,
+      "swords": 2,
+      "bows": 3,
+      "arrows": 4,
+      "daggers": 1,
+      "command": "PRIOR",
+      "experience": 0
+    },
+    "initial": {
+      "state": {
+        "player_hp": 200.0,
+        "overlord_hp": 191.66666666651145,
+        "seed": 907633385
+      },
+      "screen": "                                      \u0001 \u0002\n              --------------------------------------------------\n                             AssaultProbe        Overlord"
+    },
+    "before": {
+      "seed": 907633385,
+      "level": 20,
+      "charm": 0,
+      "male": 5,
+      "female": 5,
+      "medicine": 3,
+      "poison": 0,
+      "swords": 2,
+      "bows": 3,
+      "arrows": 4,
+      "daggers": 1,
+      "hp": 1.0,
+      "gold": 20.0,
+      "food": 100.0,
+      "experience": 0.0,
+      "staff": 1,
+      "talisman": 0,
+      "looks": 0,
+      "ring": 0,
+      "plague": 0,
+      "protection": 0,
+      "horse": 1,
+      "cart": 1,
+      "hair": "Black",
+      "ready": 1,
+      "command": "PRIOR"
+    },
+    "rounds": [
+      {
+        "applied": {
+          "state": {
+            "player_hp": 193.20000000018626,
+            "overlord_hp": 190.466666666558,
+            "seed": 555402811
+          },
+          "screen": "         You smack him in the face.\n\n         He stomps on you.\n\n\n\n\n\n\n\n\n                                      \u0001 \u0002\n              --------------------------------------------------\n                             AssaultProbe        Overlord\n                             193.20              190.47"
+        },
+        "cleared": {
+          "state": {
+            "player_hp": 193.20000000018626,
+            "overlord_hp": 190.466666666558,
+            "seed": 555402811
+          },
+          "screen": "                                      \u0001 \u0002\n              --------------------------------------------------\n                             AssaultProbe        Overlord\n                             193.20              190.47"
+        }
+      },
+      {
+        "applied": {
+          "state": {
+            "player_hp": 192.90000000037253,
+            "overlord_hp": 188.06666666665114,
+            "seed": 1716779917
+          },
+          "screen": "         You slug him in the gut.\n\n         He slightly nicks you.\n\n\n\n\n\n\n\n\n                                      \u0001 \u0002\n              --------------------------------------------------\n                             AssaultProbe        Overlord\n                             192.90              188.07"
+        },
+        "cleared": {
+          "state": {
+            "player_hp": 192.90000000037253,
+            "overlord_hp": 188.06666666665114,
+            "seed": 1716779917
+          },
+          "screen": "                                      \u0001 \u0002\n              --------------------------------------------------\n                             AssaultProbe        Overlord\n                             192.90              188.07"
+        }
+      },
+      {
+        "applied": {
+          "state": {
+            "player_hp": 190.7000000004191,
+            "overlord_hp": 180.56666666665114,
+            "seed": 840368863
+          },
+          "screen": "         You stomp on him.\n\n         He kicks you in the shins.\n\n\n\n\n\n\n\n\n                                      \u0001 \u0002\n              --------------------------------------------------\n                             AssaultProbe        Overlord\n                             190.70              180.57"
+        },
+        "cleared": {
+          "state": {
+            "player_hp": 190.7000000004191,
+            "overlord_hp": 180.56666666665114,
+            "seed": 840368863
+          },
+          "screen": "                                      \u0001 \u0002\n              --------------------------------------------------\n                             AssaultProbe        Overlord\n                             190.70              180.57"
+        }
+      },
+      {
+        "applied": {
+          "state": {
+            "player_hp": 189.50000000046566,
+            "overlord_hp": 180.56666666665114,
+            "seed": 2192956465
+          },
+          "screen": "         You miss him.\n\n         He hits you in the face.\n\n\n\n\n\n\n\n\n                                      \u0001 \u0002\n              --------------------------------------------------\n                             AssaultProbe        Overlord\n                             189.50              180.57"
+        },
+        "cleared": {
+          "state": {
+            "player_hp": 189.50000000046566,
+            "overlord_hp": 180.56666666665114,
+            "seed": 2192956465
+          },
+          "screen": "                                      \u0001 \u0002\n              --------------------------------------------------\n                             AssaultProbe        Overlord\n                             189.50              180.57"
+        }
+      },
+      {
+        "applied": {
+          "state": {
+            "player_hp": 189.20000000065193,
+            "overlord_hp": 170.96666666679084,
+            "seed": 679643011
+          },
+          "screen": "         You slice into him with a dagger.\n\n         He slightly nicks you.\n\n\n\n\n\n\n\n\n                                      \u0001 \u0002\n              --------------------------------------------------\n                             AssaultProbe        Overlord\n                             189.20              170.97"
+        },
+        "cleared": {
+          "state": {
+            "player_hp": 189.20000000065193,
+            "overlord_hp": 170.96666666679084,
+            "seed": 679643011
+          },
+          "screen": "                                      \u0001 \u0002\n              --------------------------------------------------\n                             AssaultProbe        Overlord\n                             189.20              170.97"
+        }
+      },
+      {
+        "applied": {
+          "state": {
+            "player_hp": 178.0000000006985,
+            "overlord_hp": 158.2666666668374,
+            "seed": 3318678741
+          },
+          "screen": "         Your sword cuts deep into the Overlord.\n\n         He chops you up some.\n\n\n\n\n\n\n\n\n                                      \u0001 \u0002\n              --------------------------------------------------\n                             AssaultProbe        Overlord\n                             178.00              158.27"
+        },
+        "cleared": {
+          "state": {
+            "player_hp": 178.0000000006985,
+            "overlord_hp": 158.2666666668374,
+            "seed": 3318678741
+          },
+          "screen": "                                      \u0001 \u0002\n              --------------------------------------------------\n                             AssaultProbe        Overlord\n                             178.00              158.27"
+        }
+      },
+      {
+        "applied": {
+          "state": {
+            "player_hp": 168.60000000079162,
+            "overlord_hp": 150.7666666668374,
+            "seed": 3471660071
+          },
+          "screen": "         You stomp on him.\n\n         He cuts your skin with a knife.\n\n\n\n\n\n\n\n\n                                      \u0001 \u0002\n              --------------------------------------------------\n                             AssaultProbe        Overlord\n                             168.60              150.77"
+        },
+        "cleared": {
+          "state": {
+            "player_hp": 168.60000000079162,
+            "overlord_hp": 150.7666666668374,
+            "seed": 3471660071
+          },
+          "screen": "                                      \u0001 \u0002\n              --------------------------------------------------\n                             AssaultProbe        Overlord\n                             168.60              150.77"
+        }
+      },
+      {
+        "applied": {
+          "state": {
+            "player_hp": 157.4000000008382,
+            "overlord_hp": 150.7666666668374,
+            "seed": 2318366073
+          },
+          "screen": "         You miss him.\n\n         He chops you up some.\n\n\n\n\n\n\n\n\n                                      \u0001 \u0002\n              --------------------------------------------------\n                             AssaultProbe        Overlord\n                             157.40              150.77"
+        },
+        "cleared": {
+          "state": {
+            "player_hp": 157.4000000008382,
+            "overlord_hp": 150.7666666668374,
+            "seed": 2318366073
+          },
+          "screen": "                                      \u0001 \u0002\n              --------------------------------------------------\n                             AssaultProbe        Overlord\n                             157.40              150.77"
+        }
+      },
+      {
+        "applied": {
+          "state": {
+            "player_hp": 155.20000000088476,
+            "overlord_hp": 150.46666666702367,
+            "seed": 266823883
+          },
+          "screen": "         You slightly nicked him.\n\n         He kicks you in the shins.\n\n\n\n\n\n\n\n\n                                      \u0001 \u0002\n              --------------------------------------------------\n                             AssaultProbe        Overlord\n                             155.20              150.47"
+        },
+        "cleared": {
+          "state": {
+            "player_hp": 155.20000000088476,
+            "overlord_hp": 150.46666666702367,
+            "seed": 266823883
+          },
+          "screen": "                                      \u0001 \u0002\n              --------------------------------------------------\n                             AssaultProbe        Overlord\n                             155.20              150.47"
+        }
+      },
+      {
+        "applied": {
+          "state": {
+            "player_hp": 153.00000000093132,
+            "overlord_hp": 149.26666666707024,
+            "seed": 1248275997
+          },
+          "screen": "         You smack him in the face.\n\n         He kicks you in the shins.\n\n\n\n\n\n\n\n\n                                      \u0001 \u0002\n              --------------------------------------------------\n                             AssaultProbe        Overlord\n                             153.00              149.27"
+        },
+        "cleared": {
+          "state": {
+            "player_hp": 153.00000000093132,
+            "overlord_hp": 149.26666666707024,
+            "seed": 1248275997
+          },
+          "screen": "                                      \u0001 \u0002\n              --------------------------------------------------\n                             AssaultProbe        Overlord\n                             153.00              149.27"
+        }
+      },
+      {
+        "applied": {
+          "state": {
+            "player_hp": 153.00000000093132,
+            "overlord_hp": 146.86666666716337,
+            "seed": 4127245679
+          },
+          "screen": "         You slug him in the gut.\n\n         He misses you\n\n\n\n\n\n\n\n\n                                      \u0001 \u0002\n              --------------------------------------------------\n                             AssaultProbe        Overlord\n                             153.00              146.87"
+        },
+        "cleared": {
+          "state": {
+            "player_hp": 153.00000000093132,
+            "overlord_hp": 146.86666666716337,
+            "seed": 4127245679
+          },
+          "screen": "                                      \u0001 \u0002\n              --------------------------------------------------\n                             AssaultProbe        Overlord\n                             153.00              146.87"
+        }
+      },
+      {
+        "applied": {
+          "state": {
+            "player_hp": 150.8000000009779,
+            "overlord_hp": 137.26666666730307,
+            "seed": 2701536961
+          },
+          "screen": "         You slice into him with a dagger.\n\n         He kicks you in the shins.\n\n\n\n\n\n\n\n\n                                      \u0001 \u0002\n              --------------------------------------------------\n                             AssaultProbe        Overlord\n                             150.80              137.27"
+        },
+        "cleared": {
+          "state": {
+            "player_hp": 150.8000000009779,
+            "overlord_hp": 137.26666666730307,
+            "seed": 2701536961
+          },
+          "screen": "                                      \u0001 \u0002\n              --------------------------------------------------\n                             AssaultProbe        Overlord\n                             150.80              137.27"
+        }
+      },
+      {
+        "applied": {
+          "state": {
+            "player_hp": 146.2000000011176,
+            "overlord_hp": 134.8666666673962,
+            "seed": 2882103827
+          },
+          "screen": "         You slug him in the gut.\n\n         He tackles you.\n\n\n\n\n\n\n\n\n                                      \u0001 \u0002\n              --------------------------------------------------\n                             AssaultProbe        Overlord\n                             146.20              134.87"
+        },
+        "cleared": {
+          "state": {
+            "player_hp": 146.2000000011176,
+            "overlord_hp": 134.8666666673962,
+            "seed": 2882103827
+          },
+          "screen": "                                      \u0001 \u0002\n              --------------------------------------------------\n                             AssaultProbe        Overlord\n                             146.20              134.87"
+        }
+      },
+      {
+        "applied": {
+          "state": {
+            "player_hp": 136.80000000121072,
+            "overlord_hp": 132.46666666748933,
+            "seed": 1218213733
+          },
+          "screen": "         You slug him in the gut.\n\n         He cuts your skin with a knife.\n\n\n\n\n\n\n\n\n                                      \u0001 \u0002\n              --------------------------------------------------\n                             AssaultProbe        Overlord\n                             136.80              132.47"
+        },
+        "cleared": {
+          "state": {
+            "player_hp": 136.80000000121072,
+            "overlord_hp": 132.46666666748933,
+            "seed": 1218213733
+          },
+          "screen": "                                      \u0001 \u0002\n              --------------------------------------------------\n                             AssaultProbe        Overlord\n                             136.80              132.47"
+        }
+      },
+      {
+        "applied": {
+          "state": {
+            "player_hp": 136.80000000121072,
+            "overlord_hp": 132.46666666748933,
+            "seed": 2077316791
+          },
+          "screen": "         You miss him.\n\n         He misses you\n\n\n\n\n\n\n\n\n                                      \u0001 \u0002\n              --------------------------------------------------\n                             AssaultProbe        Overlord\n                             136.80              132.47"
+        },
+        "cleared": {
+          "state": {
+            "player_hp": 136.80000000121072,
+            "overlord_hp": 132.46666666748933,
+            "seed": 2077316791
+          },
+          "screen": "                                      \u0001 \u0002\n              --------------------------------------------------\n                             AssaultProbe        Overlord\n                             136.80              132.47"
+        }
+      },
+      {
+        "applied": {
+          "state": {
+            "player_hp": 130.00000000139698,
+            "overlord_hp": 130.06666666758247,
+            "seed": 465176585
+          },
+          "screen": "         You slug him in the gut.\n\n         He stomps on you.\n\n\n\n\n\n\n\n\n                                      \u0001 \u0002\n              --------------------------------------------------\n                             AssaultProbe        Overlord\n                             130.00              130.07"
+        },
+        "cleared": {
+          "state": {
+            "player_hp": 130.00000000139698,
+            "overlord_hp": 130.06666666758247,
+            "seed": 465176585
+          },
+          "screen": "                                      \u0001 \u0002\n              --------------------------------------------------\n                             AssaultProbe        Overlord\n                             130.00              130.07"
+        }
+      },
+      {
+        "applied": {
+          "state": {
+            "player_hp": 125.40000000153668,
+            "overlord_hp": 127.6666666676756,
+            "seed": 3500706651
+          },
+          "screen": "         You slug him in the gut.\n\n         He tackles you.\n\n\n\n\n\n\n\n\n                                      \u0001 \u0002\n              --------------------------------------------------\n                             AssaultProbe        Overlord\n                             125.40              127.67"
+        },
+        "cleared": {
+          "state": {
+            "player_hp": 125.40000000153668,
+            "overlord_hp": 127.6666666676756,
+            "seed": 3500706651
+          },
+          "screen": "                                      \u0001 \u0002\n              --------------------------------------------------\n                             AssaultProbe        Overlord\n                             125.40              127.67"
+        }
+      },
+      {
+        "applied": {
+          "state": {
+            "player_hp": 114.20000000158325,
+            "overlord_hp": 125.26666666776873,
+            "seed": 351199405
+          },
+          "screen": "         You slug him in the gut.\n\n         He chops you up some.\n\n\n\n\n\n\n\n\n                                      \u0001 \u0002\n              --------------------------------------------------\n                             AssaultProbe        Overlord\n                             114.20              125.27"
+        },
+        "cleared": {
+          "state": {
+            "player_hp": 114.20000000158325,
+            "overlord_hp": 125.26666666776873,
+            "seed": 351199405
+          },
+          "screen": "                                      \u0001 \u0002\n              --------------------------------------------------\n                             AssaultProbe        Overlord\n                             114.20              125.27"
+        }
+      },
+      {
+        "applied": {
+          "state": {
+            "player_hp": 103.00000000162981,
+            "overlord_hp": 120.46666666783858,
+            "seed": 887031807
+          },
+          "screen": "         You beat him with a tree branch.\n\n         He chops you up some.\n\n\n\n\n\n\n\n\n                                      \u0001 \u0002\n              --------------------------------------------------\n                             AssaultProbe        Overlord\n                             103.00              120.47"
+        },
+        "cleared": {
+          "state": {
+            "player_hp": 103.00000000162981,
+            "overlord_hp": 120.46666666783858,
+            "seed": 887031807
+          },
+          "screen": "                                      \u0001 \u0002\n              --------------------------------------------------\n                             AssaultProbe        Overlord\n                             103.00              120.47"
+        }
+      },
+      {
+        "applied": {
+          "state": {
+            "player_hp": 96.20000000169966,
+            "overlord_hp": 110.86666666786186,
+            "seed": 1321926993
+          },
+          "screen": "         You slice into him with a dagger.\n\n         He stomps on you.\n\n\n\n\n\n\n\n\n                                      \u0001 \u0002\n              --------------------------------------------------\n                             AssaultProbe        Overlord\n                             96.200              110.87"
+        },
+        "cleared": {
+          "state": {
+            "player_hp": 96.20000000169966,
+            "overlord_hp": 110.86666666786186,
+            "seed": 1321926993
+          },
+          "screen": "                                      \u0001 \u0002\n              --------------------------------------------------\n                             AssaultProbe        Overlord\n                             96.200              110.87"
+        }
+      },
+      {
+        "applied": {
+          "state": {
+            "player_hp": 95.00000000174623,
+            "overlord_hp": 109.66666666790843,
+            "seed": 1392823459
+          },
+          "screen": "         You smack him in the face.\n\n         He hits you in the face.\n\n\n\n\n\n\n\n\n                                      \u0001 \u0002\n              --------------------------------------------------\n                             AssaultProbe        Overlord\n                             95.000              109.67"
+        },
+        "cleared": {
+          "state": {
+            "player_hp": 95.00000000174623,
+            "overlord_hp": 109.66666666790843,
+            "seed": 1392823459
+          },
+          "screen": "                                      \u0001 \u0002\n              --------------------------------------------------\n                             AssaultProbe        Overlord\n                             95.000              109.67"
+        }
+      },
+      {
+        "applied": {
+          "state": {
+            "player_hp": 83.8000000017928,
+            "overlord_hp": 108.466666667955,
+            "seed": 64907765
+          },
+          "screen": "         You smack him in the face.\n\n         He chops you up some.\n\n\n\n\n\n\n\n\n                                      \u0001 \u0002\n              --------------------------------------------------\n                             AssaultProbe        Overlord\n                             83.800              108.47"
+        },
+        "cleared": {
+          "state": {
+            "player_hp": 83.8000000017928,
+            "overlord_hp": 108.466666667955,
+            "seed": 64907765
+          },
+          "screen": "                                      \u0001 \u0002\n              --------------------------------------------------\n                             AssaultProbe        Overlord\n                             83.800              108.47"
+        }
+      },
+      {
+        "applied": {
+          "state": {
+            "player_hp": 79.20000000181608,
+            "overlord_hp": 98.86666666797828,
+            "seed": 4121549127
+          },
+          "screen": "         You slice into him with a dagger.\n\n         He tackles you.\n\n\n\n\n\n\n\n\n                                      \u0001 \u0002\n              --------------------------------------------------\n                             AssaultProbe        Overlord\n                             79.200              98.877"
+        },
+        "cleared": {
+          "state": {
+            "player_hp": 79.20000000181608,
+            "overlord_hp": 98.86666666797828,
+            "seed": 4121549127
+          },
+          "screen": "                                      \u0001 \u0002\n              --------------------------------------------------\n                             AssaultProbe        Overlord\n                             79.200              98.877"
+        }
+      },
+      {
+        "applied": {
+          "state": {
+            "player_hp": 74.60000000183936,
+            "overlord_hp": 86.16666666802485,
+            "seed": 2394495641
+          },
+          "screen": "         Your sword cuts deep into the Overlord.\n\n         He tackles you.\n\n\n\n\n\n\n\n\n                                      \u0001 \u0002\n              --------------------------------------------------\n                             AssaultProbe        Overlord\n                             74.600              86.177"
+        },
+        "cleared": {
+          "state": {
+            "player_hp": 74.60000000183936,
+            "overlord_hp": 86.16666666802485,
+            "seed": 2394495641
+          },
+          "screen": "                                      \u0001 \u0002\n              --------------------------------------------------\n                             AssaultProbe        Overlord\n                             74.600              86.177"
+        }
+      },
+      {
+        "applied": {
+          "state": {
+            "player_hp": 63.40000000188593,
+            "overlord_hp": 73.46666666807141,
+            "seed": 123612651
+          },
+          "screen": "         Your sword cuts deep into the Overlord.\n\n         He chops you up some.\n\n\n\n\n\n\n\n\n                                      \u0001 \u0002\n              --------------------------------------------------\n                             AssaultProbe        Overlord\n                             63.400              73.477"
+        },
+        "cleared": {
+          "state": {
+            "player_hp": 63.40000000188593,
+            "overlord_hp": 73.46666666807141,
+            "seed": 123612651
+          },
+          "screen": "                                      \u0001 \u0002\n              --------------------------------------------------\n                             AssaultProbe        Overlord\n                             63.400              73.477"
+        }
+      },
+      {
+        "applied": {
+          "state": {
+            "player_hp": 56.60000000189757,
+            "overlord_hp": 60.76666666811798,
+            "seed": 1777013565
+          },
+          "screen": "         Your sword cuts deep into the Overlord.\n\n         He stomps on you.\n\n\n\n\n\n\n\n\n                                      \u0001 \u0002\n              --------------------------------------------------\n                             AssaultProbe        Overlord\n                             56.600              60.777"
+        },
+        "cleared": {
+          "state": {
+            "player_hp": 56.60000000189757,
+            "overlord_hp": 60.76666666811798,
+            "seed": 1777013565
+          },
+          "screen": "                                      \u0001 \u0002\n              --------------------------------------------------\n                             AssaultProbe        Overlord\n                             56.600              60.777"
+        }
+      },
+      {
+        "applied": {
+          "state": {
+            "player_hp": 56.60000000189757,
+            "overlord_hp": 48.066666668164544,
+            "seed": 2461125263
+          },
+          "screen": "         Your sword cuts deep into the Overlord.\n\n         He misses you\n\n\n\n\n\n\n\n\n                                      \u0001 \u0002\n              --------------------------------------------------\n                             AssaultProbe        Overlord\n                             56.600              48.077"
+        },
+        "cleared": {
+          "state": {
+            "player_hp": 56.60000000189757,
+            "overlord_hp": 48.066666668164544,
+            "seed": 2461125263
+          },
+          "screen": "                                      \u0001 \u0002\n              --------------------------------------------------\n                             AssaultProbe        Overlord\n                             56.600              48.077"
+        }
+      },
+      {
+        "applied": {
+          "state": {
+            "player_hp": 55.400000001944136,
+            "overlord_hp": 48.066666668164544,
+            "seed": 805589985
+          },
+          "screen": "         You miss him.\n\n         He hits you in the face.\n\n\n\n\n\n\n\n\n                                      \u0001 \u0002\n              --------------------------------------------------\n                             AssaultProbe        Overlord\n                             55.400              48.077"
+        },
+        "cleared": {
+          "state": {
+            "player_hp": 55.400000001944136,
+            "overlord_hp": 48.066666668164544,
+            "seed": 805589985
+          },
+          "screen": "                                      \u0001 \u0002\n              --------------------------------------------------\n                             AssaultProbe        Overlord\n                             55.400              48.077"
+        }
+      },
+      {
+        "applied": {
+          "state": {
+            "player_hp": 54.2000000019907,
+            "overlord_hp": 45.66666666819947,
+            "seed": 3258232627
+          },
+          "screen": "         You slug him in the gut.\n\n         He hits you in the face.\n\n\n\n\n\n\n\n\n                                      \u0001 \u0002\n              --------------------------------------------------\n                             AssaultProbe        Overlord\n                             54.200              45.677"
+        },
+        "cleared": {
+          "state": {
+            "player_hp": 54.2000000019907,
+            "overlord_hp": 45.66666666819947,
+            "seed": 3258232627
+          },
+          "screen": "                                      \u0001 \u0002\n              --------------------------------------------------\n                             AssaultProbe        Overlord\n                             54.200              45.677"
+        }
+      },
+      {
+        "applied": {
+          "state": {
+            "player_hp": 53.00000000203727,
+            "overlord_hp": 44.466666668246035,
+            "seed": 2610224261
+          },
+          "screen": "         You smack him in the face.\n\n         He hits you in the face.\n\n\n\n\n\n\n\n\n                                      \u0001 \u0002\n              --------------------------------------------------\n                             AssaultProbe        Overlord\n                             53.000              44.477"
+        },
+        "cleared": {
+          "state": {
+            "player_hp": 53.00000000203727,
+            "overlord_hp": 44.466666668246035,
+            "seed": 2610224261
+          },
+          "screen": "                                      \u0001 \u0002\n              --------------------------------------------------\n                             AssaultProbe        Overlord\n                             53.000              44.477"
+        }
+      },
+      {
+        "applied": {
+          "state": {
+            "player_hp": 50.800000002083834,
+            "overlord_hp": 34.86666666826932,
+            "seed": 3765885911
+          },
+          "screen": "         You slice into him with a dagger.\n\n         He kicks you in the shins.\n\n\n\n\n\n\n\n\n                                      \u0001 \u0002\n              --------------------------------------------------\n                             AssaultProbe        Overlord\n                             50.800              34.877"
+        },
+        "cleared": {
+          "state": {
+            "player_hp": 50.800000002083834,
+            "overlord_hp": 34.86666666826932,
+            "seed": 3765885911
+          },
+          "screen": "                                      \u0001 \u0002\n              --------------------------------------------------\n                             AssaultProbe        Overlord\n                             50.800              34.877"
+        }
+      },
+      {
+        "applied": {
+          "state": {
+            "player_hp": 41.40000000211876,
+            "overlord_hp": 22.166666668315884,
+            "seed": 2267852073
+          },
+          "screen": "         Your sword cuts deep into the Overlord.\n\n         He cuts your skin with a knife.\n\n\n\n\n\n\n\n\n                                      \u0001 \u0002\n              --------------------------------------------------\n                             AssaultProbe        Overlord\n                             41.400              22.177"
+        },
+        "cleared": {
+          "state": {
+            "player_hp": 41.40000000211876,
+            "overlord_hp": 22.166666668315884,
+            "seed": 2267852073
+          },
+          "screen": "                                      \u0001 \u0002\n              --------------------------------------------------\n                             AssaultProbe        Overlord\n                             41.400              22.177"
+        }
+      },
+      {
+        "applied": {
+          "state": {
+            "player_hp": 36.80000000214204,
+            "overlord_hp": 12.566666668339167,
+            "seed": 1476939899
+          },
+          "screen": "         You slice into him with a dagger.\n\n         He tackles you.\n\n\n\n\n\n\n\n\n                                      \u0001 \u0002\n              --------------------------------------------------\n                             AssaultProbe        Overlord\n                             36.800              12.577"
+        },
+        "cleared": {
+          "state": {
+            "player_hp": 36.80000000214204,
+            "overlord_hp": 12.566666668339167,
+            "seed": 1476939899
+          },
+          "screen": "                                      \u0001 \u0002\n              --------------------------------------------------\n                             AssaultProbe        Overlord\n                             36.800              12.577"
+        }
+      },
+      {
+        "applied": {
+          "state": {
+            "player_hp": 30.000000002153683,
+            "overlord_hp": 7.766666668350808,
+            "seed": 3982214605
+          },
+          "screen": "         You beat him with a tree branch.\n\n         He stomps on you.\n\n\n\n\n\n\n\n\n                                      \u0001 \u0002\n              --------------------------------------------------\n                             AssaultProbe        Overlord\n                             30.000               7.777"
+        },
+        "cleared": {
+          "state": {
+            "player_hp": 30.000000002153683,
+            "overlord_hp": 7.766666668350808,
+            "seed": 3982214605
+          },
+          "screen": "                                      \u0001 \u0002\n              --------------------------------------------------\n                             AssaultProbe        Overlord\n                             30.000               7.777"
+        }
+      },
+      {
+        "applied": {
+          "state": {
+            "player_hp": 25.400000002176967,
+            "overlord_hp": 2.966666668355174,
+            "seed": 3011054879
+          },
+          "screen": "         You beat him with a tree branch.\n\n         He tackles you.\n\n\n\n\n\n\n\n\n                                      \u0001 \u0002\n              --------------------------------------------------\n                             AssaultProbe        Overlord\n                             25.400               2.977"
+        },
+        "cleared": {
+          "state": {
+            "player_hp": 25.400000002176967,
+            "overlord_hp": 2.966666668355174,
+            "seed": 3011054879
+          },
+          "screen": "                                      \u0001 \u0002\n              --------------------------------------------------\n                             AssaultProbe        Overlord\n                             25.400               2.977"
+        }
+      },
+      {
+        "applied": {
+          "state": {
+            "player_hp": 25.100000002188608,
+            "overlord_hp": -1.8333333316404605,
+            "seed": 3903989361
+          },
+          "screen": "         You beat him with a tree branch.\n\n         He slightly nicks you.\n\n\n\n\n\n\n\n\n                                      \u0001 \u0002\n              --------------------------------------------------\n                             AssaultProbe        Overlord\n                             25.100              -1.837"
+        },
+        "cleared": {
+          "state": {
+            "player_hp": 25.100000002188608,
+            "overlord_hp": -1.8333333316404605,
+            "seed": 3903989361
+          },
+          "screen": "                                      \u0001 \u0002\n              --------------------------------------------------\n                             AssaultProbe        Overlord\n                             25.100              -1.837"
+        }
+      }
+    ],
+    "grave": {
+      "state": {
+        "player_hp": 25.100000002188608,
+        "overlord_hp": -1.8333333316404605,
+        "seed": 3903989361
+      },
+      "screen": "                                      \u0001 \u007f r.i.p.\n              --------------------------------------------------\n                             AssaultProbe        Overlord\n                             25.100              -1.837"
+    },
+    "finished": {
+      "state": {
+        "player_hp": 25.100000002188608,
+        "overlord_hp": -1.8333333316404605,
+        "seed": 3903989361
+      },
+      "screen": "                                      \u0001 \u007f r.i.p.\n              --------------------------------------------------\n                             AssaultProbe        Overlord\n                             25.100              -1.837"
+    },
+    "after": {
+      "seed": 3903989361,
+      "level": 20,
+      "charm": 0,
+      "male": 5,
+      "female": 5,
+      "medicine": 3,
+      "poison": 0,
+      "swords": 2,
+      "bows": 3,
+      "arrows": 4,
+      "daggers": 1,
+      "hp": 1.0,
+      "gold": 20.0,
+      "food": 100.0,
+      "experience": 0.0,
+      "staff": 1,
+      "talisman": 0,
+      "looks": 0,
+      "ring": 0,
+      "plague": 0,
+      "protection": 0,
+      "horse": 1,
+      "cart": 1,
+      "hair": "Black",
+      "ready": 1,
+      "command": "PRIOR"
+    }
+  }
+]

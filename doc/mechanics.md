@@ -739,3 +739,38 @@ Wait 100 ms, then draw the side `R(2)` (one prints `Player`, two `Overlord`), fo
 A positive change subtracts that many soldiers from the side opposing the label. A negative (or zero) change is added to the labelled side's count. Do not swap `P` and `E` in the table for `Overlord`, rewrite its “your” text, recruit soldiers for positive morale, or clamp an overkill immediately. The event remains visible for three seconds, then both message rows are blanked over 54 columns. Army counts and bars are not refreshed inside the event.
 
 Exact RNG order per normal batch is five casualty-helper calls, one event check, then optional side, event, amount. Calls with nonpositive limits consume no draw. Large signed-16-bit overflow remains outside the verified scope; normal casualty/overkill negatives and zero limits are recovered and compared.
+
+## Final assault Overlord duel
+
+Recovered from `FINASSLT.CHN` file `0x2059`–`0x2984`; [research and comparisons](duel-research.md). This is independent of the shared monster and Mad King combat routines. The caller enters it only after army victory.
+
+### HP, equipment and random calls
+
+Initialize local player HP `P = level * 10`, ignoring saved HP. Initialize local enemy HP `E = R(Round(P)) + P / 3`, with the assault's inclusive helper and real division by three. This consumes one draw at normal positive levels before checking the Talisman. Saved player HP, experience, supplies and equipment are not changed by the duel, including on death.
+
+After opening animation, a held Talisman sets `E` to zero and prints `You use the Talisman to defeat the Overlord!`. It is preserved and there are no attack draws or retaliation. Otherwise each round draws `R(8)` for the player, then `R(8)` for the Overlord. There are no attack choices, saving throws, inventory checks or conditional weapon consumption. Ring, poison, swords, daggers, bows, arrows, Staff and servant counts do not change these rolls or damage. Each attack description is simply the selected table entry, even without the described weapon.
+
+| Roll | Player text | Damage to enemy | Overlord text | Damage to player |
+| --- | --- | --- | --- | --- |
+| 1 | `You miss him.` | 0 | `He misses you` | 0 |
+| 2 | `You slightly nicked him.` | 0.3 | `He slightly nicks you.` | 0.3 |
+| 3 | `You smack him in the face.` | 1.2 | `He hits you in the face.` | 1.2 |
+| 4 | `You slug him in the gut.` | 2.4 | `He kicks you in the shins.` | 2.2 |
+| 5 | `You beat him with a tree branch.` | 4.8 | `He tackles you.` | 4.6 |
+| 6 | `You stomp on him.` | 7.5 | `He stomps on you.` | 6.8 |
+| 7 | `You slice into him with a dagger.` | 9.6 | `He cuts your skin with a knife.` | 9.4 |
+| 8 | `Your sword cuts deep into the Overlord.` | 12.7 | `He chops you up some.` | 11.2 |
+
+Subtract damage from the appropriate local HP. Always retaliate after the player's attack, even if enemy HP is now zero or negative. After both attacks, display both local HP values without clamping, wait two seconds, clear both attack-message rows, then continue only while both HP values are positive.
+
+After combat or Talisman use, draw an enemy grave if `E <= 0`, otherwise a player grave, then wait one second. If `P <= 0`, print `The Overlord has slain you in hand - hand combat.` and return to the caller's game exit. If both died, this defeat still takes precedence, despite the enemy grave. If `P > 0`, call the ending routine. The remake currently reaches an explicit rewards/ending placeholder on that victory branch.
+
+### Presentation and delays
+
+The opening clears the screen and draws fifty hyphens at row 15, column 15. The player figure walks from columns 15–39 on row 14, and the enemy walks from 65–41, each step held for 10 ms. Both remain at columns 39/41. Names appear on row 16 at columns 30/50; wait one second before checking the Talisman. The Talisman adds its glyph at row 13, column 40 and text on row 3, column 10.
+
+Ordinary attack descriptions appear on rows 3/5, column 10. Rolls 1–2 have no figure animation. Rolls 3–4 blink/advance over three 300 ms cycles (900 ms total); rolls 5–6 jump through two rows over four 300 ms cycles (1200 ms); rolls 7–8 slash between the figures over five 200 ms cycles (1000 ms). Speaker tones are omitted but their delays remain. None of these animations consumes RNG.
+
+HP is printed on row 17 at columns 30/50 with minimum width five and two decimals. The fields are not cleared first: shortening `100.00` to `99.70` leaves a visible trailing zero, `99.700`. After the two-second hold, exactly fifty spaces clear each description row. Grave placement tests enemy HP first: enemy `⌂ r.i.p.` starts at column 41; player `r.i.p. ⌂` at column 32, both on row 14. Final death text starts at row 23, column 1. No keypress pause occurs anywhere in the duel.
+
+At ordinary positive levels, RNG order is one initial enemy-HP draw, then two draws per combat round; Talisman consumes only the initial draw. Damage constants and local HP use the existing C-double precision policy; exact Real48 rounding and large signed-16-bit level overflow are outside the retained scope.

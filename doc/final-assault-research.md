@@ -1,6 +1,6 @@
 # Final assault: first reconstruction session
 
-Follow-up: [automatic army combat](army-research.md) is now implemented and compared, including all ten special events and zero-army aborts. The sections below retain the initial opening session's evidence and scope; current outstanding work is the duel and endings.
+Follow-up: [automatic army combat](army-research.md) is now implemented and compared, including all ten special events and zero-army aborts. The sections below retain the initial opening session's evidence and scope; the [Overlord duel](duel-research.md) is also implemented and compared. Current outstanding work is victory rewards and endings.
 
 ## Scope and evidence
 
@@ -74,7 +74,7 @@ Validation does not establish full-run RNG parity, DOS startup seeding, fraction
 ## Next targets
 
 1. Completed in the [army follow-up](army-research.md): casualty order, all event effects, negative counts and zero-army behavior, with state/RNG retained between rounds.
-2. Recover and compare the Overlord duel, starting with the Talisman shortcut and fatal outcomes.
+2. Completed in [duel research](duel-research.md): HP generation, Talisman, all attacks, retaliation/death order, complete fights and saved-state preservation.
 3. Recover reward/ending priority, ring corruption, looks, status certificate and printer behavior. The remake will write the same certificate message and final player stats to stdout instead of using a printer, without a printer-connection prompt. This is the agreed output policy; exact certificate content still needs reconstruction.
 
-`final.c` now runs the verified army battle after conversion and exits on capture or at the remaining duel placeholder after victory.
+`final.c` now runs the army battle and duel after conversion, then exits on defeat or at the remaining victory-reward/ending placeholder.

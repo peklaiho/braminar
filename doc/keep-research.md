@@ -56,3 +56,8 @@ The user has now opened `FINASSLT.CHN` for reconstruction. The earlier exit stub
 ## Automatic army battle follow-up (2026-11-18)
 
 [Army combat](army-research.md) now follows conversion. The Keep checker continues through the actual army battle, accepting the original capture message on defeat or the explicit duel placeholder on victory. Its pre-handoff player fixtures, EOF checks and fatal-plague gate are unchanged. Handoffs must request the conversion and battle delays; exact army-state/RNG/frame/delay comparisons are in the dedicated army checker. All twenty-three Keep cases and six distinct EOF prompts still pass with sanitizers.
+
+
+## Overlord duel follow-up
+
+The Keep checker now continues through the [implemented duel](duel-research.md) after army victory. It accepts army capture, the original duel death message, or the victory-reward/ending placeholder, retaining the same post-bookkeeping player checkpoints, fatal-plague gate and EOF checks. Exact duel HP/RNG/frame/delay comparisons are handled by the dedicated duel suite.

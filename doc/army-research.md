@@ -57,3 +57,8 @@ Remaining limits: signed-16-bit overflow in large army sums, conversions and eve
 ## Next target
 
 Recover and compare the Overlord duel, starting with its Talisman shortcut, enemy HP, attack/retaliation order and fatal outcomes. Victory rewards, corruption/looks endings, certificate and printer behavior remain separate later work. `final.c` now reaches its explicit placeholder only after an army victory.
+
+
+## Duel follow-up
+
+The [Overlord duel](duel-research.md) is now implemented and compared. The historical army probes above still stop before it; current gameplay and Keep checks continue through the actual duel, exiting on defeat or at the rewards/ending placeholder. Rewards, corruption/looks endings and the stdout certificate remain the next target.

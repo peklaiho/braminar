@@ -32,7 +32,7 @@ This document records intentional differences between the classic DOS game and t
 ## Numeric precision
 
 - Turn healing adds 0.10 HP instead of reproducing the classic executable's slightly smaller Pascal Real48 constant.
-- HP and experience use C `double` arithmetic instead of Pascal Real48 storage and intermediate rounding.
+- HP and experience use C `double` arithmetic instead of Pascal Real48 storage and intermediate rounding. This includes duel-local HP; its fixed damage constants use their readable decimal values instead of the original slightly smaller Real48 encodings.
 
 ## Bug fixes
 
@@ -56,7 +56,7 @@ This document records intentional differences between the classic DOS game and t
 ## Final-assault presentation
 
 - Render the original army percentage-bar glyphs with UTF-8 instead of DOS CP437 bytes, using ANSI cursor movement for the counts and transient messages. Retain the original text, positions, refresh order, and delays within the documented comparison scope.
-- Omit DOS speaker tones during army events and victory/defeat notification, preserving their 100 ms timing intervals.
+- Omit DOS speaker tones during army events, duel animations and victory/defeat notification, preserving their timing intervals. Render the duel's DOS figure/grave glyphs as UTF-8 with the same screen positions and animation sequence.
 - When the ending is implemented, write the original printer certificate's final message and player stats to standard output instead of using a printer. Do not ask the player to connect a printer.
 
 ## Temporary debugging
