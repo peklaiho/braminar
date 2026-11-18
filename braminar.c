@@ -361,14 +361,59 @@ static bool run_turn(Player* player)
     return true;
 }
 
-int main(void)
+int main(int argc, char** argv)
 {
+    /* DEBUG ONLY: remove this temporary option when final-assault reconstruction is complete. */
+    bool debug_final_assault = argc == 2 && strcmp(argv[1], "--final-assault") == 0;
+    if (argc != 1 && !debug_final_assault) {
+        fprintf(stderr, "Usage: %s [--final-assault]\n", argv[0]);
+        return EXIT_FAILURE;
+    }
+
     initialize_input();
 
     /* The entire game uses yellow text; cleanup resets the terminal color. */
     printf("\033[93m");
 
     random_state = (uint32_t)time(NULL);
+
+    /* BEGIN DEBUG ONLY: temporary end-game setup; remove together with --final-assault. */
+    if (debug_final_assault) {
+        Player player = {
+            .name = "Assault Debug",
+            .gender = 'M',
+            .level = 21,
+            .hit_points = 210,
+            .hair_color = "Black",
+            .staff_of_aviatar = true,
+            .good_looks = true,
+            .male_servants = 10,
+            .female_servants = 10,
+            .gold = 500,
+            .food = 500,
+            .medicine = 10,
+            .poison = 1,
+            .swords = 10,
+            .bows = 10,
+            .arrows = 50,
+            .daggers = 5,
+            .horse = true,
+            .cart = true,
+            .illness_protection = true,
+            .dragon_charm = 1,
+            .prime_command = "PRIOR",
+            .final_assault_ready = true
+        };
+        male_servant_price = 8;
+        female_servant_price = 13;
+        clear_screen();
+        puts("Debug final assault.\n");
+        if (display_stats(&player)) {
+            start_final_battle(&player);
+        }
+        return EXIT_SUCCESS;
+    }
+    /* END DEBUG ONLY. */
 
     if (!display_title()) {
         return EXIT_SUCCESS;

@@ -57,3 +57,7 @@ This document records intentional differences between the classic DOS game and t
 
 - Render the original army percentage-bar glyphs with UTF-8 instead of DOS CP437 bytes, using ANSI cursor movement for the counts and transient messages. Retain the original text, positions, refresh order, and delays within the documented comparison scope.
 - Omit DOS speaker tones during army events and victory/defeat notification, preserving their 100 ms timing intervals.
+
+## Temporary debugging
+
+- `--final-assault` skips character creation and adventure play, supplies a level-21 character and fixed servant prices, and starts the final assault with normal time-based random seeding after its status screen. This debug-only option is marked for removal after reconstruction; it is not an original-game mechanic.
