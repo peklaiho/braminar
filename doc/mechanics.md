@@ -686,3 +686,21 @@ L (leaving the entered tree or accepting hut help) prints the deity's good-deed 
 | 5 | Acquire the Talisman if absent; otherwise announce Duncin' Doughnuts and add twelve food. No substitute roll. |
 
 Blank deeds receive no judgment, reward, or extra draw. Every path, including declining entry, ends with one common keypress pause at `0x96D7`–`0x96DF`. End-of-turn bookkeeping follows, including healing with the changed level and consumption with newly rewarded servants. Within-event draw order is selection; optional hut occupant; optional good-deed reward. No Staff acquisition or combat occurs here.
+
+## Final assault asset conversion
+
+The first reconstructed `FINASSLT.CHN` scope is its opening at file `0x2985`–`0x2C49`. Offsets in this section refer to that module, not `BRAMINAR.COM`. [Research and repeatable entry](final-assault-research.md) distinguish controlled captures from inspected later branches.
+
+Let `R(n)` be `Random(n) + 1` for positive `n`; the assault helper at `0x0085` returns zero without drawing if `n <= 0`. The main-game RNG recurrence is reused. Starting from the player's gold, accumulate net worth in this order:
+
+1. Male servants times the current male servant price, then female servants times the current female price.
+2. Medicine times three, then poison times one hundred.
+3. Swords times `R(100)`, bows times `R(100)`, arrows times `R(20)`, daggers times `R(100)`. Each category draws once, including categories with zero items. Individual items do not draw separately.
+4. One hundred if a horse is held; two hundred if a cart is held.
+5. One thousand times `level - 20` only if level exceeds twenty. There is no penalty below twenty inside this routine.
+
+Food, HP, experience, hair, gender, looks, Staff, Talisman, ring, plague, illness protection and dragon charm contribute nothing to this calculation. None of the player's assets or flags is consumed or cleared. The four category draws happen even for an otherwise empty inventory.
+
+Player soldiers are `Round(net_worth / 7)`, using the Pascal runtime's nearest-integer conversion (positive halves upward). The rounding call at module `0x2BB1` resolves to original runtime file `0x19F6`, not the truncation entry at `0x19FA`. The enemy army is `R(player_soldiers) + player_soldiers div 2`. For a positive army this is the fifth RNG draw. At zero soldiers the helper adds zero and consumes no fifth draw. Army counts are signed 16-bit values in the original; extreme overflow and subsequent zero-army combat remain unresolved.
+
+The opening prints `Now converting assets into an army.`, waits one second, computes and prints `Your net worth is ` with width seven and zero decimals, ` gold pieces.`, then `You have N soldiers.` and `The Overlord has N soldiers.`, then waits two seconds. It has no keypress pause before army combat. The remake implements this report and exits at an explicit placeholder for the remaining battle.

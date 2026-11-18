@@ -366,3 +366,23 @@ see [charm/quest research](quest-state-research.md) for captures and limits.
 ## G8 simultaneous-death comparisons
 
 [Combat ordering research](combat-order-research.md) records four controlled setups, raw captures, and reproduction commands. The retained checkers now cover 13 shared-combat, 43 hut, and 47 castle scenarios. These checkers compare gameplay state and outcome text without requiring exact RNG equality. Hut and castle named probes regenerate their new fixtures; the shared fixture is extracted from its raw configuration/checkpoint records, as with the earlier shared cases.
+
+## Repeatable final-assault entry
+
+`python3 tools/final_probe.py > doc/captures/final-probes.txt` launches fresh original-game instances, automates character creation and a synthetic successful Keep, then restores controlled player state and RNG at the loaded assault module's entry. No adventure play or disk patch is needed. It stops after asset conversion, before army combat, and saves `doc/final-checkpoints.json`. Named cases and `--output PATH` select a subset or separate fixture file.
+
+To start at the final assault for repeated play:
+
+```sh
+python3 tools/final_probe.py baseline --interactive
+```
+
+At `dosbox>` use the same `screen`, `key`, `text`, `wait`, and `quit` commands as the ordinary runner. Army combat progresses automatically; `wait 1` captures a later screen. Redirect output to retain the complete transcript. For a scripted continuation:
+
+```sh
+python3 tools/final_probe.py baseline -c 'wait 8' -c 'wait 8' --output /tmp/final-flow.json > doc/captures/final-flow.txt
+```
+
+For custom experiments, import `start_final_assault(game, config)` from `final_probe` with a fresh `Game` and a modified named-case configuration. It returns the program code segment with the debugger paused at the initialized module entry, with requested state restored. Use `dump()` and `write_memory(..., paused=True)` there; do not nest debugger contexts. `resume(game)` resumes execution. The runner's conversion breakpoint is code segment:`59C5`; module file offsets map to runtime IP by adding `0x2D7C`. The [research ledger](final-assault-research.md) records byte checks, DS offsets, RNG restoration and validation limits.
+
+`python3 tools/check_final.py --sanitize` compares saved original conversion state, exact RNG progression, unchanged player inventory, normalized text and requested delays using the actual remake sources, without requiring DOSBox. `python3 tools/check_keep.py --sanitize` validates main-turn handoff ordering through the new opening and its remaining-combat exit placeholder.

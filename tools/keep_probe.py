@@ -88,8 +88,9 @@ def paused_screen(game):
                      for n in range(0,4000,160)).strip('\n')
 
 
-def prepare(game, config):
-    data = bytearray(game.read_memory('DS',0x277,0x49))
+def prepare(game, config, paused=False):
+    read = game.dump if paused else game.read_memory
+    data = bytearray(read('DS',0x277,0x49))
     struct.pack_into('<h',data,0,config['level'])
     data[2:8] = real48(config['hp'])
     data[8:14] = b'\x05Black'
@@ -101,10 +102,10 @@ def prepare(game, config):
         struct.pack_into('<h',data,address-0x277,config[name])
     for address,name in ((0x2A0,'gold'),(0x2A6,'food'),(0x2BA,'experience')):
         data[address-0x277:address-0x277+6] = real48(config[name])
-    game.write_memory('DS',0x277,data)
-    game.write_memory('DS',0x3EE,struct.pack('<hh',8,13))
-    game.write_memory('DS',0x1FC,config['seed'].to_bytes(4,'little'))
-    game.write_memory('DS',0x4F8,b'\0\x05'+config['command'].encode('ascii'))
+    game.write_memory('DS',0x277,data,paused=paused)
+    game.write_memory('DS',0x3EE,struct.pack('<hh',8,13),paused=paused)
+    game.write_memory('DS',0x1FC,config['seed'].to_bytes(4,'little'),paused=paused)
+    game.write_memory('DS',0x4F8,b'\0\x05'+config['command'].encode('ascii'),paused=paused)
 
 
 def event_text(screen, pan=False):

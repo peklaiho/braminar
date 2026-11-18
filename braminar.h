@@ -1,3 +1,6 @@
+#ifndef BRAMINAR_H
+#define BRAMINAR_H
+
 #include <stdbool.h>
 #include <stdint.h>
 
@@ -36,3 +39,14 @@ typedef struct {
     int level;
     double hit_points;
 } Monster;
+
+typedef struct {
+    double net_worth;
+    int soldiers;
+    int enemy_soldiers;
+} FinalArmy;
+
+FinalArmy convert_final_assets(const Player* player);
+void start_final_battle(const Player* player);
+
+#endif

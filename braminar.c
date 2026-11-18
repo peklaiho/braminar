@@ -298,12 +298,6 @@ static bool display_stats(const Player* player)
     return read_key() != EOF;
 }
 
-static void start_final_battle(void)
-{
-    puts("\nThe final battle is not implemented yet.");
-    exit(EXIT_SUCCESS);
-}
-
 int ask_yes_no(const char* question)
 {
     puts(question);
@@ -362,7 +356,7 @@ static bool run_turn(Player* player)
         return false;
     }
     if (player->final_assault_ready) {
-        start_final_battle();
+        start_final_battle(player);
     }
     return true;
 }

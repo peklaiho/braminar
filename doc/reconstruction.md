@@ -22,7 +22,7 @@ The boxes above are a reusable workflow, not claims that every target needs ever
 
 ## Next targets
 
-Current overview: [remaining main-game gaps](remaining-gaps.md), reviewed 2026-11-16. All twelve retained sanitizer comparison suites pass; remaining work is principally validation, integration, and unresolved fidelity boundaries. Final assault work is excluded.
+Current overview: [remaining main-game gaps](remaining-gaps.md), reviewed 2026-11-16. The 2026-11-16 overview reported twelve passing sanitizer comparison suites; remaining work is principally validation, integration, and unresolved fidelity boundaries. Final assault opening work began 2026-11-18; see the separate target below.
 
 Bounded follow-ups G1–G8 are complete: [forest](forest-research.md), [occupied gnome](gnome-research.md), [City interactions](town-research.md#g3-city-interactions), [startup/turn evidence](startup-turn-research.md), [ring persistence](ring-research.md), [illness state](illness-state-research.md), [charm/quest persistence](quest-state-research.md), and [combat death/reward ordering](combat-order-research.md). These comparisons needed no gameplay corrections beyond the already documented intentional differences. Exact RNG equality is not a completion requirement.
 
@@ -39,10 +39,10 @@ G7 adds consecutive dragon submissions with charm preserved and Staff loss → r
 - [x] Dark Castle/Mad King: all three rooms, ghost minstrels, theft/noise, crystal-ball hints, traps/rewards, and independent King combat implemented; 47 retained controlled comparisons pass. [Evidence and limits](castle-research.md).
 - [x] Slot-13 watched tree/hut: separate tree judgments, old-man/puppy help, all five rewards and held-Talisman substitute implemented; 32 retained controlled comparisons pass, plus a separate ordinary decline pass. [Evidence and limits](watched-home-research.md).
 - [x] Town follow-up (G3): shared-service purchases plus bargain-market shopping, and cleric ring removal followed by muggers, compared in two complete visits. No gameplay correction needed. [Evidence](town-research.md#g3-city-interactions). Ordinary integration remains the separate G9 task.
-- [x] Keep command branch: level/Staff gates, optional attack, case-sensitive five-character comparison, wrong-command Staff loss, and post-bookkeeping handoff to the exit stub implemented; twenty-three retained controlled comparisons include G4 starvation and G7 Staff recovery. [Evidence and limits](keep-research.md).
-- [ ] Future ordinary integration: earn Pan's command, the Staff, and level twenty through normal play, then reach the Keep. A controlled Pan-to-Keep sequence is retained in [Keep research](keep-research.md); the final assault remains deferred.
+- [x] Keep command branch: level/Staff gates, optional attack, case-sensitive five-character comparison, wrong-command Staff loss, and post-bookkeeping handoff implemented; twenty-three retained controlled comparisons include G4 starvation and G7 Staff recovery; the checker now follows the verified assault opening to its remaining-combat placeholder. [Evidence and limits](keep-research.md).
+- [ ] Future ordinary integration: earn Pan's command, the Staff, and level twenty through normal play, then reach the Keep. A controlled Pan-to-Keep sequence is retained in [Keep research](keep-research.md); the final assault opening is now implemented; army combat and later phases remain unfinished.
 
-The Keep branch now reaches the existing final-battle exit stub after bookkeeping. The main-game event bodies are implemented within their documented scope; continue ordinary integration play and the listed validation follow-ups. The final assault is explicitly deferred at the user's request.
+The Keep branch now reaches the final-assault conversion report and exits at the remaining-combat placeholder after bookkeeping. The main-game event bodies are implemented within their documented scope; continue ordinary integration play and the listed validation follow-ups. The user opened the final assault for reconstruction on 2026-11-18; its verified opening is now implemented.
 
 ## Core systems
 
@@ -84,7 +84,7 @@ Slot numbers follow the [recovered dispatch](mechanics.md#event-selection). “P
 | 14 | Flowing river | Recovered / implemented | Five saved cases: harmless vision, both items, held items, poisoned champion, decline. Comparison harness was temporary; fixtures retained. [Ledger](session-03.md#controlled-river-checks) |
 | 15 | Statue of Pan | Recovered / implemented | Five retained DOS comparisons cover success, failure, decline, invalid answer keys, command replacement/preservation, and question records 1, 3, 20. All 20 embedded records checked against data. [Evidence and limits](pan-research.md) |
 | 16 | Keep prerequisite rejection | Recovered / implemented | Ordinary rejection plus controlled level/Staff combinations and rejection before promotion to level twenty. [Evidence](keep-research.md). |
-| 16 | Keep command and final-assault transition | Recovered / implemented to exit stub | Optional attack, input boundaries, wrong-command Staff loss, success, post-turn death suppression, and controlled Pan-to-Keep sequence. Final assault remains unimplemented. [Evidence and limits](keep-research.md). |
+| 16 | Keep command and final-assault transition | Recovered / implemented through conversion | Optional attack, input boundaries, wrong-command Staff loss, success, post-turn death suppression, and controlled Pan-to-Keep sequence. Assault asset conversion is implemented; army combat remains a placeholder. [Keep evidence](keep-research.md), [assault research](final-assault-research.md). |
 
 ## Cross-event and deferred work
 
@@ -95,6 +95,16 @@ Slot numbers follow the [recovered dispatch](mechanics.md#event-selection). “P
 | Mad King combat | Recovered / implemented independently of shared combat: full fights, ring, weapons/bows/unarmed, poison, death, rewards and RNG compared. Captures do not exhaust every damage/shout combination or simultaneous deaths. [Evidence and limits](castle-research.md). |
 | Hidden state and interactions | G5–G7 close the bounded ring, illness, charm, and quest-persistence chains. Further combinations are unnecessary absent a concrete normal-play discrepancy; ordinary integration remains G9. [Ring evidence](ring-research.md), [illness evidence](illness-state-research.md), [charm/quest evidence](quest-state-research.md), [remaining gaps](remaining-gaps.md#bounded-completion-checklist) |
 | Numeric behavior | HP/experience precision choices are recorded in CHANGES.md. Check gold/food calculations for player-visible fractions as new mechanics are recovered; extreme integer overflow is unresolved. [Guideline](mechanics.md) |
-| Final battle | Deferred: reconstruct `FINASSLT.CHN` later. Successful Keep entry now calls the separate exit stub after bookkeeping if the player survives; implementing the battle is excluded from this task. [Scope](../AGENTS.md#game-structure-and-initial-scope) |
+| Final assault | Opening conversion recovered / implemented. Repeatable loaded-module entry avoids adventure play and restores experiment state after Keep bookkeeping. Army combat, duel and endings remain unfinished. [Research and next targets](final-assault-research.md) |
 
 Raw captures live in the ignored `doc/captures/` directory. Keep compact controlled fixtures and their configurations alongside research notes so useful comparisons remain reproducible without those captures. Available capture/check commands are documented in [dosbox-tool.md](dosbox-tool.md).
+
+## Final assault targets (opened 2026-11-18)
+
+- [x] Find repeatable memory entry through the real chain loader, preserving its initialization and restoring controlled state at entry. Original `dos/` files remain untouched.
+- [x] Recover and implement asset conversion, army generation, opening text and delays in `final.c`; retain original checkpoints and sanitizer comparisons. [Scope and evidence](final-assault-research.md).
+- [ ] Recover and compare automatic army combat, special events, casualty boundaries and zero-army behavior.
+- [ ] Recover and compare the Overlord duel, including Talisman, death and attack order.
+- [ ] Recover and compare victory rewards, corruption/looks endings, certificate and printer flow.
+
+All assault runs so far are controlled research. Ordinary main-game integration remains G9 and is not completed by these forced-entry experiments. The remake exits explicitly after the verified conversion until army combat is implemented.

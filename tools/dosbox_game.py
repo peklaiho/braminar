@@ -176,16 +176,19 @@ class Game:
         with self.debugger():
             return self.dump(segment, offset, size)
 
-    def write_memory(self, segment, offset, data):
+    def write_memory(self, segment, offset, data, paused=False):
         if segment not in ('DS', 'SS'):
             raise ValueError('Memory probes may write only DS or SS')
         if not 1 <= len(data) <= 256:
             raise ValueError('Write between 1 and 256 bytes per probe')
-        with self.debugger():
-            values = ' '.join(f'{value:02X}' for value in data)
-            self.debug_command(f'SM {segment}:{offset:04X} {values}')
-            if self.dump(segment, offset, len(data)) != data:
-                raise RuntimeError('Debugger memory write did not match its readback')
+        if not paused:
+            with self.debugger():
+                self.write_memory(segment, offset, data, paused=True)
+            return
+        values = ' '.join(f'{value:02X}' for value in data)
+        self.debug_command(f'SM {segment}:{offset:04X} {values}')
+        if self.dump(segment, offset, len(data)) != data:
+            raise RuntimeError('Debugger memory write did not match its readback')
 
     def screen(self):
         with self.debugger():

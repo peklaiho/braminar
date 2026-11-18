@@ -11,6 +11,10 @@ static int keep_nanosleep(const struct timespec* request, struct timespec* remai
 #define nanosleep keep_nanosleep
 #define main braminar_program_main
 #include "../braminar.c"
+#include "../combat.c"
+#include "../events.c"
+#include "../town.c"
+#include "../final.c"
 #undef main
 #undef nanosleep
 #undef getchar

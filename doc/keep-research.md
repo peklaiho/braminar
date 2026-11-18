@@ -47,3 +47,7 @@ This validates acquisition, persistence, command input, and handoff ordering und
 ## Limits and intentional differences
 
 The final assault remains deferred by explicit scope; the exit stub replaces the original chain into `FINASSLT.CHN`. The probe captures original state before that chain, not outcomes inside it. POSIX line editing and EOF handling follow the existing shared reader; DOS-specific control characters and its line-editor capacity are not exhaustively compared. Ordinary five-character, short, empty, whitespace, lowercase, and overlength inputs are covered. Fractional HP/experience follow the documented double-precision policy; extreme integer overflow remains outside this target.
+
+## Final-assault opening follow-up (2026-11-18)
+
+The user has now opened `FINASSLT.CHN` for reconstruction. The earlier exit stub is replaced by verified asset conversion and army generation in `final.c`, then an explicit army-combat/duel placeholder exit. [Assault research](final-assault-research.md) documents the real chain loader and repeatable entry with requested state restored after Keep bookkeeping. The historical Keep probes above still stop before the chain; their fixtures remain valid for the pre-handoff state. The Keep comparison harness now includes the split game sources and expects the new opening's three seconds of delays on surviving successful handoffs. Fatal plague and EOF still suppress entry.

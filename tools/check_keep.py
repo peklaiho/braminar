@@ -77,12 +77,12 @@ def main():
                     narrative = re.sub(r'CHECK \{[^\r\n]*\}', '', text[:matches[i].start()])
                     assert normalize(reference['screen']) in normalize(narrative), (case['name'], i, reference['screen'], narrative)
             assert actual[-1]['keys'] == sum(step['kind'] != 'turn' for step in case['steps']), case['name']
-            delay = 0
+            delay = 3 if case['final']['ready'] and case['final']['hp'] > 0 else 0
             assert actual[-1]['delay'] == delay, (case['name'], actual[-1], delay)
             narrative = re.sub(r'CHECK \{[^\r\n]*\}', '', text)
             assert normalize(case['final_screen']) in normalize(narrative), (case['name'], text)
             handoff = case['final']['ready'] and case['final']['hp'] > 0
-            stub = 'The final battle is not implemented yet.'
+            stub = 'Army combat and the final duel are not implemented yet.'
             assert (stub in text) == bool(handoff), (case['name'], text)
             if handoff:
                 assert text.index(stub) < matches[-1].start(), (case['name'], text)
@@ -99,7 +99,7 @@ def main():
                 if prompt not in eof_prompts or step['state']['ready']:
                     code, text = run(executable, case['config'], keys, False, case['options'].get('turns', 1))
                     assert code == 3, ('EOF', case['name'], prompt, text)
-                    assert 'The final battle is not implemented yet.' not in text, ('EOF handoff', case['name'], text)
+                    assert 'Now converting assets into an army.' not in text, ('EOF handoff', case['name'], text)
                     final = json.loads(re.findall(r'CHECK (\{[^\r\n]*\})', text)[-1])
                     for key, value in step['state'].items():
                         if key == 'seed':
